@@ -15,71 +15,40 @@ skins =
 widgets =
 {
     {
-        name = [[New Widget]],
+        name = [[Group]],
         isVisible = true,
         noInput = false,
-        anchor = 1,
+        anchor = 5,
         rotation = 0,
-        x = 1594,
+        x = 90,
         xpx = true,
-        y = 1002,
+        y = 146,
         ypx = true,
-        w = 200,
-        wpx = true,
-        h = 100,
-        hpx = true,
+        w = 0,
+        h = 0,
         sx = 1,
         sy = 1,
-        ctor = [[label]],
-        halign = MOAITextBox.LEFT_JUSTIFY,
-        valign = MOAITextBox.LEFT_JUSTIFY,
-        text_style = [[]],
-    },
-    {
-        name = [[New Widget]],
-        isVisible = true,
-        noInput = false,
-        anchor = 1,
-        rotation = 0,
-        x = 1614,
-        xpx = true,
-        y = 908,
-        ypx = true,
-        w = 400,
-        wpx = true,
-        h = 50,
-        hpx = true,
-        sx = 1,
-        sy = 1,
-        ctor = [[progressbar]],
-        value = 0.3,
-        inset_size =
-        {
-            w = 12,
-            wpx = true,
-            h = 4,
-            hpx = true,
-        },
-        bg_images =
+        ctor = [[group]],
+        children =
         {
             {
-                file = [[white.png]],
-                name = [[bg]],
-            },
-        },
-        progress_images =
-        {
-            {
-                file = [[white.png]],
-                name = [[progress]],
-                color =
-                {
-                    1,
-                    0,
-                    0,
-                    1,
-                },
-            },
+                name = [[New Widget]],
+                isVisible = true,
+                noInput = false,
+                anchor = 1,
+                rotation = 0,
+                x = -1,
+                xpx = true,
+                y = -6,
+                ypx = true,
+                w = 130,
+                wpx = true,
+                h = 130,
+                hpx = true,
+                sx = 1,
+                sy = 1,
+                ctor = [[discprogressbar]]
+            }
         },
     },
 }
@@ -90,4 +59,13 @@ properties =
 {
     sinksInput = true,
 }
-return { dependents = dependents, text_styles = text_styles, transitions = transitions, skins = skins, widgets = widgets, properties = properties, currentSkin = nil }
+return {
+    dependents = dependents,
+    text_styles = text_styles,
+    transitions = transitions,
+    skins = skins,
+    widgets = widgets,
+    properties =
+        properties,
+    currentSkin = nil
+}
