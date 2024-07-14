@@ -1,0 +1,5 @@
+return {
+    OPTIONS = {
+        TEST = "TEST"
+    }
+}
