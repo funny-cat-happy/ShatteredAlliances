@@ -21,9 +21,7 @@ widgets =
         anchor = 5,
         rotation = 0,
         x = 90,
-        xpx = true,
         y = 146,
-        ypx = true,
         w = 0,
         h = 0,
         sx = 1,
@@ -32,7 +30,7 @@ widgets =
         children =
         {
             {
-                name = [[New Widget]],
+                name = [[progressbar]],
                 isVisible = true,
                 noInput = false,
                 anchor = 1,
@@ -47,8 +45,8 @@ widgets =
                 hpx = true,
                 sx = 1,
                 sy = 1,
-                ctor = [[discprogressbar]]
-            }
+                ctor = [[discprogressbar]],
+            },
         },
     },
 }

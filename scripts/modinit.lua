@@ -5,13 +5,13 @@ local function init(modApi)
 	modApi.requirements = {}
 	local dataPath = modApi:getDataPath()
 	KLEIResourceMgr.MountPackage(dataPath .. "/buildout/gui.kwad", "data")
-	-- local scriptPath = modApi:getScriptPath()
-	-- include(scriptPath .. "/clientModify/mui")
+	local scriptPath = modApi:getScriptPath()
+	rawset(_G, "SA_PATH", rawget(_G, "SA_PATH") or scriptPath)
 end
 
 
 local function load(modApi, options, params, options_raw)
-	
+
 end
 
 -- local function initStrings(modApi)
@@ -27,10 +27,8 @@ local function lateInit(modApi)
 	-- serverdefs.SITUATIONS.executive_terminals.ui.icon = "collaboration.png"
 	-- log:write(util.stringize(serverdefs.SITUATIONS.executive_terminals.ui.icon))
 	-- log:flush()
-	log:write('tt')
-	log:flush()
 	local scriptPath = modApi:getScriptPath()
-	include(scriptPath .. "mui")
+	include(scriptPath .. "/clientModify/mui")
 	local stateMainMenu = include('states/state-main-menu')
 	local mui = include("mui/mui")
 	local oldLoad = stateMainMenu.onLoad
