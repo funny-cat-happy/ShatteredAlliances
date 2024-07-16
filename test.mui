@@ -108,16 +108,16 @@
             </Position>
             <SkinnedSize skinned="true">
               <Default>
-                <Width>150</Width>
-                <Height>150</Height>
+                <Width>200</Width>
+                <Height>200</Height>
                 <WDim>Pixels</WDim>
                 <HDim>Pixels</HDim>
               </Default>
               <Values />
             </SkinnedSize>
             <Size>
-              <Width>150</Width>
-              <Height>150</Height>
+              <Width>200</Width>
+              <Height>200</Height>
               <WDim>Pixels</WDim>
               <HDim>Pixels</HDim>
             </Size>

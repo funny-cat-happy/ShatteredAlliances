@@ -34,6 +34,38 @@ widgets =
         children =
         {
             {
+                name = [[alarmDisc]],
+                isVisible = true,
+                noInput = false,
+                anchor = 1,
+                rotation = 0,
+                x = -1,
+                xpx = true,
+                y = -6,
+                ypx = true,
+                w = 150,
+                wpx = true,
+                h = 150,
+                hpx = true,
+                sx = 1,
+                sy = 1,
+                ctor = [[image]],
+                color =
+                {
+                    1,
+                    1,
+                    1,
+                    1,
+                },
+                images =
+                {
+                    {
+                        file = [[alarm_disc.png]],
+                        name = [[]],
+                    },
+                },
+            },
+            {
                 name = [[alarmRing1]],
                 isVisible = true,
                 noInput = false,

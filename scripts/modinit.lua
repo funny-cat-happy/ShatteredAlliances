@@ -35,6 +35,7 @@ local function lateInit(modApi)
 	stateMainMenu.onLoad = function(self)
 		oldLoad(self)
 		screen = mui.createScreen("test.lua")
+		mui.activateScreen(screen)
 		screen.binder.alarm.binder.alarmRing1:setVisible(false)
 		screen.binder.alarm.binder.alarmRing1:setColor(1, 0, 0, 1)
 		screen.binder.alarm.binder.alarmRing1:setAnim("idle")
@@ -45,10 +46,52 @@ local function lateInit(modApi)
 					screen.binder.alarm.binder.alarmRing1:setVisible(false)
 				end
 			end)
-		screen.binder.alarm.binder.trackerTxt:setText("5/9")
-		MOAILogMgr.log("aa")
-		MOAILogMgr.log(util.stringize(screen.binder.alarm.binder.alarmRing1._cont._prop))
-		mui.activateScreen(screen)
+		local vsh = [[
+attribute vec4 position;
+attribute vec2 uv;
+varying vec2 vUV;
+
+void main() {
+    gl_Position = position;
+    vUV = uv;
+}
+]]
+
+		local fsh = [[
+precision mediump float;
+varying vec2 vUV;
+uniform sampler2D texture;
+uniform float progress;
+
+void main() {
+    vec2 uv = vUV * 2.0 - 1.0;
+    float angle = atan(uv.y, uv.x) + 3.14;
+    float radius = length(uv);
+    float percent = angle / (2.0 * 3.14);
+
+    if (radius < 1.0 && percent < 0.4) {
+        gl_FragColor = texture2D(texture, vUV);
+    } else {
+        discard;
+    }
+}
+]]
+		local shader = MOAIShaderProgram.new()
+		shader:load(vsh, fsh)
+		shader:reserveUniforms(1)
+		shader:declareUniform(1, 'progress', MOAIShader.UNIFORM_FLOAT)
+		screen.binder.alarm.binder.alarmDisc._cont._prop:setShader(shader)
+		local thread = MOAICoroutine.new()
+		thread:run(function()
+			local frames = 500
+			while frames > 0 do
+				-- shader:setAttr(1, (500 - frames) / 500)
+				screen.binder.alarm.binder.trackerTxt:setText(tostring(frames))
+				frames = frames - 1
+				coroutine.yield()
+			end
+		end)
+		thread:resume()
 	end
 end
 
