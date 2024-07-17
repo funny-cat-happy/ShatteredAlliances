@@ -28,25 +28,25 @@ local function lateInit(modApi)
 	-- log:flush()
 	-- local scriptPath = modApi:getScriptPath()
 	-- include(scriptPath .. "/clientModify/mui")
-	local stateMainMenu = include('states/state-main-menu')
-	local mui = include("mui/mui")
-	local screen
-	local oldLoad = stateMainMenu.onLoad
-	stateMainMenu.onLoad = function(self)
-		oldLoad(self)
-		screen = mui.createScreen("test.lua")
-		mui.activateScreen(screen)
-		screen.binder.alarm.binder.alarmRing1:setVisible(false)
-		screen.binder.alarm.binder.alarmRing1:setColor(1, 0, 0, 1)
-		screen.binder.alarm.binder.alarmRing1:setAnim("idle")
-		screen.binder.alarm.binder.alarmRing1:setVisible(true)
-		screen.binder.alarm.binder.alarmRing1:getProp():setListener(KLEIAnim.EVENT_ANIM_END,
-			function(anim, animname)
-				if animname == "idle" then
-					screen.binder.alarm.binder.alarmRing1:setVisible(false)
-				end
-			end)
-	end
+	-- local stateMainMenu = include('states/state-main-menu')
+	-- local mui = include("mui/mui")
+	-- local screen
+	-- local oldLoad = stateMainMenu.onLoad
+	-- stateMainMenu.onLoad = function(self)
+	-- 	oldLoad(self)
+	-- 	screen = mui.createScreen("test.lua")
+	-- 	mui.activateScreen(screen)
+	-- 	screen.binder.alarm.binder.alarmRing1:setVisible(false)
+	-- 	screen.binder.alarm.binder.alarmRing1:setColor(1, 0, 0, 1)
+	-- 	screen.binder.alarm.binder.alarmRing1:setAnim("idle")
+	-- 	screen.binder.alarm.binder.alarmRing1:setVisible(true)
+	-- 	screen.binder.alarm.binder.alarmRing1:getProp():setListener(KLEIAnim.EVENT_ANIM_END,
+	-- 		function(anim, animname)
+	-- 			if animname == "idle" then
+	-- 				screen.binder.alarm.binder.alarmRing1:setVisible(false)
+	-- 			end
+	-- 		end)
+	-- end
 end
 
 
