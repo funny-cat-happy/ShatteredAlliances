@@ -7973,5 +7973,13 @@ properties =
 {
     sinksInput = false,
 }
-return { dependents = dependents, text_styles = text_styles, transitions = transitions, skins = skins, widgets = widgets, properties =
-properties, currentSkin = nil }
+return {
+    dependents = dependents,
+    text_styles = text_styles,
+    transitions = transitions,
+    skins = skins,
+    widgets = widgets,
+    properties =
+        properties,
+    currentSkin = nil
+}
