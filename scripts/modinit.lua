@@ -3,6 +3,7 @@ local util = include("modules/util")
 local function earlyInit(modApi)
 	local scriptPath = modApi:getScriptPath()
 	rawset(_G, "SA_PATH", rawget(_G, "SA_PATH") or scriptPath)
+	include(SA_PATH .. '/modulesModify/util')
 end
 local function init(modApi)
 	modApi.requirements = {}
