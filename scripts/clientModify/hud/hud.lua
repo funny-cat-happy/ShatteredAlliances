@@ -496,7 +496,6 @@ end
 
 local function refreshTrackerAdvance(hud, trackerNumber)
     local stage = hud._game.simCore:getTrackerStage(math.min(simdefs.TRACKER_MAXCOUNT, trackerNumber))
-    -- local animWidget = hud._screen.binder.alarm.binder.trackerAnimFive
     local colourIndex = math.min(#cdefs.TRACKER_COLOURS, stage + 1)
     local colour = cdefs.TRACKER_COLOURS[colourIndex]
 
@@ -525,14 +524,6 @@ local function refreshTrackerAdvance(hud, trackerNumber)
 
     hud._screen.binder.alarm:setTooltip(tip)
 
-    -- Refresh the alarm ring.
-    -- animWidget:setColor(colour:unpack())
-    -- if trackerNumber >= simdefs.TRACKER_MAXCOUNT then
-    --     animWidget:setAnim("idle_5")
-    -- else
-    --     animWidget:setAnim("idle_" .. trackerNumber % simdefs.TRACKER_INCREMENT)
-    -- end
-
     refreshTrackerMusic(hud, stage)
 end
 
@@ -549,22 +540,6 @@ local function runTrackerAdvance(hud, txt, delta, tracker, subtxt)
                 hud._screen.binder.alarm.binder.alarmRing1:setVisible(false)
             end
         end)
-
-    -- local animWidget = hud._screen.binder.alarm.binder.trackerAnimFive
-    -- for i = 1, delta do
-    --     MOAIFmodDesigner.playSound(cdefs.SOUND_HUD_ADVANCE_TRACKER)
-
-    --     local stage = hud._game.simCore:getTrackerStage(math.min(simdefs.TRACKER_MAXCOUNT, tracker + i))
-    --     local colourIndex = math.min(#cdefs.TRACKER_COLOURS, stage + 1)
-    --     local colour = cdefs.TRACKER_COLOURS[colourIndex]
-    --     animWidget:setColor(colour:unpack())
-    --     local fillNum = (tracker + i) % simdefs.TRACKER_INCREMENT
-    --     if fillNum == 0 then
-    --         rig_util.waitForAnim(animWidget:getProp(), "fill_5")
-    --     else
-    --         rig_util.waitForAnim(animWidget:getProp(), "fill_" .. fillNum)
-    --     end
-    -- end
 
     refreshTrackerAdvance(hud, tracker + delta)
 
@@ -2069,6 +2044,7 @@ function hud:init(game)
 
     self._screen.binder.alarm.binder.alarmRing1:setVisible(false)
     self._screen.binder.alarm.binder.alarmRing1:setColor(1, 0, 0, 1)
+    self._screen.binder.alarm.binder.alarmLvlTitle:setText(STRINGS.SA.HUD.ALARM_TITLE)
 
     -- Time attack enabled!
     if (game.params.difficultyOptions.timeAttack or 0) > 0 then

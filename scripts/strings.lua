@@ -1,5 +1,5 @@
 return {
-    OPTIONS = {
-        TEST = "TEST"
+    HUD = {
+        ALARM_TITLE = "INC FIREWALL LEVEL"
     }
 }

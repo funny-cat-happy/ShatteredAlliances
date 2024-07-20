@@ -14,11 +14,7 @@ end
 
 
 local function load(modApi, options, params, options_raw)
-	-- local function initStrings(modApi)
-	-- local dataPath = modApi:getDataPath(
-	-- local scriptPath = modApi:getScriptPath()
-	-- local MOD_STRINGS = include(scriptPath .. "/strings")
-	-- modApi:addStrings(dataPath, "SHATTEREDALLIANCES", MOD_STRINGS)
+
 end
 local function lateInit(modApi)
 	-- local serverdefs = include("modules/serverdefs")
@@ -48,6 +44,13 @@ local function lateInit(modApi)
 	-- end
 end
 
+local function initStrings(modApi)
+	local dataPath = modApi:getDataPath()
+	local scriptPath = modApi:getScriptPath()
+	local MOD_STRINGS = include(scriptPath .. "/strings")
+	modApi:addStrings(dataPath, "SA", MOD_STRINGS)
+end
+
 
 return {
 	earlyInit = earlyInit,
@@ -55,5 +58,5 @@ return {
 	load = load,
 	lateInit = lateInit,
 	-- lateLoad = lateLoad,
-	-- initStrings = initStrings
+	initStrings = initStrings,
 }
