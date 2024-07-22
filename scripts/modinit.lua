@@ -9,7 +9,6 @@ local function init(modApi)
 	modApi.requirements = {}
 	local dataPath = modApi:getDataPath()
 	KLEIResourceMgr.MountPackage(dataPath .. "/buildout/gui.kwad", "data")
-	include(SA_PATH .. "/clientModify/hud/hud")
 end
 
 
@@ -17,6 +16,7 @@ local function load(modApi, options, params, options_raw)
 
 end
 local function lateInit(modApi)
+	include(SA_PATH .. "/clientModify/hud/hud")
 	-- local serverdefs = include("modules/serverdefs")
 	-- serverdefs.GENERAL_MISSIONS.TERMINALS.icon = "gui/collaboration.png"
 	-- serverdefs.SITUATIONS.executive_terminals.ui.icon = "collaboration.png"
