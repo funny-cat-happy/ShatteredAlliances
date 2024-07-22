@@ -13,35 +13,10 @@ end
 
 
 local function load(modApi, options, params, options_raw)
-
+	modApi:insertUIElements(include(SA_PATH .. "/clientModify/hud/hud_modify"))
 end
 local function lateInit(modApi)
 	include(SA_PATH .. "/clientModify/hud/hud")
-	-- local serverdefs = include("modules/serverdefs")
-	-- serverdefs.GENERAL_MISSIONS.TERMINALS.icon = "gui/collaboration.png"
-	-- serverdefs.SITUATIONS.executive_terminals.ui.icon = "collaboration.png"
-	-- log:write(util.stringize(serverdefs.SITUATIONS.executive_terminals.ui.icon))
-	-- log:flush()
-	-- local scriptPath = modApi:getScriptPath()
-	-- local stateMainMenu = include('states/state-main-menu')
-	-- local mui = include("mui/mui")
-	-- local screen
-	-- local oldLoad = stateMainMenu.onLoad
-	-- stateMainMenu.onLoad = function(self)
-	-- 	oldLoad(self)
-	-- 	screen = mui.createScreen("test.lua")
-	-- 	mui.activateScreen(screen)
-	-- 	screen.binder.alarm.binder.alarmRing1:setVisible(false)
-	-- 	screen.binder.alarm.binder.alarmRing1:setColor(1, 0, 0, 1)
-	-- 	screen.binder.alarm.binder.alarmRing1:setAnim("idle")
-	-- 	screen.binder.alarm.binder.alarmRing1:setVisible(true)
-	-- 	screen.binder.alarm.binder.alarmRing1:getProp():setListener(KLEIAnim.EVENT_ANIM_END,
-	-- 		function(anim, animname)
-	-- 			if animname == "idle" then
-	-- 				screen.binder.alarm.binder.alarmRing1:setVisible(false)
-	-- 			end
-	-- 		end)
-	-- end
 end
 
 local function initStrings(modApi)
