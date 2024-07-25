@@ -75,6 +75,8 @@ end
 local oldRefreshHud = hud.refreshHud
 hud.refreshHud = function(self)
     oldRefreshHud(self)
+    local sim = self._game.simCore
+    SALog(self._game.playerIndex)
     self._screen.binder.alarm.binder.advancedAlarm:setVisible(true)
 end
 
@@ -115,28 +117,25 @@ hud.onSimEvent = function(self, ev)
 
             local txt, color, sound
             local corpTurn = false
-            -- if currentPlayer:isNPC() then
-            --     txt = STRINGS.UI.ENEMY_ACTIVITY
-            --     color = { r = 1, g = 0, b = 0, a = 1 }
-            --     sound = cdefs.SOUND_HUD_GAME_ACTIVITY_CORP
-            --     corpTurn = true
-            -- else
-            --     txt = STRINGS.UI.AGENT_ACTIVITY
-            --     color = { r = 140 / 255, g = 255 / 255, b = 255 / 255, a = 1 }
-            --     sound = cdefs.SOUND_HUD_GAME_ACTIVITY_AGENT
-            -- end
             if currentPlayer:isNPC() then
-                txt = STRINGS.SA.HUD.ALLIANCE_ACTIVITY
-                color = { r = 84 / 255, g = 255 / 255, b = 159 / 255, a = 1 }
-                sound = cdefs.SOUND_HUD_GAME_ACTIVITY_CORP
-                corpTurn = true
+                if currentPlayer:isAlly() then
+                    txt = STRINGS.SA.HUD.ALLIANCE_ACTIVITY
+                    color = { r = 84 / 255, g = 255 / 255, b = 159 / 255, a = 1 }
+                    sound = cdefs.SOUND_HUD_GAME_ACTIVITY_CORP
+                    corpTurn = true
+                else
+                    txt = STRINGS.UI.ENEMY_ACTIVITY
+                    color = { r = 1, g = 0, b = 0, a = 1 }
+                    sound = cdefs.SOUND_HUD_GAME_ACTIVITY_CORP
+                    corpTurn = true
+                end
             else
                 txt = STRINGS.UI.AGENT_ACTIVITY
                 color = { r = 140 / 255, g = 255 / 255, b = 255 / 255, a = 1 }
                 sound = cdefs.SOUND_HUD_GAME_ACTIVITY_AGENT
             end
 
-            local turn = math.ceil((sim:getTurnCount() + 1) / 2)
+            local turn = math.ceil((sim:getTurnCount() + 1) / 3)
 
             sa_util.getLocalValue(oldOnsimEvent, "startTitleSwipe", 1)(self, txt, color, sound, corpTurn, turn)
             rig_util.wait(30)
