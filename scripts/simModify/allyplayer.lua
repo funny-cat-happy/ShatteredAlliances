@@ -102,7 +102,7 @@ function allyplayer:spawnGuards(sim, unitType, numGuards)
         end
 
         if #units == 1 then
-            sim:dispatchEvent(simdefs.EV_SHOW_DIALOG, { dialog = "threatDialog", dialogParams = { units[1] } })
+            sim:dispatchEvent(simdefs.EV_SHOW_DIALOG, { dialog = "reinforceDialog", dialogParams = { units[1] } })
         end
 
         for i, unit in ipairs(units) do
@@ -446,7 +446,7 @@ function allyplayer:thinkHard(sim)
     end
 
     self:cleanUpSituations()
-
+    self:doTrackerSpawn(sim, 1, simdefs.TRACKER_SPAWN_UNIT_ENFORCER)
     sim:endTurn()
 end
 

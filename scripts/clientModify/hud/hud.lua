@@ -75,8 +75,6 @@ end
 local oldRefreshHud = hud.refreshHud
 hud.refreshHud = function(self)
     oldRefreshHud(self)
-    local sim = self._game.simCore
-    SALog(self._game.playerIndex)
     self._screen.binder.alarm.binder.advancedAlarm:setVisible(true)
 end
 

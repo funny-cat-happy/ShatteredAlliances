@@ -17,6 +17,8 @@ local function load(modApi, options, params, options_raw)
 end
 local function lateInit(modApi)
 	include(SA_PATH .. "/clientModify/hud/hud")
+	include(SA_PATH .. "/clientModify/gameplay/modal_thread")
+
 	include(SA_PATH .. "/simModify/aiplayer")
 	include(SA_PATH .. "/simModify/allyplayer")
 	include(SA_PATH .. "/simModify/engine")
