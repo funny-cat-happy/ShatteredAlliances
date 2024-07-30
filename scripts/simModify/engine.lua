@@ -65,3 +65,11 @@ simengine.applyAction = function(self, action)
         action.choices[i] = self._choices[i]
     end
 end
+
+simengine.getNPC = function(self)
+    for i, player in ipairs(self._players) do
+        if player:isNPC() and not player:isAlly() then
+            return player
+        end
+    end
+end

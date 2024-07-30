@@ -2,5 +2,8 @@ return {
     HUD = {
         ALARM_TITLE = "INC FIREWALL LEVEL",
         ALLIANCE_ACTIVITY = "ALLIANCE ACTIVITY",
+    },
+    GUARDS = {
+        ALLY_ELITE_ENFORCER = "ALLY ENFORCER",
     }
 }

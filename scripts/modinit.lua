@@ -9,16 +9,24 @@ local function init(modApi)
 	modApi.requirements = {}
 	local dataPath = modApi:getDataPath()
 	KLEIResourceMgr.MountPackage(dataPath .. "/buildout/gui.kwad", "data")
+
+	include(SA_PATH .. "/simModify/btree/allybrain")
 end
 
 
 local function load(modApi, options, params, options_raw)
 	modApi:insertUIElements(include(SA_PATH .. "/clientModify/hud/hud_modify"))
+	local guarddefs = include(SA_PATH .. "/simModify/unitdefs/guarddefs")
+	for name, guarddef in pairs(guarddefs) do
+		modApi:addGuardDef(name, guarddef)
+	end
 end
 local function lateInit(modApi)
+	--modify game hud
 	include(SA_PATH .. "/clientModify/hud/hud")
 	include(SA_PATH .. "/clientModify/gameplay/modal_thread")
 
+	--add allyplayer
 	include(SA_PATH .. "/simModify/aiplayer")
 	include(SA_PATH .. "/simModify/allyplayer")
 	include(SA_PATH .. "/simModify/engine")
