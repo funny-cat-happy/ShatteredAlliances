@@ -30,6 +30,9 @@ local function lateInit(modApi)
 	include(SA_PATH .. "/simModify/aiplayer")
 	include(SA_PATH .. "/simModify/allyplayer")
 	include(SA_PATH .. "/simModify/engine")
+
+	--add debug menu
+	include(SA_PATH .. "/clientModify/fe/cheatmenu")
 end
 
 local function initStrings(modApi)
