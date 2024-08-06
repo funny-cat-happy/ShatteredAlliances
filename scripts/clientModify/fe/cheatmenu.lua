@@ -2,9 +2,9 @@ local cheatmenu = include("fe/cheatmenu")
 local util = include("client_util")
 local sa_util = include(SA_PATH .. '/modulesModify/util')
 
-local cheat_item = sa_util.getLocalValue(cheatmenu, "cheat_item")
-
 local oldCheatMenuInit = cheatmenu.menu.init
+-- local cheat_item = sa_util.getLocalValue(oldCheatMenuInit, "cheat_item")
+sa_util.debugFunc(sa_util.getLocalValue, oldCheatMenuInit, "cheat_item",5)
 cheatmenu.menu.init = function(self, screen, debugenv)
     self.screen = screen
     self.debugenv = debugenv
