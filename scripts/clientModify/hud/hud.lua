@@ -1,5 +1,4 @@
 local hud = include("hud/hud")
-local sa_util = include(SA_PATH .. '/modulesModify/util')
 local util = include("client_util")
 local modalDialog = include("states/state-modal-dialog")
 local modal_thread = include("gameplay/modal_thread")
@@ -39,7 +38,7 @@ local function newRefreshTrackerAdvance(hud, trackerNumber)
     end
 
     hud._screen.binder.alarm:setTooltip(tip)
-    sa_util.getLocalValue(hud.onSimEvent, "refreshTrackerMusic")(hud, stage)
+    SAUtil.getLocalValue(hud.onSimEvent, "refreshTrackerMusic")(hud, stage)
 end
 
 local function newRunTrackerAdvance(hud, txt, delta, tracker, subtxt)
@@ -87,13 +86,13 @@ hud.onSimEvent = function(self, ev)
         self._mainframe_panel:onSimEvent(ev)
     end
 
-    local mfMode = sa_util.getLocalValue(oldOnsimEvent, "checkForMainframeEvent", 1)(simdefs, ev.eventType, ev.eventData)
-    if mfMode == sa_util.getLocalValue(oldOnsimEvent, "SHOW_MAINFRAME", 1) then
+    local mfMode = SAUtil.getLocalValue(oldOnsimEvent, "checkForMainframeEvent", 1)(simdefs, ev.eventType, ev.eventData)
+    if mfMode == SAUtil.getLocalValue(oldOnsimEvent, "SHOW_MAINFRAME", 1) then
         if not self._isMainframe then
             self:showMainframe()
         end
         self._mainframe_panel:onSimEvent(ev)
-    elseif mfMode == sa_util.getLocalValue(oldOnsimEvent, "HIDE_MAINFRAME", 1) and self._isMainframe then
+    elseif mfMode == SAUtil.getLocalValue(oldOnsimEvent, "HIDE_MAINFRAME", 1) and self._isMainframe then
         self:hideMainframe()
     end
 
@@ -135,9 +134,9 @@ hud.onSimEvent = function(self, ev)
 
             local turn = math.ceil((sim:getTurnCount() + 1) / 3)
 
-            sa_util.getLocalValue(oldOnsimEvent, "startTitleSwipe", 1)(self, txt, color, sound, corpTurn, turn)
+            SAUtil.getLocalValue(oldOnsimEvent, "startTitleSwipe", 1)(self, txt, color, sound, corpTurn, turn)
             rig_util.wait(30)
-            sa_util.getLocalValue(oldOnsimEvent, "stopTitleSwipe", 1)(self)
+            SAUtil.getLocalValue(oldOnsimEvent, "stopTitleSwipe", 1)(self)
         end
         local selectedUnit = self:getSelectedUnit()
         if selectedUnit and selectedUnit:isValid() then
@@ -148,7 +147,7 @@ hud.onSimEvent = function(self, ev)
     elseif ev.eventType == simdefs.EV_TURN_END then
         self:hideItemsPanel()
         if ev.eventData and not ev.eventData:isNPC() then
-            sa_util.getLocalValue(oldOnsimEvent, "stopTitleSwipe", 1)(self)
+            SAUtil.getLocalValue(oldOnsimEvent, "stopTitleSwipe", 1)(self)
         end
     elseif ev.eventType == simdefs.EV_ADVANCE_TRACKER then
         if ev.eventData.alarmOnly or (ev.eventData.tracker + ev.eventData.delta >= simdefs.TRACKER_MAXCOUNT) then
@@ -163,7 +162,7 @@ hud.onSimEvent = function(self, ev)
         end
     elseif ev.eventType == "used_radio" then
         local stage = self._game.simCore:getTrackerStage(ev.eventData.tracker)
-        sa_util.getLocalValue(oldOnsimEvent, "refreshTrackerMusic", 1)(self, stage)
+        SAUtil.getLocalValue(oldOnsimEvent, "refreshTrackerMusic", 1)(self, stage)
     elseif ev.eventType == simdefs.EV_LOOT_ACQUIRED and not ev.eventData.silent then
         if not self._game.debugStep then
             self._game.viz:addThread(modal_thread.programDialog(self._game.viz,
@@ -178,21 +177,21 @@ hud.onSimEvent = function(self, ev)
         FMODMixer:pushMix("nomusic")
         MOAIFmodDesigner.playSound("SpySociety/AMB/finalroom", "AMB3")
     elseif ev.eventType == simdefs.EV_FADE_TO_BLACK then
-        sa_util.getLocalValue(oldOnsimEvent, "fadeToBlack", 1)(self)
+        SAUtil.getLocalValue(oldOnsimEvent, "fadeToBlack", 1)(self)
     elseif ev.eventType == simdefs.EV_CREDITS_REFRESH then
-        sa_util.getLocalValue(oldOnsimEvent, "refreshHudValues", 1)(self)
+        SAUtil.getLocalValue(oldOnsimEvent, "refreshHudValues", 1)(self)
     elseif ev.eventType == simdefs.EV_SHORT_WALLS then
         if not self._isShortWall then
             self:setShortWalls(true)
         end
     elseif ev.eventType == simdefs.EV_GRAFTER_DIALOG then
-        return sa_util.getLocalValue(oldOnsimEvent, "showGrafterDialog", 1)(self, ev.eventData.itemDef,
+        return SAUtil.getLocalValue(oldOnsimEvent, "showGrafterDialog", 1)(self, ev.eventData.itemDef,
             ev.eventData.userUnit, ev.eventData.drill)
     elseif ev.eventType == simdefs.EV_INSTALL_AUGMENT_DIALOG then
-        return sa_util.getLocalValue(oldOnsimEvent, "showInstallAugmentDialog", 1)(self, ev.eventData.item,
+        return SAUtil.getLocalValue(oldOnsimEvent, "showInstallAugmentDialog", 1)(self, ev.eventData.item,
             ev.eventData.unit)
     elseif ev.eventType == simdefs.EV_EXEC_DIALOG then
-        return sa_util.getLocalValue(oldOnsimEvent, "showExecDialog", 1)(self, ev.eventData.headerTxt,
+        return SAUtil.getLocalValue(oldOnsimEvent, "showExecDialog", 1)(self, ev.eventData.headerTxt,
             ev.eventData.bodyTxt, ev.eventData.options,
             ev.eventData.corps, ev.eventData.names)
     elseif ev.eventType == simdefs.EV_ITEMS_PANEL then

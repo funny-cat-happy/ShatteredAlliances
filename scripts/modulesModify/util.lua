@@ -50,8 +50,10 @@ local function printUpvalue(fn, condition, maxDepth, callChain)
     until upvName == nil
 end
 
-return {
+local SAUtil = {
     getLocalValue = getLocalValue,
     debugFunc = debugFunc,
     printUpvalue = printUpvalue,
 }
+rawset(_G, "SAUtil", rawget(_G, "SAUtil") or SAUtil)
+return SAUtil

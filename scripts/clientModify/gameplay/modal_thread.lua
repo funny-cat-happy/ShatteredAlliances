@@ -2,10 +2,9 @@ local dialogs = include("gameplay/modal_thread")
 local modalDialog = include("states/state-modal-dialog")
 local rig_util = include("gameplay/rig_util")
 local mui = include("mui/mui")
-local sa_util = include(SA_PATH .. '/modulesModify/util')
 local util = include("modules.util")
 
-local modal_thread = sa_util.getLocalValue(dialogs.alarmDialog.init, "modal_thread", 1)
+local modal_thread = SAUtil.getLocalValue(dialogs.alarmDialog.init, "modal_thread", 1)
 
 
 local reinforceDialog = class(modal_thread)
