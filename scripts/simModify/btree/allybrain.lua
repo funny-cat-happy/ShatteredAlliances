@@ -7,7 +7,7 @@ local simdefs = include("sim/simdefs")
 local speechdefs = include("sim/speechdefs")
 local mathutil = include("modules/mathutil")
 local simquery = include("sim/simquery")
-local CommonBrain = include("sim/btree/commonbrain")
+local AllyBrain = include(SA_PATH.."/simModify/btree/allybraindefine")
 
 require("class")
 
@@ -15,9 +15,8 @@ local GuardBrain = class(Brain, function(self)
     Brain.init(self, "AllyBrain",
         btree.Selector(
             {
-                CommonBrain.RangedCombat(),
-                CommonBrain.Investigate(),
-                CommonBrain.Patrol(),
+                AllyBrain.RangedCombat(),
+                AllyBrain.Investigate(),
             })
     )
 end)

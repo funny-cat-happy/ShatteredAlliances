@@ -1,4 +1,3 @@
-local simdefs = include("sim/simdefs")
 local cheatmenu = include("fe/cheatmenu")
 
 
@@ -19,6 +18,4 @@ function give_spell:init()
     cheatmenu.cheat_submenu.init(self, "Give spell", submenu)
 end
 
-if rawget(simdefs, "CHEATS") then
-    table.insert(simdefs.CHEATS, give_spell())
-end
+return give_spell

@@ -1,3 +1,4 @@
+---@class engine
 local simengine = include("sim/engine")
 local allyplayer = include(SA_PATH .. "/simModify/allyplayer")
 local simactions = include("sim/simactions")
@@ -69,6 +70,15 @@ end
 simengine.getNPC = function(self)
     for i, player in ipairs(self._players) do
         if player:isNPC() and not player:isAlly() then
+            return player
+        end
+    end
+end
+
+
+simengine.getAlly = function(self)
+    for i, player in ipairs(self._players) do
+        if player:getTraits().playerType and player:getTraits().playerType == simdefs.PLAYER_TYPE.ALLY then
             return player
         end
     end

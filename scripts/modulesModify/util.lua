@@ -19,7 +19,7 @@ local function debugFunc(fn, ...)
         fn(unpack(args))
     end, errorHandler)
     if status then
-        print("Function executed successfully")
+        SALog("Function executed successfully")
     end
 end
 
@@ -56,4 +56,3 @@ local SAUtil = {
     printUpvalue = printUpvalue,
 }
 rawset(_G, "SAUtil", rawget(_G, "SAUtil") or SAUtil)
-return SAUtil

@@ -49,6 +49,7 @@ function allyplayer:init(sim)
     sim:addTrigger(simdefs.TRG_ALARM_STATE_CHANGE, self)
 
     sim:forEachCell(function(c) self:glimpseCell(sim, c) end)
+    self._traits.playerType = simdefs.PLAYER_TYPE.ALLY
 end
 
 function allyplayer:createGuard(sim, unitType)
@@ -446,7 +447,6 @@ function allyplayer:thinkHard(sim)
     end
 
     self:cleanUpSituations()
-    self:doTrackerSpawn(sim, 1, simdefs.TRACKER_SPAWN_UNIT_ENFORCER)
     sim:endTurn()
 end
 

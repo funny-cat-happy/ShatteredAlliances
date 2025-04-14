@@ -5,5 +5,8 @@ return {
     },
     GUARDS = {
         ALLY_ELITE_ENFORCER = "ALLY ENFORCER",
+    },
+    LEVEL = {
+        HUD_WARN_EXIT_MISSION_FACTORY = "Are you sure you want to leave? You haven't destroy the control center yet."
     }
 }
