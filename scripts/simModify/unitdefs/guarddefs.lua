@@ -25,8 +25,9 @@ local npc_templates =
         traits = util.extend(commondefs.basic_guard_traits)
             {
                 heartMonitor = "enabled",
-                enforcer = true,
+                enforcer = false,
                 dashSoundRange = 8,
+                LOSarc = 2 * math.pi,
             },
         speech = speechdefs.NPC,
         voices = { "KO_Heavy" },

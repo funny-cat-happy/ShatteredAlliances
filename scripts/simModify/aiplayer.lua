@@ -10,3 +10,6 @@ aiplayer.init = function(self, sim)
     oldInit(self, sim)
     self._traits.playerType = simdefs.PLAYER_TYPE.AI
 end
+function aiplayer:getPlayerAlly(sim)
+    return nil
+end

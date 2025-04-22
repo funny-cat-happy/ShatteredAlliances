@@ -5,3 +5,13 @@ pcplayer.init = function(self, sim, agency)
     oldInit(self, sim, agency)
     self._traits.playerType = simdefs.PLAYER_TYPE.PC
 end
+
+---comment
+---@param sim engine
+function pcplayer:getPlayerAlly(sim)
+    return sim:getAlly()
+end
+
+function pcplayer:isAlly()
+    return false
+end

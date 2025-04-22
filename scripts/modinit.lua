@@ -5,6 +5,7 @@ local function earlyInit(modApi)
 	rawset(_G, "SA_PATH", rawget(_G, "SA_PATH") or scriptPath)
 	include(SA_PATH .. '/modulesModify/log')
 	include(SA_PATH .. '/modulesModify/util')
+	include(SA_PATH .. '/clientModify/gameplay/boardrig')
 end
 local function init(modApi)
 	modApi.requirements = { "Sim Constructor", "Expanded Cheats" }
@@ -54,6 +55,7 @@ local function lateInit(modApi)
 	include(SA_PATH .. "/clientModify/gameplay/modal_thread")
 
 	--add allyplayer
+	include(SA_PATH .. "/simModify/simplayer")
 	include(SA_PATH .. "/simModify/aiplayer")
 	include(SA_PATH .. "/simModify/allyplayer")
 	include(SA_PATH .. "/simModify/pcplayer")

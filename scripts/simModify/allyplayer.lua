@@ -48,7 +48,7 @@ function allyplayer:init(sim)
     sim:addTrigger(simdefs.TRG_START_TURN, self)
     sim:addTrigger(simdefs.TRG_ALARM_STATE_CHANGE, self)
 
-    sim:forEachCell(function(c) self:glimpseCell(sim, c) end)
+    -- sim:forEachCell(function(c) self:glimpseCell(sim, c) end)
     self._traits.playerType = simdefs.PLAYER_TYPE.ALLY
 end
 
@@ -665,6 +665,26 @@ function allyplayer:onTrigger(sim, evType, evData)
     elseif evType == simdefs.TRG_ALARM_STATE_CHANGE then
         self:tickAllBrains()
     end
+end
+
+function allyplayer:getPlayerAlly(sim)
+    return sim:getPC()
+end
+
+-- local oldMarkSeen = allyplayer.markSeen
+
+-- function allyplayer:markSeen(sim, cellx, celly)
+--     oldMarkSeen(self, sim, cellx, celly)
+--     local allyplayer = self:getPlayerAlly(sim)
+--     allyplayer:markSeen(sim, cellx, celly)
+-- end
+
+local oldMarkUnseen = allyplayer.markUnseen
+
+function allyplayer:markUnseen(sim, cellx, celly)
+    oldMarkUnseen(self, sim, cellx, celly)
+    local allyplayer = self:getPlayerAlly(sim)
+    allyplayer:markUnseen(sim, cellx, celly)
 end
 
 return allyplayer

@@ -83,3 +83,20 @@ simengine.getAlly = function(self)
         end
     end
 end
+
+function simengine:canPlayerSee(player, x, y)
+    local allyPlayer = player:getPlayerAlly(self)
+    if allyPlayer then
+        for i, playerUnit in ipairs(allyPlayer:getUnits()) do
+            if self:canUnitSee(playerUnit, x, y) then
+                return true
+            end
+        end
+    end
+    for i, playerUnit in ipairs(player:getUnits()) do
+        if self:canUnitSee(playerUnit, x, y) then
+            return true
+        end
+    end
+    return false
+end
