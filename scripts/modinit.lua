@@ -5,15 +5,21 @@ local function earlyInit(modApi)
 	rawset(_G, "SA_PATH", rawget(_G, "SA_PATH") or scriptPath)
 	include(SA_PATH .. '/modulesModify/log')
 	include(SA_PATH .. '/modulesModify/util')
-	include(SA_PATH .. '/clientModify/gameplay/boardrig')
 end
 local function init(modApi)
 	modApi.requirements = { "Sim Constructor", "Expanded Cheats" }
 	local dataPath = modApi:getDataPath()
 	KLEIResourceMgr.MountPackage(dataPath .. "/buildout/gui.kwad", "data")
 
+	include(SA_PATH .. "/simModify/btree/actions")
+	include(SA_PATH .. "/simModify/btree/conditions")
 	include(SA_PATH .. "/simModify/btree/allybrain")
+
 	include(SA_PATH .. "/clientModify/fe/cheatmenu")
+
+	include(SA_PATH .. '/clientModify/gameplay/boardrig')
+	include(SA_PATH .. '/clientModify/gameplay/agentrig')
+
 	local simdefs = include(SA_PATH .. "/simModify/simdefs")
 	for k, v in pairs(simdefs) do
 		modApi:addSimdef(k, v)
@@ -22,7 +28,8 @@ end
 
 
 local function load(modApi, options, params, options_raw)
-	modApi:insertUIElements(include(SA_PATH .. "/clientModify/hud/hud_modify"))
+	modApi:insertUIElements(include(SA_PATH .. "/clientModify/hud/hud_insert"))
+	modApi:modifyUIElements(include(SA_PATH .. "/clientModify/hud/hud_modification"))
 	local guarddefs = include(SA_PATH .. "/simModify/unitdefs/guarddefs")
 	for name, guarddef in pairs(guarddefs) do
 		modApi:addGuardDef(name, guarddef)
@@ -52,6 +59,9 @@ end
 local function lateInit(modApi)
 	--modify game hud
 	include(SA_PATH .. "/clientModify/hud/hud")
+	include(SA_PATH .. "/clientModify/hud/agent_panel")
+	include(SA_PATH .. "/clientModify/hud/mainframe_panel")
+	include(SA_PATH .. "/clientModify/hud/home_panel")
 	include(SA_PATH .. "/clientModify/gameplay/modal_thread")
 
 	--add allyplayer

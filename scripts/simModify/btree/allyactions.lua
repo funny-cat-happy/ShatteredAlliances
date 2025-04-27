@@ -66,7 +66,7 @@ function Actions.ShootAtTarget(sim, unit)
     if not unit:getBrain():getTarget() then
         return simdefs.BSTATE_FAILED
     end
-    local target = unit:getBrain():getTarget()        --we should only have the target if we can see them
+    local target = unit:getBrain():getTarget()            --we should only have the target if we can see them
     local canShoot = unit:canReact() or
         unit:getBrain():getSenses():hasLostTarget(target) --if they run into cover and then back out, they need to get shot
     if canShoot and unit:isAiming() and target:isValid() then

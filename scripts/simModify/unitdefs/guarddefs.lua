@@ -28,6 +28,12 @@ local npc_templates =
                 enforcer = false,
                 dashSoundRange = 8,
                 LOSarc = 2 * math.pi,
+                sneaking = true,
+                hasHearing = false,
+                walk = true,
+                invisible = false,
+                tagged = true,
+                ally = true
             },
         speech = speechdefs.NPC,
         voices = { "KO_Heavy" },

@@ -1,4 +1,3 @@
-
 -- Copyright (c) 2012 Klei Entertainment Inc.
 -- All Rights Reserved.
 -- SPY SOCIETY.
@@ -10,8 +9,8 @@ local SOUND_RANGE_2 = 8
 local SOUND_RANGE_3 = 12
 local SOUND_RANGE_MAX = 100
 
-local util = include( "modules/util" )
-local cdefs = include( "client_defs" )
+local util = include("modules/util")
+local cdefs = include("client_defs")
 
 ----------------------------------------------------------------
 -- These are the 'default' difficulty options, AKA 'Hard' mode.
@@ -24,95 +23,95 @@ local DEFAULT_DIFFICULTY_OPTIONS =
 	savescumming = false,
 	-- timeAttack mode on?
 	timeAttack = 0,
-    -- Are corp names hidden on the map screen?
-    hideMapDestinations = false,
-    -- Are interest points drawn without observing guards?
-    drawInterestPoints = false,
-    -- Are danger zones for enemy LOS rendered?
-    dangerZones = true,
-    -- Are you allowed to melee from the front?
-    meleeFromFront = true,
-    -- Is the alarm auto-incremented each PC turn?
-    autoAlarm = true,
-    -- Alarm multiplier, each tracker increases is multiplied by this factor.
-    alarmMultiplier = 1,
-    -- How many "rooms" are spawned during level-gen; roughly determines level size.
-    roomCount = 10,
-    -- Agency starting credits.
-    startingCredits = 500,
-    -- Agency starting power.
-    startingPower = 10,
-    -- Determines how patrols are generated
-    beginnerPatrols = false,
-    -- How many total CPUs are dispersed to consoles per level.
-    powerPerLevel = 10,
-    -- How many total consoles exist per level.
-    consolesPerLevel = 5,
-    -- How many total safes exist per level.
-    safesPerLevel = 5,
-    --- Daemon profusion in the level
-    daemonQuantity = "NORMAL",
-    -- Multiplier to credits gained.
-    creditMultiplier = 0.75,
-    -- Multiplier to the number of firewalls assigned to mainframe items.
-    firewallMultiplier = 2.0,
-    -- Rewinds available per level
-    rewindsLeft = 1,
-    -- Additive multiplier to KO duration for guards
-    koDuration = 0,
+	-- Are corp names hidden on the map screen?
+	hideMapDestinations = false,
+	-- Are interest points drawn without observing guards?
+	drawInterestPoints = false,
+	-- Are danger zones for enemy LOS rendered?
+	dangerZones = true,
+	-- Are you allowed to melee from the front?
+	meleeFromFront = true,
+	-- Is the alarm auto-incremented each PC turn?
+	autoAlarm = true,
+	-- Alarm multiplier, each tracker increases is multiplied by this factor.
+	alarmMultiplier = 1,
+	-- How many "rooms" are spawned during level-gen; roughly determines level size.
+	roomCount = 10,
+	-- Agency starting credits.
+	startingCredits = 500,
+	-- Agency starting power.
+	startingPower = 10,
+	-- Determines how patrols are generated
+	beginnerPatrols = false,
+	-- How many total CPUs are dispersed to consoles per level.
+	powerPerLevel = 10,
+	-- How many total consoles exist per level.
+	consolesPerLevel = 5,
+	-- How many total safes exist per level.
+	safesPerLevel = 5,
+	--- Daemon profusion in the level
+	daemonQuantity = "NORMAL",
+	-- Multiplier to credits gained.
+	creditMultiplier = 0.75,
+	-- Multiplier to the number of firewalls assigned to mainframe items.
+	firewallMultiplier = 2.0,
+	-- Rewinds available per level
+	rewindsLeft = 1,
+	-- Additive multiplier to KO duration for guards
+	koDuration = 0,
 	-- Determines the alarm types
 	alarmTypes = "NORMAL",
-    -- Hours in teh campaign ( math.huge implies endless mode )
-    maxHours = config.CAMPAIGN_HOURS,
-    -- Does the alarm raise 1 when units are KOed?
-    alarmRaisedOnKO = false,
-    -- Determines the guard spawn table
-    spawnTable = "NORMAL",   
-    -- Does the final level have the countermeasures daemon? 
-    countermeasuresFinal = true, 
+	-- Hours in teh campaign ( math.huge implies endless mode )
+	maxHours = config.CAMPAIGN_HOURS,
+	-- Does the alarm raise 1 when units are KOed?
+	alarmRaisedOnKO = false,
+	-- Determines the guard spawn table
+	spawnTable = "NORMAL",
+	-- Does the final level have the countermeasures daemon?
+	countermeasuresFinal = true,
 }
-
+---@class systemSimdefs
 local _M =
 {
 	-- Logging flags
-	LOG_SPAM = "LOG_SPAM",
-	LOG_PATH = "LOG_PATH", -- AI pathfinding
-	LOG_AI = "LOG_AI", -- AI behaviour
-	LOG_SIT = "LOG_SIT",	--situations
-	LOG_TUTORIAL = "LOG_TUTORIAL", -- Tutorial
-	LOG_PROCGEN = "LOG_PROCGEN", -- Level procgen spew
-	LOG_SENSE = "LOG_SENSE", -- AI senses spew
+	LOG_SPAM                      = "LOG_SPAM",
+	LOG_PATH                      = "LOG_PATH", -- AI pathfinding
+	LOG_AI                        = "LOG_AI", -- AI behaviour
+	LOG_SIT                       = "LOG_SIT", --situations
+	LOG_TUTORIAL                  = "LOG_TUTORIAL", -- Tutorial
+	LOG_PROCGEN                   = "LOG_PROCGEN", -- Level procgen spew
+	LOG_SENSE                     = "LOG_SENSE", -- AI senses spew
 
-	AGENT_LIMIT = 4,
+	AGENT_LIMIT                   = 4,
 
-	DEFAULT_EXITID = 1,
-	EXITID_VENT = 3, 
+	DEFAULT_EXITID                = 1,
+	EXITID_VENT                   = 3,
 
-	MAX_AUGMENT_CAPACITY = 6, -- Absolute max capacity.
-    DEFAULT_AUGMENT_CAPACITY = 4, -- Default capacity.
-	BASE_SKILL_COST = 200,
-	SKILL_COST_EXP = 1.25,
+	MAX_AUGMENT_CAPACITY          = 6, -- Absolute max capacity.
+	DEFAULT_AUGMENT_CAPACITY      = 4, -- Default capacity.
+	BASE_SKILL_COST               = 200,
+	SKILL_COST_EXP                = 1.25,
 
 	-- should be contiguous and east should start at 0 (for conversion to radians)
-	DIR_E = 0,
-	DIR_NE = 1,
-	DIR_N = 2,
-	DIR_NW = 3,
-	DIR_W = 4,
-	DIR_SW = 5,
-	DIR_S = 6,
-	DIR_SE = 7,
-	DIR_MAX = 8, -- not a valid direction
+	DIR_E                         = 0,
+	DIR_NE                        = 1,
+	DIR_N                         = 2,
+	DIR_NW                        = 3,
+	DIR_W                         = 4,
+	DIR_SW                        = 5,
+	DIR_S                         = 6,
+	DIR_SE                        = 7,
+	DIR_MAX                       = 8, -- not a valid direction
 
-	DIR_SIDES = { 0, 2, 4, 6 }, -- E/N/W/S
-	OFFSET_NEIGHBOURS = { -1, -1, 0, -1, 1, -1, -1, 0, 1, 0, -1, 1, 0, 1, 1, 1 },
+	DIR_SIDES                     = { 0, 2, 4, 6 }, -- E/N/W/S
+	OFFSET_NEIGHBOURS             = { -1, -1, 0, -1, 1, -1, -1, 0, 1, 0, -1, 1, 0, 1, 1, 1 },
 
 	--shoulder directions
-	SHOULDER_LEFT = "L",
-	SHOULDER_RIGHT = "R",
+	SHOULDER_LEFT                 = "L",
+	SHOULDER_RIGHT                = "R",
 
 	-- offsets and direction (dx, dy, dir) for all exits adjacent to a cell.
-	ADJACENT_EXITS =
+	ADJACENT_EXITS                =
 	{
 		0, 0, 0,
 		0, 0, 2,
@@ -128,292 +127,292 @@ local _M =
 		0, -1, 4,
 	},
 
-	SEERID_PERIPHERAL = 100000, -- Offset added to unitID to get the seer's periphal seerID.
+	SEERID_PERIPHERAL             = 100000, -- Offset added to unitID to get the seer's periphal seerID.
 
 	-----------------------
 	-- returns to simquery.isWatchedCell
-	
-	CELL_WATCHED = 1, -- Cell in direct vision
-	CELL_NOTICED = 2, -- Cell in peripheral vision
-	CELL_HIDDEN = 3, -- Cell in direct or peripheral vision, but hidden due to cover
+
+	CELL_WATCHED                  = 1, -- Cell in direct vision
+	CELL_NOTICED                  = 2, -- Cell in peripheral vision
+	CELL_HIDDEN                   = 3, -- Cell in direct or peripheral vision, but hidden due to cover
 
 	-----------------------
 	-- returns from simquery.canMove
 
-	CANMOVE_OK = "OK",
-	CANMOVE_DYNAMIC_IMPASS = "Dynamic Impass",
-	CANMOVE_STATIC_IMPASS = "Static Impass",
-	CANMOVE_NOMP = "No MP",
-	CANMOVE_NOEXIT = "No Exit",
-	CANMOVE_INTERRUPTED = "Interrupted",
-	CANMOVE_INVALIDATED = "Invalidated",
-	CANMOVE_NOPATH = "No Path",
-	CANMOVE_PARTIAL_PATH = "Partial Path",
-	CANMOVE_FAILED = "Failed", -- generic failure
+	CANMOVE_OK                    = "OK",
+	CANMOVE_DYNAMIC_IMPASS        = "Dynamic Impass",
+	CANMOVE_STATIC_IMPASS         = "Static Impass",
+	CANMOVE_NOMP                  = "No MP",
+	CANMOVE_NOEXIT                = "No Exit",
+	CANMOVE_INTERRUPTED           = "Interrupted",
+	CANMOVE_INVALIDATED           = "Invalidated",
+	CANMOVE_NOPATH                = "No Path",
+	CANMOVE_PARTIAL_PATH          = "Partial Path",
+	CANMOVE_FAILED                = "Failed", -- generic failure
 
 	---------------
 	-- Action costs	
 
-	DEFAULT_COST = 1, -- Default cost for most things
-	DISABLE_HEART_METER_CPUS = 1,
-	SNEAKING_COST = 1, 
-	DRAGGING_COST = 3, 
-	MIN_DRAGGING_COST = 1.5, 
-	--IMP_DRAGGING_COST = 2, 
-	
+	DEFAULT_COST                  = 1, -- Default cost for most things
+	DISABLE_HEART_METER_CPUS      = 1,
+	SNEAKING_COST                 = 1,
+	DRAGGING_COST                 = 3,
+	MIN_DRAGGING_COST             = 1.5,
+	--IMP_DRAGGING_COST = 2,
+
 	-------------------------------------------------------
 	-- Constants to specify the operation of sim:modifyExit
 
-	EXITOP_OPEN = 1,
-	EXITOP_CLOSE = 2,
-	EXITOP_TOGGLE_DOOR = 3,
-	EXITOP_LOCK = 4,
-	EXITOP_UNLOCK = 5,
-	EXITOP_TOGGLE_LOCK = 6,
-	EXITOP_BREAK_DOOR = 7,
-	EXIT_DISARM = 8,
+	EXITOP_OPEN                   = 1,
+	EXITOP_CLOSE                  = 2,
+	EXITOP_TOGGLE_DOOR            = 3,
+	EXITOP_LOCK                   = 4,
+	EXITOP_UNLOCK                 = 5,
+	EXITOP_TOGGLE_LOCK            = 6,
+	EXITOP_BREAK_DOOR             = 7,
+	EXIT_DISARM                   = 8,
 
 	------------------
 	-- Alarm tracker
 
-	TRACKER_SPAWN_UNIT_ENFORCER = "npc_guard_enforcer_reinforcement", -- Unitdef to spawn in
+	TRACKER_SPAWN_UNIT_ENFORCER   = "npc_guard_enforcer_reinforcement", -- Unitdef to spawn in
 	TRACKER_SPAWN_UNIT_ENFORCER_2 = "npc_guard_enforcer_reinforcement_2", -- Unitdef to spawn in
 
-    CUSTOM_DIFFICULTY = -1,
-    TUTORIAL_DIFFICULTY = 0,
-	NORMAL_DIFFICULTY = 1,
-	EXPERIENCED_DIFFICULTY = 2,
-	HARD_DIFFICULTY = 3,
-	VERY_HARD_DIFFICULTY = 4,
-	ENDLESS_DIFFICULTY  = 5,
-	ENDLESS_PLUS_DIFFICULTY  = 6,
-	TIME_ATTACK_DIFFICULTY  = 7,
+	CUSTOM_DIFFICULTY             = -1,
+	TUTORIAL_DIFFICULTY           = 0,
+	NORMAL_DIFFICULTY             = 1,
+	EXPERIENCED_DIFFICULTY        = 2,
+	HARD_DIFFICULTY               = 3,
+	VERY_HARD_DIFFICULTY          = 4,
+	ENDLESS_DIFFICULTY            = 5,
+	ENDLESS_PLUS_DIFFICULTY       = 6,
+	TIME_ATTACK_DIFFICULTY        = 7,
 
-    DIFFICULTY_OPTIONS =
-    {
-        [0] = util.extend( DEFAULT_DIFFICULTY_OPTIONS )
-        {
-        	savescumming = true,
-            hideMapDestinations = false,
-            drawInterestPoints = true,
-            alarmMultiplier = 0,
-            creditMultiplier = 1.0,
-            firewallMultiplier = 0.5,
-            rewindsLeft = 0,
-            koDuration = 1,
-            alarmTypes = "NONE",
-            spawnTable = "NONE",
-        },
-        [1] = util.extend( DEFAULT_DIFFICULTY_OPTIONS )
-        {
-        	savescumming = true,
-            hideMapDestinations = false,
-            drawInterestPoints = true,
-            creditMultiplier = 1.0,
-            firewallMultiplier = 0.5,
-            rewindsLeft = 5,
-            beginnerPatrols = true,
-            koDuration = 1,
-		    alarmTypes = "EASY",
-            spawnTable = "LESS",
-            daemonQuantity = "LESS",
-            countermeasuresFinal = false, 
-        },
-        [2] = util.extend( DEFAULT_DIFFICULTY_OPTIONS )
-        {
-        	savescumming = false,
-            hideMapDestinations = false,
-            drawInterestPoints = true,
-            creditMultiplier = 1.0,
-            firewallMultiplier = 0.5,
-            rewindsLeft = 3,
-            koDuration = 1,
-        },
-        [3] = DEFAULT_DIFFICULTY_OPTIONS,
-        [4] = util.extend( DEFAULT_DIFFICULTY_OPTIONS )
-        {
-			alarmRaisedOnKO = true,
-			startingPower = 5,
-			dangerZones = false,
-			meleeFromFront = false,
-			spawnTable = "MORE",
-        },
-        [5] = util.extend( DEFAULT_DIFFICULTY_OPTIONS )
-        {
-			maxHours = math.huge,
-        },
-        [6] = util.extend( DEFAULT_DIFFICULTY_OPTIONS )
-        {
-			maxHours = math.huge,
-			alarmRaisedOnKO = true,
-			startingPower = 5,
-			dangerZones = false,
-			meleeFromFront = false,
-			spawnTable = "MORE",
-        },
-        [7] = util.extend( DEFAULT_DIFFICULTY_OPTIONS )
-        {
-        	timeAttack = 2*60*cdefs.SECONDS
-        },
-   
-    },
-
-	ALARM_TYPES = 
+	DIFFICULTY_OPTIONS            =
 	{
-		EASY =  { "booting", "cameras", "firewalls", "guards", "enforcers", "enforcers" }, 
+		[0] = util.extend(DEFAULT_DIFFICULTY_OPTIONS)
+			{
+				savescumming = true,
+				hideMapDestinations = false,
+				drawInterestPoints = true,
+				alarmMultiplier = 0,
+				creditMultiplier = 1.0,
+				firewallMultiplier = 0.5,
+				rewindsLeft = 0,
+				koDuration = 1,
+				alarmTypes = "NONE",
+				spawnTable = "NONE",
+			},
+		[1] = util.extend(DEFAULT_DIFFICULTY_OPTIONS)
+			{
+				savescumming = true,
+				hideMapDestinations = false,
+				drawInterestPoints = true,
+				creditMultiplier = 1.0,
+				firewallMultiplier = 0.5,
+				rewindsLeft = 5,
+				beginnerPatrols = true,
+				koDuration = 1,
+				alarmTypes = "EASY",
+				spawnTable = "LESS",
+				daemonQuantity = "LESS",
+				countermeasuresFinal = false,
+			},
+		[2] = util.extend(DEFAULT_DIFFICULTY_OPTIONS)
+			{
+				savescumming = false,
+				hideMapDestinations = false,
+				drawInterestPoints = true,
+				creditMultiplier = 1.0,
+				firewallMultiplier = 0.5,
+				rewindsLeft = 3,
+				koDuration = 1,
+			},
+		[3] = DEFAULT_DIFFICULTY_OPTIONS,
+		[4] = util.extend(DEFAULT_DIFFICULTY_OPTIONS)
+			{
+				alarmRaisedOnKO = true,
+				startingPower = 5,
+				dangerZones = false,
+				meleeFromFront = false,
+				spawnTable = "MORE",
+			},
+		[5] = util.extend(DEFAULT_DIFFICULTY_OPTIONS)
+			{
+				maxHours = math.huge,
+			},
+		[6] = util.extend(DEFAULT_DIFFICULTY_OPTIONS)
+			{
+				maxHours = math.huge,
+				alarmRaisedOnKO = true,
+				startingPower = 5,
+				dangerZones = false,
+				meleeFromFront = false,
+				spawnTable = "MORE",
+			},
+		[7] = util.extend(DEFAULT_DIFFICULTY_OPTIONS)
+			{
+				timeAttack = 2 * 60 * cdefs.SECONDS
+			},
+
+	},
+
+	ALARM_TYPES                   =
+	{
+		EASY = { "booting", "cameras", "firewalls", "guards", "enforcers", "enforcers" },
 		NORMAL = { "cameras", "firewalls", "guards", "guards", "enforcers", "enforcers" },
 		NONE = {},
 	},
 
-    DAEMON_TABLE =
-    {
-        -- Each entry is #of daemons for a given level difficulty. If the level difficulty exceeds the
-        -- length of the table (eg. level 10 endless level difficulties), then the last entry is used.
-        LESS = { 0, 2, 4, 4 },
-        NORMAL = { 0, 4, 4, 4 },
-        MORE = { 0, 6, 6, 6 },
-    },
-
-    DAEMON_TABLE_17_5 =
-    {
-        -- Each entry is #of daemons for a given level difficulty. If the level difficulty exceeds the
-        -- length of the table (eg. level 10 endless level difficulties), then the last entry is used.
-               --  1  2  3  4  5  6  7  8  9  10
-        LESS =   { 0, 2, 4, 4, 4, 4, 5, 5, 5, 6, 6, 6, 6, 7, 8 },
-        NORMAL = { 0, 4, 4, 5, 5, 6, 6, 6, 7, 8, 8, 8, 8, 9},
-        MORE =   { 0, 6, 6, 7, 7, 7, 8, 8, 8, 9, 9, 9, 9, 10},
-    },
-
-
-	SPAWN_TABLE = 
+	DAEMON_TABLE                  =
 	{
-		LESS =  {
-					[1] = { "COMMON", "COMMON", "COMMON"},
-                	[2] = { "COMMON", "COMMON", "COMMON", "ELITE" },
-	                [3] = { "COMMON", "COMMON", "COMMON", "ELITE", "CAMERA_DRONE" },
-    	            [4] = { "COMMON", "COMMON", "ELITE", "ELITE", "CAMERA_DRONE" },
-			        [5] = { "COMMON", "ELITE", "ELITE", "ELITE", "ELITE", "CAMERA_DRONE" }, 
-			        [6] = { "OMNI", "ELITE", "ELITE", "ELITE", "ELITE", "CAMERA_DRONE" },
-			        [7] = { "OMNI", "OMNI", "ELITE", "ELITE", "ELITE", "CAMERA_DRONE" },
-			        [8] = { "OMNI", "OMNI", "OMNI", "ELITE", "ELITE", "CAMERA_DRONE" },
-			        [9] = { "OMNI", "OMNI", "OMNI", "OMNI", "ELITE", "CAMERA_DRONE" },
-			        [10] = { "OMNI", "OMNI", "OMNI", "OMNI", "OMNI", "CAMERA_DRONE" }, 
-
-			        [11] = { "OMNI", "OMNI", "OMNI", "OMNI", "OMNI", "CAMERA_DRONE" }, 
-					[12] = { "OMNI", "OMNI", "OMNI", "OMNI", "OMNI", "CAMERA_DRONE" }, 
-					[13] = { "OMNI", "OMNI", "OMNI", "OMNI", "OMNI", "CAMERA_DRONE" }, 
-			        [14] = { "OMNI", "OMNI", "OMNI", "OMNI", "OMNI", "CAMERA_DRONE" }, 
-					[15] = { "OMNI", "OMNI", "OMNI", "OMNI", "OMNI", "CAMERA_DRONE" }, 	
-			        [16] = { "OMNI", "OMNI", "OMNI", "OMNI", "OMNI", "CAMERA_DRONE" }, 
-					[17] = { "OMNI", "OMNI", "OMNI", "OMNI", "OMNI", "CAMERA_DRONE" }, 
-					[18] = { "OMNI", "OMNI", "OMNI", "OMNI", "OMNI", "CAMERA_DRONE" }, 
-			        [19] = { "OMNI", "OMNI", "OMNI", "OMNI", "OMNI", "CAMERA_DRONE","CAMERA_DRONE" }, 
-					[20] = { "OMNI", "OMNI", "OMNI", "OMNI", "OMNI", "CAMERA_DRONE", "CAMERA_DRONE" }, 										
-				
-    	        }, 
-		NORMAL = {
-
-			        [1] = { "COMMON", "COMMON", "COMMON"},
-			        [2] = { "COMMON", "COMMON", "COMMON", "ELITE", "CAMERA_DRONE" },
-			        [3] = { "COMMON", "COMMON", "ELITE", "ELITE", "CAMERA_DRONE" },
-			        [4] = { "COMMON", "ELITE", "ELITE", "ELITE", "ELITE", "CAMERA_DRONE" },
-			        [5] = { "ELITE", "ELITE", "ELITE", "ELITE", "ELITE", "CAMERA_DRONE" },
-			        [6] = { "OMNI", "ELITE", "ELITE", "ELITE", "ELITE", "CAMERA_DRONE" },
-			        [7] = { "OMNI", "OMNI", "ELITE", "ELITE", "ELITE", "CAMERA_DRONE" },
-			        [8] = { "OMNI", "OMNI", "OMNI", "ELITE", "ELITE", "CAMERA_DRONE" },
-			        [9] = { "OMNI", "OMNI", "OMNI", "OMNI", "ELITE", "CAMERA_DRONE" },
-			        [10] = { "OMNI", "OMNI", "OMNI", "OMNI", "OMNI", "CAMERA_DRONE" },
-  
-			        [11] = { "OMNI", "OMNI", "OMNI", "OMNI", "OMNI", "CAMERA_DRONE" },			        
-					[12] = { "OMNI", "OMNI", "OMNI", "OMNI", "OMNI", "CAMERA_DRONE" },			        			        
-			        [13] = { "OMNI", "OMNI", "OMNI", "OMNI", "OMNI", "CAMERA_DRONE" },			        
-					[14] = { "OMNI", "OMNI", "OMNI", "OMNI", "OMNI", "CAMERA_DRONE" },			        			        
-			        [15] = { "OMNI", "OMNI", "OMNI", "OMNI", "OMNI", "CAMERA_DRONE" },			        
-					[16] = { "OMNI", "OMNI", "OMNI", "OMNI", "OMNI", "CAMERA_DRONE" },			        			        
-			        [17] = { "OMNI", "OMNI", "OMNI", "OMNI", "OMNI", "CAMERA_DRONE" },			        
-					[18] = { "OMNI", "OMNI", "OMNI", "OMNI", "OMNI", "CAMERA_DRONE","CAMERA_DRONE" }, 
-			        [19] = { "OMNI", "OMNI", "OMNI", "OMNI", "OMNI", "CAMERA_DRONE","CAMERA_DRONE" }, 
-					[20] = { "OMNI", "OMNI", "OMNI", "OMNI", "OMNI","OMNI", "CAMERA_DRONE", "CAMERA_DRONE" },			        			        
-    			},
-		MORE = {
-			        [1] = { "COMMON", "COMMON", "COMMON","COMMON"},
-			        [2] = { "COMMON", "COMMON", "ELITE", "ELITE", "CAMERA_DRONE" },
-			        [3] = { "COMMON", "COMMON", "COMMON", "ELITE", "ELITE", "CAMERA_DRONE" },
-			        [4] = { "ELITE", "ELITE", "ELITE", "ELITE", "ELITE", "CAMERA_DRONE" },
-			        [5] = { "OMNI", "ELITE", "ELITE", "ELITE", "ELITE", "CAMERA_DRONE" },
-			        [6] = { "OMNI", "OMNI", "ELITE", "ELITE", "ELITE", "CAMERA_DRONE" },
-			        [7] = { "OMNI", "OMNI", "OMNI", "ELITE", "ELITE", "CAMERA_DRONE" },
-			        [8] = { "OMNI", "OMNI", "OMNI", "OMNI", "ELITE", "CAMERA_DRONE" },
-			        [9] = { "OMNI", "OMNI", "OMNI", "OMNI", "OMNI", "CAMERA_DRONE" },
-			        [10] = { "OMNI", "OMNI", "OMNI", "OMNI", "OMNI", "CAMERA_DRONE" },	
-
-			        [11] = { "OMNI", "OMNI", "OMNI", "OMNI", "OMNI", "CAMERA_DRONE" },			        
-					[12] = { "OMNI", "OMNI", "OMNI", "OMNI", "OMNI", "CAMERA_DRONE" },			        			        
-			        [13] = { "OMNI", "OMNI", "OMNI", "OMNI", "OMNI", "CAMERA_DRONE" },			        
-					[14] = { "OMNI", "OMNI", "OMNI", "OMNI", "OMNI", "CAMERA_DRONE" },			        			        
-			        [15] = { "OMNI", "OMNI", "OMNI", "OMNI", "OMNI", "CAMERA_DRONE" },			        
-					[16] = { "OMNI", "OMNI", "OMNI", "OMNI", "OMNI","OMNI", "CAMERA_DRONE" },			        			        
-			        [17] = { "OMNI", "OMNI", "OMNI", "OMNI", "OMNI","OMNI", "CAMERA_DRONE" },			        
-					[18] = { "OMNI", "OMNI", "OMNI", "OMNI", "OMNI","OMNI", "CAMERA_DRONE","CAMERA_DRONE" }, 
-			        [19] = { "OMNI", "OMNI", "OMNI", "OMNI", "OMNI","OMNI", "CAMERA_DRONE","CAMERA_DRONE" }, 
-					[20] = { "OMNI", "OMNI", "OMNI", "OMNI", "OMNI","OMNI", "CAMERA_DRONE", "CAMERA_DRONE" },				        
-    			},    			
-		NONE = {
-			        [1] = {},
-			        [2] = {},
-			        [3] = {},
-			        [4] = {},
-			        [5] = {},
-			        [6] = {},
-			        [7] = {},
-			        [8] = {},
-			        [9] = {},
-			        [10] = {},	
-
-			        [11] = {},
-			        [12] = {},
-			        [13] = {},
-			        [14] = {},
-			        [15] = {},
-			        [16] = {},
-			        [17] = {},
-			        [18] = {},
-			        [19] = {},
-			        [20] = {},				        
-				},
+		-- Each entry is #of daemons for a given level difficulty. If the level difficulty exceeds the
+		-- length of the table (eg. level 10 endless level difficulties), then the last entry is used.
+		LESS = { 0, 2, 4, 4 },
+		NORMAL = { 0, 4, 4, 4 },
+		MORE = { 0, 6, 6, 6 },
 	},
 
-    OMNI_SPAWN_TABLE =
-    {
-		LESS = { "PROTECTOR", "SOLDIER", "CRIER", "OMNI_NON_SOLDIER", "CAMERA_DRONE" }, 
+	DAEMON_TABLE_17_5             =
+	{
+		-- Each entry is #of daemons for a given level difficulty. If the level difficulty exceeds the
+		-- length of the table (eg. level 10 endless level difficulties), then the last entry is used.
+		--  1  2  3  4  5  6  7  8  9  10
+		LESS = { 0, 2, 4, 4, 4, 4, 5, 5, 5, 6, 6, 6, 6, 7, 8 },
+		NORMAL = { 0, 4, 4, 5, 5, 6, 6, 6, 7, 8, 8, 8, 8, 9 },
+		MORE = { 0, 6, 6, 7, 7, 7, 8, 8, 8, 9, 9, 9, 9, 10 },
+	},
+
+
+	SPAWN_TABLE =
+	{
+		LESS = {
+			[1] = { "COMMON", "COMMON", "COMMON" },
+			[2] = { "COMMON", "COMMON", "COMMON", "ELITE" },
+			[3] = { "COMMON", "COMMON", "COMMON", "ELITE", "CAMERA_DRONE" },
+			[4] = { "COMMON", "COMMON", "ELITE", "ELITE", "CAMERA_DRONE" },
+			[5] = { "COMMON", "ELITE", "ELITE", "ELITE", "ELITE", "CAMERA_DRONE" },
+			[6] = { "OMNI", "ELITE", "ELITE", "ELITE", "ELITE", "CAMERA_DRONE" },
+			[7] = { "OMNI", "OMNI", "ELITE", "ELITE", "ELITE", "CAMERA_DRONE" },
+			[8] = { "OMNI", "OMNI", "OMNI", "ELITE", "ELITE", "CAMERA_DRONE" },
+			[9] = { "OMNI", "OMNI", "OMNI", "OMNI", "ELITE", "CAMERA_DRONE" },
+			[10] = { "OMNI", "OMNI", "OMNI", "OMNI", "OMNI", "CAMERA_DRONE" },
+
+			[11] = { "OMNI", "OMNI", "OMNI", "OMNI", "OMNI", "CAMERA_DRONE" },
+			[12] = { "OMNI", "OMNI", "OMNI", "OMNI", "OMNI", "CAMERA_DRONE" },
+			[13] = { "OMNI", "OMNI", "OMNI", "OMNI", "OMNI", "CAMERA_DRONE" },
+			[14] = { "OMNI", "OMNI", "OMNI", "OMNI", "OMNI", "CAMERA_DRONE" },
+			[15] = { "OMNI", "OMNI", "OMNI", "OMNI", "OMNI", "CAMERA_DRONE" },
+			[16] = { "OMNI", "OMNI", "OMNI", "OMNI", "OMNI", "CAMERA_DRONE" },
+			[17] = { "OMNI", "OMNI", "OMNI", "OMNI", "OMNI", "CAMERA_DRONE" },
+			[18] = { "OMNI", "OMNI", "OMNI", "OMNI", "OMNI", "CAMERA_DRONE" },
+			[19] = { "OMNI", "OMNI", "OMNI", "OMNI", "OMNI", "CAMERA_DRONE", "CAMERA_DRONE" },
+			[20] = { "OMNI", "OMNI", "OMNI", "OMNI", "OMNI", "CAMERA_DRONE", "CAMERA_DRONE" },
+
+		},
+		NORMAL = {
+
+			[1] = { "COMMON", "COMMON", "COMMON" },
+			[2] = { "COMMON", "COMMON", "COMMON", "ELITE", "CAMERA_DRONE" },
+			[3] = { "COMMON", "COMMON", "ELITE", "ELITE", "CAMERA_DRONE" },
+			[4] = { "COMMON", "ELITE", "ELITE", "ELITE", "ELITE", "CAMERA_DRONE" },
+			[5] = { "ELITE", "ELITE", "ELITE", "ELITE", "ELITE", "CAMERA_DRONE" },
+			[6] = { "OMNI", "ELITE", "ELITE", "ELITE", "ELITE", "CAMERA_DRONE" },
+			[7] = { "OMNI", "OMNI", "ELITE", "ELITE", "ELITE", "CAMERA_DRONE" },
+			[8] = { "OMNI", "OMNI", "OMNI", "ELITE", "ELITE", "CAMERA_DRONE" },
+			[9] = { "OMNI", "OMNI", "OMNI", "OMNI", "ELITE", "CAMERA_DRONE" },
+			[10] = { "OMNI", "OMNI", "OMNI", "OMNI", "OMNI", "CAMERA_DRONE" },
+
+			[11] = { "OMNI", "OMNI", "OMNI", "OMNI", "OMNI", "CAMERA_DRONE" },
+			[12] = { "OMNI", "OMNI", "OMNI", "OMNI", "OMNI", "CAMERA_DRONE" },
+			[13] = { "OMNI", "OMNI", "OMNI", "OMNI", "OMNI", "CAMERA_DRONE" },
+			[14] = { "OMNI", "OMNI", "OMNI", "OMNI", "OMNI", "CAMERA_DRONE" },
+			[15] = { "OMNI", "OMNI", "OMNI", "OMNI", "OMNI", "CAMERA_DRONE" },
+			[16] = { "OMNI", "OMNI", "OMNI", "OMNI", "OMNI", "CAMERA_DRONE" },
+			[17] = { "OMNI", "OMNI", "OMNI", "OMNI", "OMNI", "CAMERA_DRONE" },
+			[18] = { "OMNI", "OMNI", "OMNI", "OMNI", "OMNI", "CAMERA_DRONE", "CAMERA_DRONE" },
+			[19] = { "OMNI", "OMNI", "OMNI", "OMNI", "OMNI", "CAMERA_DRONE", "CAMERA_DRONE" },
+			[20] = { "OMNI", "OMNI", "OMNI", "OMNI", "OMNI", "OMNI", "CAMERA_DRONE", "CAMERA_DRONE" },
+		},
+		MORE = {
+			[1] = { "COMMON", "COMMON", "COMMON", "COMMON" },
+			[2] = { "COMMON", "COMMON", "ELITE", "ELITE", "CAMERA_DRONE" },
+			[3] = { "COMMON", "COMMON", "COMMON", "ELITE", "ELITE", "CAMERA_DRONE" },
+			[4] = { "ELITE", "ELITE", "ELITE", "ELITE", "ELITE", "CAMERA_DRONE" },
+			[5] = { "OMNI", "ELITE", "ELITE", "ELITE", "ELITE", "CAMERA_DRONE" },
+			[6] = { "OMNI", "OMNI", "ELITE", "ELITE", "ELITE", "CAMERA_DRONE" },
+			[7] = { "OMNI", "OMNI", "OMNI", "ELITE", "ELITE", "CAMERA_DRONE" },
+			[8] = { "OMNI", "OMNI", "OMNI", "OMNI", "ELITE", "CAMERA_DRONE" },
+			[9] = { "OMNI", "OMNI", "OMNI", "OMNI", "OMNI", "CAMERA_DRONE" },
+			[10] = { "OMNI", "OMNI", "OMNI", "OMNI", "OMNI", "CAMERA_DRONE" },
+
+			[11] = { "OMNI", "OMNI", "OMNI", "OMNI", "OMNI", "CAMERA_DRONE" },
+			[12] = { "OMNI", "OMNI", "OMNI", "OMNI", "OMNI", "CAMERA_DRONE" },
+			[13] = { "OMNI", "OMNI", "OMNI", "OMNI", "OMNI", "CAMERA_DRONE" },
+			[14] = { "OMNI", "OMNI", "OMNI", "OMNI", "OMNI", "CAMERA_DRONE" },
+			[15] = { "OMNI", "OMNI", "OMNI", "OMNI", "OMNI", "CAMERA_DRONE" },
+			[16] = { "OMNI", "OMNI", "OMNI", "OMNI", "OMNI", "OMNI", "CAMERA_DRONE" },
+			[17] = { "OMNI", "OMNI", "OMNI", "OMNI", "OMNI", "OMNI", "CAMERA_DRONE" },
+			[18] = { "OMNI", "OMNI", "OMNI", "OMNI", "OMNI", "OMNI", "CAMERA_DRONE", "CAMERA_DRONE" },
+			[19] = { "OMNI", "OMNI", "OMNI", "OMNI", "OMNI", "OMNI", "CAMERA_DRONE", "CAMERA_DRONE" },
+			[20] = { "OMNI", "OMNI", "OMNI", "OMNI", "OMNI", "OMNI", "CAMERA_DRONE", "CAMERA_DRONE" },
+		},
+		NONE = {
+			[1] = {},
+			[2] = {},
+			[3] = {},
+			[4] = {},
+			[5] = {},
+			[6] = {},
+			[7] = {},
+			[8] = {},
+			[9] = {},
+			[10] = {},
+
+			[11] = {},
+			[12] = {},
+			[13] = {},
+			[14] = {},
+			[15] = {},
+			[16] = {},
+			[17] = {},
+			[18] = {},
+			[19] = {},
+			[20] = {},
+		},
+	},
+
+	OMNI_SPAWN_TABLE =
+	{
+		LESS = { "PROTECTOR", "SOLDIER", "CRIER", "OMNI_NON_SOLDIER", "CAMERA_DRONE" },
 		NORMAL = { "PROTECTOR", "SOLDIER", "CRIER", "OMNI", "OMNI", "CAMERA_DRONE" },
 		MORE = { "PROTECTOR", "SOLDIER", "CRIER", "OMNI", "OMNI", "OMNI", "CAMERA_DRONE" },
-		NONE = { }
-    },
+		NONE = {}
+	},
 
-    FTM_PREFABS_TABLE = 
-    {
-    	[1]= 0,
-		[2]= 1,    	
-		[3]= 1,
-		[4]= 2,
-		[5]= 2,
-		[6]= 3,
-		[7]= 3,
-		[8]= 3,
-		[9]= 4,
-		[10]= 4,
+	FTM_PREFABS_TABLE =
+	{
+		[1] = 0,
+		[2] = 1,
+		[3] = 1,
+		[4] = 2,
+		[5] = 2,
+		[6] = 3,
+		[7] = 3,
+		[8] = 3,
+		[9] = 4,
+		[10] = 4,
 
-    	[11]= 4,
-		[12]= 4,    	
-		[13]= 4,
-		[14]= 4,
-		[15]= 4,
-		[16]= 4,
-		[17]= 5,
-		[18]= 5,
-		[19]= 5,
-		[20]= 5,		
+		[11] = 4,
+		[12] = 4,
+		[13] = 4,
+		[14] = 4,
+		[15] = 4,
+		[16] = 4,
+		[17] = 5,
+		[18] = 5,
+		[19] = 5,
+		[20] = 5,
 	},
 
 
@@ -440,67 +439,67 @@ local _M =
 		[4] = 3,
 	},
 
-    MISSION_REPUTATION = 
-    {
-	    [1] = 200, 
-	    [2] = 400, 
-	    [3] = 600, 
-	    [4] = 1000, 
-	    [5] = 1200, 
-	    [6] = 1600, 
-	    [7] = 2400, 
-	    [8] = 3000, 
-	    [9] = 4000, 
-	    [10] = 5000, 
+	MISSION_REPUTATION =
+	{
+		[1] = 200,
+		[2] = 400,
+		[3] = 600,
+		[4] = 1000,
+		[5] = 1200,
+		[6] = 1600,
+		[7] = 2400,
+		[8] = 3000,
+		[9] = 4000,
+		[10] = 5000,
 
-	    [11] =  6000, 
-	    [12] =  7000, 
-	    [13] =  8000, 
-	    [14] =  9000, 
-	    [15] = 10000, 
-	    [16] = 11000, 
-	    [17] = 13000, 
-	    [18] = 14000, 
-	    [19] = 15000, 
-	    [20] = 16000, 	    
-    },
+		[11] = 6000,
+		[12] = 7000,
+		[13] = 8000,
+		[14] = 9000,
+		[15] = 10000,
+		[16] = 11000,
+		[17] = 13000,
+		[18] = 14000,
+		[19] = 15000,
+		[20] = 16000,
+	},
 
-    GAME_COMPLETION_REPUTATION = 1000,
+	GAME_COMPLETION_REPUTATION = 1000,
 
-    MONEY_SCALAR = 
-    {
-	    [1] = 1.00, 
-	    [2] = 1.25, 
-	    [3] = 1.50, 
-	    [4] = 1.75,
-	    [5] = 1.75,
-	    [6] = 1.75,
-	    [7] = 1.75,
-	    [8] = 1.75,
-	    [9] = 1.75,
-	    [10] = 1.75,
+	MONEY_SCALAR =
+	{
+		[1] = 1.00,
+		[2] = 1.25,
+		[3] = 1.50,
+		[4] = 1.75,
+		[5] = 1.75,
+		[6] = 1.75,
+		[7] = 1.75,
+		[8] = 1.75,
+		[9] = 1.75,
+		[10] = 1.75,
 
-	    [11] = 1.75, 
-	    [12] = 1.75, 
-	    [13] = 1.75, 
-	    [14] = 1.75,
-	    [15] = 1.75,
-	    [16] = 1.75,
-	    [17] = 1.75,
-	    [18] = 1.75,
-	    [19] = 1.75,
-	    [20] = 1.75,	    
-    },
+		[11] = 1.75,
+		[12] = 1.75,
+		[13] = 1.75,
+		[14] = 1.75,
+		[15] = 1.75,
+		[16] = 1.75,
+		[17] = 1.75,
+		[18] = 1.75,
+		[19] = 1.75,
+		[20] = 1.75,
+	},
 
 	TRACKER_MAXCOUNT = 30, -- Max tracker count before reinforcements start spawning in
-	TRACKER_INCREMENT = 5,  
-    TRACKER_MAXSTAGE = 6, -- MAXCOUNT / INCREMENT
+	TRACKER_INCREMENT = 5,
+	TRACKER_MAXSTAGE = 6, -- MAXCOUNT / INCREMENT
 
-    HOLOCIRCUIT_KO = 2,
-    HOLOCIRCUIT_RANGE = 2,
+	HOLOCIRCUIT_KO = 2,
+	HOLOCIRCUIT_RANGE = 2,
 
 	--- PROGRAMS
-	----------------- 
+	-----------------
 	MAX_PROGRAMS = 5,
 
 	-----------------
@@ -511,7 +510,7 @@ local _M =
 	BSTATE_RUNNING = "RUNNING",
 	BSTATE_WAITING = "PROCESSING",
 	BSTATE_WAITINGFORCORPTURN = "WAITING FOR CORP",
-    BSTATE_WAITINGFORPCTURN = "WAITING FOR PC",
+	BSTATE_WAITINGFORPCTURN = "WAITING FOR PC",
 
 
 	------------------
@@ -594,7 +593,7 @@ local _M =
 	TRG_UNIT_ALERTED = 18,
 	TRG_UNIT_RESCUED = 19,
 	TRG_START_TURN = 20,
-    TRG_UNIT_ESCAPED = 21,
+	TRG_UNIT_ESCAPED = 21,
 	TRG_UNIT_HIJACKED = 22,
 	TRG_END_TURN = 23,
 	TRG_UNIT_KO = 24,
@@ -607,37 +606,37 @@ local _M =
 	TRG_UNIT_PICKEDUP = 50,
 	TRG_UNIT_DROPPED = 51,
 	TRG_UNIT_DEPLOYED = 52,
-    TRG_UNIT_EMP = 53,
-    TRG_SAFE_LOOTED = 66,
-    TRG_ICE_BROKEN = 67, 
-    TRG_CLOSE_NANOFAB = 68, 
-    TRG_SET_OVERWATCH = 69,
-    TRG_DAEMON_INSTALL = 70, 
-    TRG_CLOSE_AUGMENT_MACHINE = 71,
-    TRG_CAUGHT_BY_CAMERA = 72,
+	TRG_UNIT_EMP = 53,
+	TRG_SAFE_LOOTED = 66,
+	TRG_ICE_BROKEN = 67,
+	TRG_CLOSE_NANOFAB = 68,
+	TRG_SET_OVERWATCH = 69,
+	TRG_DAEMON_INSTALL = 70,
+	TRG_CLOSE_AUGMENT_MACHINE = 71,
+	TRG_CAUGHT_BY_CAMERA = 72,
 	TRG_LAST_WORDS = 73,
-    TRG_BUY_ITEM = 74,
-    TRG_USE_AUGMENT_MACHINE = 75,
-    TRG_UNIT_NEWINTEREST = 76,
-    TRG_UNIT_NEWTARGET = 77,
-    TRG_DAEMON_REVERSE = 78,
-    TRG_OPEN_DOOR = 79,
-    TRG_COMPILE_START = 80,
-    TRG_RECAPTURE_DEVICES = 81,
-    TRG_MAP_EVENT = 82,
-    TRG_ALARM_INCREASE = 83,
-    TRG_UNIT_DISABLED = 84,
-    TRG_LOS_REFRESH = 85,
+	TRG_BUY_ITEM = 74,
+	TRG_USE_AUGMENT_MACHINE = 75,
+	TRG_UNIT_NEWINTEREST = 76,
+	TRG_UNIT_NEWTARGET = 77,
+	TRG_DAEMON_REVERSE = 78,
+	TRG_OPEN_DOOR = 79,
+	TRG_COMPILE_START = 80,
+	TRG_RECAPTURE_DEVICES = 81,
+	TRG_MAP_EVENT = 82,
+	TRG_ALARM_INCREASE = 83,
+	TRG_UNIT_DISABLED = 84,
+	TRG_LOS_REFRESH = 85,
 
 	MAP_EVENTS =
-	{	
+	{
 		SWITCH = 1,
 		RESET_SWITCH = 2,
 		TELEPORT = 3,
 	},
 
 
-	TRG_ALARM_STATE_CHANGE = 60, 
+	TRG_ALARM_STATE_CHANGE = 60,
 
 	TRG_TIMER = 100,
 	TRG_GAME_OVER = 999,
@@ -659,7 +658,7 @@ local _M =
 	EV_UNIT_THROWN = 12,
 	EV_UNIT_DEPLOY = 14,
 	EV_UNIT_PICKEDUP = 15,
-	EV_UNIT_PEEK = 18,	
+	EV_UNIT_PEEK = 18,
 	EV_UNIT_USECOMP = 19,
 	EV_UNIT_PICKUP = 20,
 	EV_UNIT_USEDOOR = 21,
@@ -667,9 +666,9 @@ local _M =
 	EV_UNIT_ALERTED = 23,
 	EV_UNIT_APPEARED = 26,
 	EV_UNIT_OVERWATCH = 27,
-	EV_UNIT_OVERWATCH_MELEE = 28,	
-	EV_UNIT_KO = 29,	
-	EV_UNIT_MELEE = 30,	
+	EV_UNIT_OVERWATCH_MELEE = 28,
+	EV_UNIT_KO = 29,
+	EV_UNIT_MELEE = 30,
 	EV_UNIT_TURN = 31,
 	EV_UNIT_USEDOOR_PST = 32,
 	EV_UNIT_UNTIE = 36,
@@ -684,15 +683,15 @@ local _M =
 
 	EV_UNIT_SPAWNED = 50,
 	EV_UNIT_DESPAWNED = 51,
-	EV_UNIT_REFRESH = 52,    -- refreshes units HUD
+	EV_UNIT_REFRESH = 52, -- refreshes units HUD
 	EV_UNIT_REFRESH_TRACKS = 53,
 	EV_UNIT_CAPTURE = 54,
-    EV_UNIT_REFRESH_SITUATION = 55,
-	
+	EV_UNIT_REFRESH_SITUATION = 55,
+
 	EV_UNIT_FLOAT_TXT = 56,
 	EV_UNIT_HIT = 57,
 	EV_UNIT_HIT_SHIELD = 60,
-	EV_UNIT_INSTALL_AUGMENT = 62, 
+	EV_UNIT_INSTALL_AUGMENT = 62,
 	EV_UNIT_FLY_TXT = 64,
 	EV_UNIT_ADD_FX = 65,
 
@@ -725,9 +724,9 @@ local _M =
 	EV_UNIT_SWTICH_FX = 130,
 
 	EV_EXIT_MODIFIED = 200,
-	
-	EV_LOS_REFRESH = 300,	
-	EV_CAM_PAN = 301,	
+
+	EV_LOS_REFRESH = 300,
+	EV_CAM_PAN = 301,
 	EV_PLAY_SOUND = 302,
 	EV_SET_MUSIC_PARAM = 303,
 
@@ -735,8 +734,8 @@ local _M =
 	EV_UNIT_UPDATE_ICE = 351,
 	EV_MAINFRAME_INSTALL_PROGRAM = 361,
 	EV_MAINFRAME_UNINSTALL_PROGRAM = 362,
-	EV_MAINFRAME_PARASITE = 363,	
-	EV_MAINFRAME_MOVE_DAEMON = 364,	
+	EV_MAINFRAME_PARASITE = 363,
+	EV_MAINFRAME_MOVE_DAEMON = 364,
 	EV_MAINFRAME_INSTALL_NEW_DAEMON = 365,
 
 	EV_HUD_MPUSED = 401,
@@ -746,22 +745,22 @@ local _M =
 
 	EV_TURN_END = 500,
 	EV_TURN_START = 502,
-    EV_ACHIEVEMENT = 505,
+	EV_ACHIEVEMENT = 505,
 
 	EV_SOUND_EMITTED = 601,
 	EV_SCANRING_VIS = 602,
 	EV_ADVANCE_TRACKER = 603,
 	EV_ALERT = 604,
 	EV_LOOT_ACQUIRED = 605,
-	EV_ITEMS_PANEL = 610, 
+	EV_ITEMS_PANEL = 610,
 	EV_CMD_DIALOG = 611,
-	EV_AGENT_LIMIT = 613, 
-	EV_CLOAK_IN = 614, 
-	EV_CLOAK_OUT = 615, 
-	EV_GAIN_AP = 616, 
+	EV_AGENT_LIMIT = 613,
+	EV_CLOAK_IN = 614,
+	EV_CLOAK_OUT = 615,
+	EV_GAIN_AP = 616,
 
 	EV_SHOW_WARNING = 621,
-	EV_CREDITS_REFRESH = 623, 
+	EV_CREDITS_REFRESH = 623,
 	EV_OVERLOAD_VIZ = 624,
 	EV_GRENADE_EXPLODE = 625,
 	EV_THREATS_DIALOG = 630,
@@ -771,49 +770,49 @@ local _M =
 	EV_SKILL_LEVELED = 638,
 	EV_SHOW_DAEMON = 639,
 	EV_SHOW_ALARM = 640,
-	EV_SHOW_ALARM_FIRST = 642, 
+	EV_SHOW_ALARM_FIRST = 642,
 	EV_KILL_DAEMON = 645,
 	EV_SHOW_MODAL = 646,
-    EV_SHOW_MODAL_REWIND = 647,
-	EV_SHOW_REVERSE_DAEMON = 648, 
+	EV_SHOW_MODAL_REWIND = 647,
+	EV_SHOW_REVERSE_DAEMON = 648,
 	EV_SHOW_DIALOG = 649,
 
 	EV_PATHNODE_RESERVE = 650,
 	EV_PATHNODE_UNRESERVE = 651,
- 	EV_TELEPORT = 652,
- 	EV_FLY_IMAGE = 653,
- 	EV_PUSH_QUIET_MIX = 654, 
- 	EV_FADE_TO_BLACK = 655, 
- 	EV_UNIT_TAB = 656,
- 	EV_SHORT_WALLS = 657, 
- 	EV_HIDE_PROGRAM = 658, 
- 	EV_SLIDE_IN_PROGRAM = 659, 
- 	EV_GRAFTER_DIALOG = 660,
- 	EV_EXEC_DIALOG = 661,  
- 	EV_INSTALL_AUGMENT_DIALOG = 662,  
- 	EV_BLINK_REWIND = 663,
+	EV_TELEPORT = 652,
+	EV_FLY_IMAGE = 653,
+	EV_PUSH_QUIET_MIX = 654,
+	EV_FADE_TO_BLACK = 655,
+	EV_UNIT_TAB = 656,
+	EV_SHORT_WALLS = 657,
+	EV_HIDE_PROGRAM = 658,
+	EV_SLIDE_IN_PROGRAM = 659,
+	EV_GRAFTER_DIALOG = 660,
+	EV_EXEC_DIALOG = 661,
+	EV_INSTALL_AUGMENT_DIALOG = 662,
+	EV_BLINK_REWIND = 663,
 	EV_SHOW_COOLDOWN = 664,
 	EV_FLASH_VIZ = 665,
-    EV_DAEMON_TUTORIAL = 666,
-	
+	EV_DAEMON_TUTORIAL = 666,
+
 	EV_PULSE_SCAN = 667,
 
 	EV_CHECKPOINT = 701,
-    EV_CLEAR_QUEUE = 702, -- skip & clear mission panel queue 
+	EV_CLEAR_QUEUE = 702, -- skip & clear mission panel queue
 
 	--------------------
-	-- TRAP DEFS 
+	-- TRAP DEFS
 
-	TRAP_SHOCK = 1, 
-	
-    --------------------
-    -- This choice is made when a choice dialog aborts.
+	TRAP_SHOCK = 1,
 
-    CHOICE_ABORT = 0,
+	--------------------
+	-- This choice is made when a choice dialog aborts.
+
+	CHOICE_ABORT = 0,
 
 	---------------------
 	-- SOUND DEFS
-	
+
 	SOUND_RANGE_0 = SOUND_RANGE_0,
 	SOUND_RANGE_1 = SOUND_RANGE_1,
 	SOUND_RANGE_2 = SOUND_RANGE_2,
@@ -822,9 +821,9 @@ local _M =
 
 	SOUND_GAMEPLAY_POPUP = "SpySociety/HUD/gameplay/popup",
 
-	FOOTSTEP_FRAMES_WALK = {1, 13},
-	FOOTSTEP_FRAMES_RUN = {4, 14},
-	FOOTSTEP_FRAMES_SNK = {7, 17},
+	FOOTSTEP_FRAMES_WALK = { 1, 13 },
+	FOOTSTEP_FRAMES_RUN = { 4, 14 },
+	FOOTSTEP_FRAMES_SNK = { 7, 17 },
 
 	SOUNDPATH_USE_CONSOLE = "SpySociety/Actions/console_use",
 	SOUNDPATH_SAFE_OPEN = "SpySociety/Objects/safe_open",
@@ -858,23 +857,23 @@ local _M =
 	SOUNDPATH_DRAG_CARPET = "SpySociety/Movement/drag_metal",
 	SOUNDPATH_DRAG_METAL = "SpySociety/Movement/drag_carpet",
 
-	SOUNDPATH_DEATH_HARDWOOD = "SpySociety/Movement/deathfall_agent_hardwood",  
+	SOUNDPATH_DEATH_HARDWOOD = "SpySociety/Movement/deathfall_agent_hardwood",
 	SOUNDPATH_HIT_BALLISTIC_FLESH = "SpySociety/HitResponse/hitby_ballistic_flesh",
 	SOUNDPATH_HIT_BALLISTIC_METAL = "SpySociety/HitResponse/hitby_ballistic_metal",
 	SOUNDPATH_HIT_BALLISTIC_CYBORG = "SpySociety/HitResponse/hitby_ballistic_cyborg",
 	SOUNDPATH_TURRET_SCAN = "SpySociety/Objects/turret/gunturret_scan_LP",
-	
+
 	SOUND_SMALL = { path = nil, range = SOUND_RANGE_1 },
 	SOUND_MED = { path = nil, range = SOUND_RANGE_2 },
 	SOUND_LARGE = { path = nil, range = SOUND_RANGE_3 },
 	SOUND_KICK_DOOR = { path = "SpySociety/Actions/door_kickedopen", range = 2 },
 
-	SOUND_DOOR_OPEN = { path = "SpySociety/Actions/door_open_quiet", range = SOUND_RANGE_0 },	
+	SOUND_DOOR_OPEN = { path = "SpySociety/Actions/door_open_quiet", range = SOUND_RANGE_0 },
 	SOUND_DOOR_CLOSE = { path = "SpySociety/Actions/door_close_quiet", range = SOUND_RANGE_0 },
 	SOUND_DOOR_BREAK = { path = "SpySociety/Actions/door_smashed", range = SOUND_RANGE_2 },
-	
-	SOUND_ELEVATOR_OPEN = { path = "SpySociety/Objects/elevator_open", range = SOUND_RANGE_1, innocuous = true   },
-	SOUND_ELEVATOR_CLOSE = { path = "SpySociety/Objects/elevator_close", range = SOUND_RANGE_1, innocuous = true  },
+
+	SOUND_ELEVATOR_OPEN = { path = "SpySociety/Objects/elevator_open", range = SOUND_RANGE_1, innocuous = true },
+	SOUND_ELEVATOR_CLOSE = { path = "SpySociety/Objects/elevator_close", range = SOUND_RANGE_1, innocuous = true },
 
 	SOUND_DOOR_UNLOCK = { path = "SpySociety/Actions/door_passcardunlock", range = 0 },
 	SOUND_DOOR_LOCK = { path = "SpySociety/Actions/door_lock", range = 0 },
@@ -883,11 +882,11 @@ local _M =
 	SOUND_ITEM_PICKUP = { path = "SpySociety/Actions/item_pickup", range = SOUND_RANGE_0 },
 	SOUND_ITEM_PUTDOWN = { path = "SpySociety/Actions/item_place", range = SOUND_RANGE_0 },
 	SOUND_PRIME_EMP = { path = "SpySociety/Actions/emp_activate", range = SOUND_RANGE_0 },
-	SOUND_PLACE_TRAP = { path = "SpySociety/Actions/place_doortrap", range = SOUND_RANGE_0 },	
+	SOUND_PLACE_TRAP = { path = "SpySociety/Actions/place_doortrap", range = SOUND_RANGE_0 },
 	SOUND_HIT_LASERS_FLESH = { path = "SpySociety/HitResponse/hitby_laser_flesh", range = SOUND_RANGE_0 },
 	SOUND_HIT_ENERGY_FLESH = { path = "SpySociety/HitResponse/hitby_energy_flesh", range = SOUND_RANGE_0 },
 	SOUND_HIT_BALLISTIC_FLESH = { path = "SpySociety/HitResponse/hitby_ballistic_flesh", range = SOUND_RANGE_0 },
-	SOUND_HIT_BALLISTIC_METAL = { path = "SpySociety/HitResponse/hitby_ballistic_metal", range = SOUND_RANGE_0 },	
+	SOUND_HIT_BALLISTIC_METAL = { path = "SpySociety/HitResponse/hitby_ballistic_metal", range = SOUND_RANGE_0 },
 	SOUND_HIT_ENERGY_FLESH = { path = "SpySociety/HitResponse/hitby_energy_flesh", range = SOUND_RANGE_0 },
 	SOUND_DEATH_HARDWOOD = { path = "SpySociety/HitResponse/deathfall_agent_hardwood", range = SOUND_RANGE_2 },
 	SOUND_SECURITY_ALERTED = { path = "SpySociety/Objects/securitycamera_spotplayer", range = SOUND_RANGE_3, innocuous = true },
@@ -897,11 +896,11 @@ local _M =
 	SOUND_HOST_PARASITE = { path = "SpySociety/HUD/mainframe/node_capture", range = SOUND_RANGE_0 },
 
 	SOUND_MAINFRAME_REVEAL = { path = "SpySociety/Actions/mainframe_objectsreveled", range = SOUND_RANGE_MAX, innocuous = true },
-	
+
 	SOUND_EMP_EXPLOSION = { path = "SpySociety/Actions/EMP_explo", range = SOUND_RANGE_2 },
-	SOUND_OVERLOAD =  { path = "SpySociety/Actions/mainframe_soundbugoverload", range = SOUND_RANGE_2 },
-	SOUND_HOLOCIRCUIT_OVERLOAD =  { path = "SpySociety/Actions/mainframe_soundbugoverload", range = SOUND_RANGE_2, innocuous = true },
-	SOUND_SHOCKTRAP =  { path = "SpySociety/HitResponse/hitby_shocktrap", range = SOUND_RANGE_1 },
+	SOUND_OVERLOAD = { path = "SpySociety/Actions/mainframe_soundbugoverload", range = SOUND_RANGE_2 },
+	SOUND_HOLOCIRCUIT_OVERLOAD = { path = "SpySociety/Actions/mainframe_soundbugoverload", range = SOUND_RANGE_2, innocuous = true },
+	SOUND_SHOCKTRAP = { path = "SpySociety/HitResponse/hitby_shocktrap", range = SOUND_RANGE_1 },
 	SOUND_ANTIVIRUS = { path = nil, range = SOUND_RANGE_1, innocuous = true },
 
 	SOUND_UNHIDE = { path = "SpySociety/Actions/agent_discovered", range = SOUND_RANGE_0, innocuous = true },
@@ -948,108 +947,108 @@ local _M =
 
 	SOUND_DRONE_GENERIC = "SpySociety/Objects/drone/drone_emote",
 
-	SOUND_HUD_INCIDENT_POPUP = 	{ path = "SpySociety/HUD/gameplay/console_popup", range = SOUND_RANGE_0 },
+	SOUND_HUD_INCIDENT_POPUP = { path = "SpySociety/HUD/gameplay/console_popup", range = SOUND_RANGE_0 },
 	SOUND_HUD_INCIDENT_POSITIVE = { path = "SpySociety/HUD/gameplay/console_result_good", range = SOUND_RANGE_0 },
 	SOUND_HUD_INCIDENT_NEGATIVE = { path = "SpySociety/HUD/gameplay/console_result_bad", range = SOUND_RANGE_0 },
 
 	DOOR_KEYS = {
-		OFFICE 			= 1,
-		SECURITY 		= 2,
-		ELEVATOR 		= 4,
-		ELEVATOR_INUSE 	= 8,
-		GUARD   		= 16,
-		VAULT   		= 32,
-		FINAL_LEVEL	    = 64, 
-		FINAL_RED       = 128, 
-        SPECIAL_EXIT    = 256, 
-        BLAST_DOOR      = 512, 
+		OFFICE         = 1,
+		SECURITY       = 2,
+		ELEVATOR       = 4,
+		ELEVATOR_INUSE = 8,
+		GUARD          = 16,
+		VAULT          = 32,
+		FINAL_LEVEL    = 64,
+		FINAL_RED      = 128,
+		SPECIAL_EXIT   = 256,
+		BLAST_DOOR     = 512,
 	},
 
 	DEFAULT_KEYID = 1,
 
-	ITEMS_SPECIAL_DAY_1 ={
-		{ "vault_passcard", 15 },
-		{ "item_defiblance", 10 },
-		{ "item_lockdecoder", 10 },
+	ITEMS_SPECIAL_DAY_1 = {
+		{ "vault_passcard",                 15 },
+		{ "item_defiblance",                10 },
+		{ "item_lockdecoder",               10 },
 		{ "augment_distributed_processing", 10 },
-		{ "item_icebreaker", 10 },
+		{ "item_icebreaker",                10 },
 
-		{ "augment_predictive_brawling", 10 },
+		{ "augment_predictive_brawling",    10 },
 
-		{ "item_hologrenade", 10 },
-		{ "item_stickycam", 10 },
-		{ "augment_microslam_apparatus", 10 },
-		{ "item_light_pistol_ammo", 10 },
-		{ "item_smokegrenade", 10 },
+		{ "item_hologrenade",               10 },
+		{ "item_stickycam",                 10 },
+		{ "augment_microslam_apparatus",    10 },
+		{ "item_light_pistol_ammo",         10 },
+		{ "item_smokegrenade",              10 },
 	},
 
 	ITEMS_SPECIAL_DAY_2 = {
-		{ "vault_passcard", 15 },
-		{ "item_defiblance", 10 },
-		{ "item_lockdecoder", 10 },
+		{ "vault_passcard",                 15 },
+		{ "item_defiblance",                10 },
+		{ "item_lockdecoder",               10 },
 		{ "augment_distributed_processing", 10 },
 
-		{ "item_icebreaker_2", 10 },
-		{ "item_bio_dartgun", 10 },
-		{ "item_power_tazer_2", 10 },
-		{ "item_light_pistol_dam", 10 },
-		
-		{ "augment_penetration_scanner", 10 },
+		{ "item_icebreaker_2",              10 },
+		{ "item_bio_dartgun",               10 },
+		{ "item_power_tazer_2",             10 },
+		{ "item_light_pistol_dam",          10 },
 
-		{ "item_hologrenade", 10 },
-		{ "item_stickycam", 10 },
+		{ "augment_penetration_scanner",    10 },
+
+		{ "item_hologrenade",               10 },
+		{ "item_stickycam",                 10 },
 		--{ "augment_microslam_apparatus", 10 },
 	},
 
 	ITEMS_SPECIAL_DAY_4 = {
-		{ "item_defiblance", 10 },
-		{ "item_lockdecoder", 10 },
+		{ "item_defiblance",                10 },
+		{ "item_lockdecoder",               10 },
 		{ "augment_distributed_processing", 10 },
 
-		{ "item_icebreaker_2", 10 },
-		{ "item_bio_dartgun", 10 },
-		{ "item_power_tazer_2", 10 },
-		{ "item_light_pistol_dam", 10 },
-		
-		{ "augment_penetration_scanner", 10 },
+		{ "item_icebreaker_2",              10 },
+		{ "item_bio_dartgun",               10 },
+		{ "item_power_tazer_2",             10 },
+		{ "item_light_pistol_dam",          10 },
 
-		{ "item_hologrenade", 10 },
-		{ "item_stickycam", 10 },
-	},	
+		{ "augment_penetration_scanner",    10 },
 
-	BEGINNER_ITEMS_SPECIAL_DAY_2 = 
+		{ "item_hologrenade",               10 },
+		{ "item_stickycam",                 10 },
+	},
+
+	BEGINNER_ITEMS_SPECIAL_DAY_2 =
 	{
 		{ "augment_distributed_processing", 15 },
-		{ "item_emp_pack_2", 10 },
-		{ "item_icebreaker_2", 10 },
-		{ "item_laptop_2", 10 },
+		{ "item_emp_pack_2",                10 },
+		{ "item_icebreaker_2",              10 },
+		{ "item_laptop_2",                  10 },
 	},
 
-	BEGINNER_ITEMS_SPECIAL_DAY_3 = 
+	BEGINNER_ITEMS_SPECIAL_DAY_3 =
 	{
-		{ "item_defiblance", 10 },
+		{ "item_defiblance",             10 },
 		{ "augment_penetration_scanner", 10 },
-		{ "augment_piercing_scanner", 10 },
-		{ "item_tazer_3", 10 },
-		{ "item_bio_dartgun", 15 },
+		{ "augment_piercing_scanner",    10 },
+		{ "item_tazer_3",                10 },
+		{ "item_bio_dartgun",            15 },
 	},
 
-	BEGINNER_ITEMS_SPECIAL_VARIETY = 
+	BEGINNER_ITEMS_SPECIAL_VARIETY =
 	{
-		{ "augment_net_downlink", 10 },
-		{ "augment_predictive_brawling", 10 },
+		{ "augment_net_downlink",            10 },
+		{ "augment_predictive_brawling",     10 },
 		{ "augment_holocircuit_overloaders", 10 },
-		{ "item_emp_pack", 10 },
-		{ "item_tazer_2", 10 },
+		{ "item_emp_pack",                   10 },
+		{ "item_tazer_2",                    10 },
 	},
 
-	CAMPAIGN_EVENTS = 
+	CAMPAIGN_EVENTS =
 	{
 		CUSTOM_FINAL = 1,
 		ADD_MORE_HOURS = 2,
 		GOTO_MISSION = 3,
 		SET_CAMPAIGN_PARAM = 4,
-		CUSTOM_SCRIPT= 5,
+		CUSTOM_SCRIPT = 5,
 		ADVANCE_TO_NEXT_DAY = 6,
 		SET_CUSTOM_SCRIPT_INDEX = 7,
 		REMOVE_AGENT = 8,
@@ -1059,20 +1058,20 @@ local _M =
 		MAP_POPUP = 12,
 		ADD_ENDLESS_MISSION = 13,
 	},
-	
+
 }
 
 function _M:stringForEvent(eventType)
-	for k,v in pairs(self) do
+	for k, v in pairs(self) do
 		if type(k) == "string" and type(v) == "number" and string.sub(k, 1, 3) == "EV_" and v == eventType then
 			return k
 		end
 	end
-    return eventType
+	return eventType
 end
 
 function _M:stringForTrigger(eventType)
-	for k,v in pairs(self) do
+	for k, v in pairs(self) do
 		if type(k) == "string" and type(v) == "number" and string.sub(k, 1, 4) == "TRG_" and v == eventType then
 			return k
 		end
@@ -1080,13 +1079,13 @@ function _M:stringForTrigger(eventType)
 end
 
 function _M:stringForDir(dir)
-	for k,v in pairs(self) do
+	for k, v in pairs(self) do
 		if type(k) == "string" and type(v) == "number" and string.sub(k, 1, 4) == "DIR_" and v == dir then
 			return k
 		end
 	end
 end
 
-util.strictify( _M )
+util.strictify(_M)
 
 return _M

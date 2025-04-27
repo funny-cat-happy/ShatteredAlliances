@@ -7,16 +7,25 @@ local simdefs = include("sim/simdefs")
 local speechdefs = include("sim/speechdefs")
 local mathutil = include("modules/mathutil")
 local simquery = include("sim/simquery")
-local AllyBrain = include(SA_PATH.."/simModify/btree/allybraindefine")
+local CommonBrain = include("sim/btree/commonbrain")
 
 require("class")
+
+local function UseInvisibleCloak()
+    return btree.Sequence("UseInvisibleCloak",
+        {
+            btree.Condition(conditions.HasInvisible),
+            btree.Action(actions.useInvisibleCloak),
+        })
+end
 
 local GuardBrain = class(Brain, function(self)
     Brain.init(self, "AllyBrain",
         btree.Selector(
             {
-                AllyBrain.RangedCombat(),
-                AllyBrain.Investigate(),
+                UseInvisibleCloak(),
+                CommonBrain.RangedCombat(),
+                CommonBrain.Investigate(),
             })
     )
 end)

@@ -1,13 +1,8 @@
-----------------------------------------------------------------
--- Copyright (c) 2012 Klei Entertainment Inc.
--- All Rights Reserved.
--- SPY SOCIETY.
-----------------------------------------------------------------
-
 local util = include("modules/util")
 local array = include("modules/array")
 local simunit = include("sim/simunit")
 local simquery = include("sim/simquery")
+---@type systemSimdefs | customSimdefs
 local simdefs = include("sim/simdefs")
 local simplayer = include("sim/simplayer")
 local simfactory = include("sim/simfactory")
@@ -72,6 +67,11 @@ function allyplayer:createGuard(sim, unitType)
     return newUnit
 end
 
+---comment
+---@param sim engine
+---@param unitType any
+---@param numGuards any
+---@return simunit[]
 function allyplayer:spawnGuards(sim, unitType, numGuards)
     local cells = sim:getCells("guard_spawn")
     if cells then
@@ -109,13 +109,17 @@ function allyplayer:spawnGuards(sim, unitType, numGuards)
         for i, unit in ipairs(units) do
             sim:dispatchEvent(simdefs.EV_UNIT_APPEARED, { unitID = unit:getID() })
             sim:dispatchEvent(simdefs.EV_TELEPORT, { units = { unit }, warpOut = false })
-            sim:getPC():glimpseUnit(sim, unit:getID())
         end
     end
 
     return units
 end
 
+---comment
+---@param sim engine
+---@param numGuards any
+---@param unitType any
+---@param newPatrol boolean
 function allyplayer:doTrackerSpawn(sim, numGuards, unitType, newPatrol)
     local units = self:spawnGuards(sim, unitType, numGuards)
 
