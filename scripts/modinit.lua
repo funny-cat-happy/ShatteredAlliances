@@ -1,26 +1,27 @@
-local util = include("modules/util")
-
 local function earlyInit(modApi)
 	local scriptPath = modApi:getScriptPath()
 	rawset(_G, "SA_PATH", rawget(_G, "SA_PATH") or scriptPath)
-	include(SA_PATH .. '/modulesModify/log')
-	include(SA_PATH .. '/modulesModify/util')
+	rawset(_G, "SAInclude", rawget(_G, "SAInclude") or function(striptPath)
+		return include(scriptPath .. "/" .. striptPath)
+	end)
+	SAInclude('modulesModify/log')
+	SAInclude('modulesModify/util')
 end
 local function init(modApi)
 	modApi.requirements = { "Sim Constructor", "Expanded Cheats" }
 	local dataPath = modApi:getDataPath()
 	KLEIResourceMgr.MountPackage(dataPath .. "/buildout/gui.kwad", "data")
 
-	include(SA_PATH .. "/simModify/btree/actions")
-	include(SA_PATH .. "/simModify/btree/conditions")
-	include(SA_PATH .. "/simModify/btree/allybrain")
+	SAInclude("simModify/btree/actions")
+	SAInclude("simModify/btree/conditions")
+	SAInclude("simModify/btree/allybrain")
 
-	include(SA_PATH .. "/clientModify/fe/cheatmenu")
+	SAInclude("clientModify/fe/cheatmenu")
 
-	include(SA_PATH .. '/clientModify/gameplay/boardrig')
-	include(SA_PATH .. '/clientModify/gameplay/agentrig')
+	SAInclude('clientModify/gameplay/boardrig')
+	SAInclude('clientModify/gameplay/agentrig')
 
-	local simdefs = include(SA_PATH .. "/simModify/simdefs")
+	local simdefs = SAInclude("simModify/simdefs")
 	for k, v in pairs(simdefs) do
 		modApi:addSimdef(k, v)
 	end
@@ -28,13 +29,13 @@ end
 
 
 local function load(modApi, options, params, options_raw)
-	modApi:insertUIElements(include(SA_PATH .. "/clientModify/hud/hud_insert"))
-	modApi:modifyUIElements(include(SA_PATH .. "/clientModify/hud/hud_modification"))
-	local guarddefs = include(SA_PATH .. "/simModify/unitdefs/guarddefs")
+	modApi:insertUIElements(SAInclude("clientModify/hud/hud_insert"))
+	modApi:modifyUIElements(SAInclude("clientModify/hud/hud_modification"))
+	local guarddefs = SAInclude("simModify/unitdefs/guarddefs")
 	for name, guarddef in pairs(guarddefs) do
 		modApi:addGuardDef(name, guarddef)
 	end
-	local give_spell = include(SA_PATH .. "/clientModify/fe/cheatmenu")
+	local give_spell = SAInclude("clientModify/fe/cheatmenu")
 	local cheatmenu = include("fe/cheatmenu")
 
 
@@ -46,30 +47,35 @@ local function load(modApi, options, params, options_raw)
 		end))
 	end
 	-- Add the new custom situations
-	include(SA_PATH .. "/simModify/mission/mission_factory")
-	local serverdefs_mod = include(SA_PATH .. "/modulesModify/serverdefs")
+	SAInclude("simModify/mission/mission_factory")
+	local serverdefs_mod = SAInclude("modulesModify/serverdefs")
 	modApi:addSituation(serverdefs_mod.MISSION_FACTORY_SITUATION, "mission_factory", SA_PATH .. "/simModify/mission")
+	-- add mainframe ability
+	local mainframe_abilities = SAInclude("simModify/abilities/player_mainframe_abilities")
+	for name, ability in pairs(mainframe_abilities) do
+		modApi:addMainframeAbility(name, ability)
+	end
 end
 
 local function lateLoad(modApi, options, params, options_raw)
 	--add new situation
-	local fn = include(SA_PATH .. "/modulesModify/serverdefs")
+	local fn = SAInclude("modulesModify/serverdefs")
 	fn.lateLoad()
 end
 local function lateInit(modApi)
 	--modify game hud
-	include(SA_PATH .. "/clientModify/hud/hud")
-	include(SA_PATH .. "/clientModify/hud/agent_panel")
-	include(SA_PATH .. "/clientModify/hud/mainframe_panel")
-	include(SA_PATH .. "/clientModify/hud/home_panel")
-	include(SA_PATH .. "/clientModify/gameplay/modal_thread")
+	SAInclude("clientModify/hud/hud")
+	SAInclude("clientModify/hud/agent_panel")
+	SAInclude("clientModify/hud/mainframe_panel")
+	SAInclude("clientModify/hud/home_panel")
+	SAInclude("clientModify/gameplay/modal_thread")
 
 	--add allyplayer
-	include(SA_PATH .. "/simModify/simplayer")
-	include(SA_PATH .. "/simModify/aiplayer")
-	include(SA_PATH .. "/simModify/allyplayer")
-	include(SA_PATH .. "/simModify/pcplayer")
-	include(SA_PATH .. "/simModify/engine")
+	SAInclude("simModify/simplayer")
+	SAInclude("simModify/aiplayer")
+	SAInclude("simModify/allyplayer")
+	SAInclude("simModify/pcplayer")
+	SAInclude("simModify/engine")
 end
 
 local function initStrings(modApi)
