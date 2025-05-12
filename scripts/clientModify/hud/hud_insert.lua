@@ -160,9 +160,9 @@ local inserts = {
                     ctor = [[image]],
                     color =
                     {
-                        0.7843137383461,
-                        0,
-                        0,
+                        0.219607844948769,
+                        0.376470595598221,
+                        0.376470595598221,
                         0.196078434586525,
                     },
                     images =
@@ -229,7 +229,7 @@ local inserts = {
                     },
                 },
                 {
-                    name = [[agentProfileAnim]],
+                    name = [[incognitaProfileAnim]],
                     isVisible = true,
                     noInput = false,
                     anchor = 1,
@@ -272,7 +272,7 @@ local inserts = {
                         },
                     },
                     ctor = [[anim]],
-                    animfile = [[portraits/incognita_face]],
+                    animfile = [[portraits/incognita_face_red]],
                     symbol = [[character]],
                     anim = [[idle]],
                     color =

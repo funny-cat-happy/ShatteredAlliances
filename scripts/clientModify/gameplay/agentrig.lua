@@ -29,7 +29,6 @@ agentrig.shouldDrawInterest = function(self, unit, interest)
 end
 
 agentrig.drawInterest = function(self, interest, alerted)
-    SALog("drawInterest")
     local x0, y0 = self._boardRig:cellToWorld(interest.x, interest.y)
     local sim = self._boardRig:getSim()
 

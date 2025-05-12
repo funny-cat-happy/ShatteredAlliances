@@ -1,4 +1,5 @@
 local modifications = {
+    --incognita red face
     { "hud.lua",
         { "widgets", "homePanel_top", "children", "incognitaFace", "images" },
         {
@@ -8,6 +9,7 @@ local modifications = {
             }
         }
     },
+    --incognita button text size
     { "hud.lua",
         { "widgets", "homePanel_top", "children", "incognitaBtn" },
         {
@@ -64,6 +66,31 @@ local modifications = {
                     name = [[active]],
                 },
             },
+        },
+    },
+    --firewall text size
+    { "hud.lua",
+        { "widgets", "alarm", "children", "trackerTxt" },
+        {
+            name = [[trackerTxt]],
+            isVisible = true,
+            noInput = false,
+            anchor = 1,
+            rotation = 0,
+            x = -2,
+            xpx = true,
+            y = -30,
+            ypx = true,
+            w = 80,
+            wpx = true,
+            h = 70,
+            hpx = true,
+            sx = 1,
+            sy = 1,
+            ctor = [[label]],
+            halign = MOAITextBox.CENTER_JUSTIFY,
+            valign = MOAITextBox.LEFT_JUSTIFY,
+            text_style = [[font1_24_r]],
         },
     },
 }

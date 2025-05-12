@@ -60,7 +60,7 @@ local MISSION_FACTORY_SITUATION = {
             "SpySociety/VoiceOver/Missions/MapScreen/Location_RegionalSecurityOffice_2",
         },
         insetImg = "gui/menu pages/corp_select/New_mission_icons/terminal thing.png",
-        icon = "gui/mission_previews/security_dispatch.png",
+        icon = "gui/mission_previews/collaboration.png",
         objectives = serverdefs.createGeneralMissionObj(STRINGS.MISSIONS.ESCAPE.OBJ_GUARD_OFFICE),
         secondary_objectives = serverdefs.createGeneralSecondaryMissionObj(),
     },

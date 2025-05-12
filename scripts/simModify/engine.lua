@@ -8,6 +8,7 @@ local binops = include("modules/binary_ops")
 local mathutil = include("modules/mathutil")
 local array = include("modules/array")
 local level = include("sim/level")
+---@type simdefs
 local simdefs = include("sim/simdefs")
 local simevents = include("sim/simevents")
 local simunit = include("sim/simunit")
@@ -33,12 +34,42 @@ local alarm_states = include("sim/alarm_states")
 
 local oldInit = simengine.init
 
+---@class engine
+---@field _firewallLimit integer
+---@field _currentFirewall integer
+---@field _firewallStage integer
+
 simengine.init = function(self, params, levelData, ...)
     oldInit(self, params, levelData, ...)
     self._turn = 3
     table.insert(self._players, 1, allyplayer(self))
+    self._firewallLimit = simdefs.SA.FIREWALL_UPPER_LIMIT
+    self._currentFirewall = 6
+    self._firewallStage = 1
 end
 
+simengine.getINCFirewallStatus = function(self)
+    return self._currentFirewall, self._firewallLimit, self._firewallStage
+end
+
+simengine.updateINCFirewallStatus = function(self, firewall, limit)
+    self._currentFirewall = self._currentFirewall + firewall
+    if limit then
+        self._firewallLimit = self._firewallLimit + limit
+    end
+    if firewall ~= 0 or limit ~= 0 then
+        self:dispatchEvent(simdefs.EV_ADVANCE_TRACKER,
+            {
+                currentFirewall = self._currentFirewall,
+                firewallLimit = self._firewallLimit,
+                firewallStage = self
+                    ._firewallStage
+            })
+    end
+end
+
+simengine.trackerAdvance = function(self, delta, txt, scan)
+end
 
 simengine.applyAction = function(self, action)
     local choiceCount = self._choiceCount
@@ -104,7 +135,7 @@ end
 
 simengine.getAlly = function(self)
     for i, player in ipairs(self._players) do
-        if player:getTraits().playerType and player:getTraits().playerType == simdefs.PLAYER_TYPE.ALLY then
+        if player:getTraits().playerType and player:getTraits().playerType == simdefs.SA.PLAYER_TYPE.ALLY then
             return player
         end
     end
@@ -291,9 +322,6 @@ simengine.moveUnit = function(self, unit, moveTable)
         if not unit:isValid() then
             canMoveReason = simdefs.CANMOVE_INTERRUPTED
             break
-        end
-        if (unit:getPlayerOwner() == self:getAlly()) then
-            SALog(simquery.getMoveSoundRange(unit, start_cell))
         end
 
         self:emitSound({ hiliteCells = unit:isPC(), range = simquery.getMoveSoundRange(unit, start_cell) }, end_cell.x,

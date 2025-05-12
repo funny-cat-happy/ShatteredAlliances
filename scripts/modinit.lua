@@ -1,8 +1,8 @@
 local function earlyInit(modApi)
 	local scriptPath = modApi:getScriptPath()
 	rawset(_G, "SA_PATH", rawget(_G, "SA_PATH") or scriptPath)
-	rawset(_G, "SAInclude", rawget(_G, "SAInclude") or function(striptPath)
-		return include(scriptPath .. "/" .. striptPath)
+	rawset(_G, "SAInclude", rawget(_G, "SAInclude") or function(filePath)
+		return include(scriptPath .. "/" .. filePath)
 	end)
 	SAInclude('modulesModify/log')
 	SAInclude('modulesModify/util')
@@ -10,7 +10,10 @@ end
 local function init(modApi)
 	modApi.requirements = { "Sim Constructor", "Expanded Cheats" }
 	local dataPath = modApi:getDataPath()
-	KLEIResourceMgr.MountPackage(dataPath .. "/buildout/gui.kwad", "data")
+	KLEIResourceMgr.MountPackage(dataPath .. "/gui.kwad", "data")
+	KLEIResourceMgr.MountPackage(dataPath .. "/anims.kwad", "data")
+	KLEIResourceMgr.MountPackage(dataPath .. "/sound.kwad", "data")
+	MOAIFmodDesigner.loadFEV("SA.fev")
 
 	SAInclude("simModify/btree/actions")
 	SAInclude("simModify/btree/conditions")
@@ -19,15 +22,18 @@ local function init(modApi)
 	SAInclude("clientModify/fe/cheatmenu")
 
 	SAInclude('clientModify/gameplay/boardrig')
-	SAInclude('clientModify/gameplay/agentrig')
+    SAInclude('clientModify/gameplay/agentrig')
+	
+	SAInclude("simModify/simunit")
 
-	local simdefs = SAInclude("simModify/simdefs")
-	for k, v in pairs(simdefs) do
-		modApi:addSimdef(k, v)
-	end
+	modApi:addSimdef("SA", SAInclude("simModify/simdefs"))
 end
 
-
+---comment
+---@param modApi modApi
+---@param options any
+---@param params any
+---@param options_raw any
 local function load(modApi, options, params, options_raw)
 	modApi:insertUIElements(SAInclude("clientModify/hud/hud_insert"))
 	modApi:modifyUIElements(SAInclude("clientModify/hud/hud_modification"))
@@ -35,25 +41,33 @@ local function load(modApi, options, params, options_raw)
 	for name, guarddef in pairs(guarddefs) do
 		modApi:addGuardDef(name, guarddef)
 	end
-	local give_spell = SAInclude("clientModify/fe/cheatmenu")
-	local cheatmenu = include("fe/cheatmenu")
-
-
-	local cheat_item = cheatmenu.cheat_item
-	local simdefs = include("sim/simdefs")
-	if rawget(simdefs, "CHEATS") then
-		table.insert(simdefs.CHEATS, cheat_item("debug", function()
-			SALog("debug")
-		end))
-	end
+	-- local give_spell = SAInclude("clientModify/fe/cheatmenu")
+	-- local cheatmenu = include("fe/cheatmenu")
+	-- local cheat_item = cheatmenu.cheat_item
+	-- local simdefs = include("sim/simdefs")
+	-- if rawget(simdefs, "CHEATS") then
+	-- 	table.insert(simdefs.CHEATS, cheat_item("debug", function()
+	-- 		SALog("debug")
+	-- 	end))
+	-- end
 	-- Add the new custom situations
 	SAInclude("simModify/mission/mission_factory")
 	local serverdefs_mod = SAInclude("modulesModify/serverdefs")
 	modApi:addSituation(serverdefs_mod.MISSION_FACTORY_SITUATION, "mission_factory", SA_PATH .. "/simModify/mission")
-	-- add mainframe ability
-	local mainframe_abilities = SAInclude("simModify/abilities/player_mainframe_abilities")
-	for name, ability in pairs(mainframe_abilities) do
+	-- add player program
+	local player_mainframe_abilities = SAInclude("simModify/abilities/player_mainframe_abilities")
+	for name, ability in pairs(player_mainframe_abilities) do
 		modApi:addMainframeAbility(name, ability)
+	end
+	-- add incognita program
+	local player_mainframe_abilities = SAInclude("simModify/abilities/incognita_program_abilities")
+	for name, ability in pairs(player_mainframe_abilities) do
+		modApi:addMainframeAbility(name, ability)
+	end
+	-- add incognita daemon
+	local incognita_mainframe_abilities = SAInclude("simModify/abilities/incognita_daemon_abilities")
+	for name, ability in pairs(incognita_mainframe_abilities) do
+		modApi:addDaemonAbility(name, ability)
 	end
 end
 

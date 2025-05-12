@@ -7,6 +7,17 @@ local _M = {
     },
     ALLY_UNIT = {
         ALLY_INVISIBLE_KILLER = "ally_guard_enforcer_reinforcement"
-    }
+    },
+
+
+    FIREWALL_UPPER_LIMIT = 9,
+
+
+    TRG_INCOGNITA_ACTION = 0,
 }
 return _M
+
+---@class customSimdefsWrap
+---@field SA customSimdefs
+
+---@alias simdefs customSimdefsWrap|systemSimdefs

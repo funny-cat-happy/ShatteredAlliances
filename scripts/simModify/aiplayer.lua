@@ -1,5 +1,10 @@
 local aiplayer = include("sim/aiplayer")
+---@type simdefs
 local simdefs = include("sim/simdefs")
+local simplayer = include("sim/simplayer")
+local simability = include("sim/simability")
+local util = include("modules/util")
+local dict = SAInclude("modulesModify/dict")
 
 aiplayer.isAlly = function(self)
     return false
@@ -8,7 +13,13 @@ end
 local oldInit = aiplayer.init
 aiplayer.init = function(self, sim)
     oldInit(self, sim)
-    self._traits.playerType = simdefs.PLAYER_TYPE.AI
+    self._traits.playerType = simdefs.SA.PLAYER_TYPE.AI
+    self._incognita_program = {}
+    self._intention_points = 2
+    local ability = simability.create("programLockPick")
+    table.insert(self._incognita_program, ability)
+    local ability = simability.create("programMarch")
+    table.insert(self._incognita_program, ability)
 end
 function aiplayer:getPlayerAlly(sim)
     return nil
@@ -47,5 +58,91 @@ aiplayer.updateSenses = function(self, unit)
 
     if not target and not interest then
         self:returnToIdleSituation(unit)
+    end
+end
+
+aiplayer.onEndTurn = function(self, sim)
+    simplayer.onEndTurn(self, sim)
+    if self._sim:getCurrentPlayer() == self then
+        self:updateTracker(sim)
+    end
+end
+
+aiplayer.thinkHard = function(self, sim)
+    sim:triggerEvent(simdefs.SA.TRG_INCOGNITA_ACTION, self)
+    ---@type dict
+    local evaluateDict = dict(sim)
+    for key, value in pairs(self:getPrograms()) do
+        evaluateDict:add(value, value.evaluate())
+    end
+    evaluateDict:sort()
+    for i = 1, self._intention_points, 1 do
+        local programDict = evaluateDict:randomPop(70)
+        if programDict then
+            programDict.key:executeAbility(sim)
+        end
+    end
+    sim:endTurn()
+end
+
+aiplayer.march = function(self, sim)
+    local st = os.clock()
+    local steps = 0
+    local pcPlayer = sim:getPC()
+
+
+    self.bunits = util.tdupe(self.prioritisedUnits)
+    local maxSteps = 50
+    while #self.bunits > 0 and not pcPlayer:isNeutralized(sim) and steps < maxSteps do
+        -- Process behaviours once for each outstanding unit.
+        local unit = table.remove(self.bunits, 1)
+        self:setCurrentAgent(unit)
+        if unit:isValid() then
+            simlog(simdefs.LOG_AI, "[%s] Thinking", tostring(unit:getID()))
+        end
+        local thought = self:tickBrain(unit)
+        if thought and unit:isValid() then
+            if thought == simdefs.BSTATE_RUNNING then
+                --we got interrupted!
+                simlog(simdefs.LOG_AI, "[%s] Thinking again immediately", tostring(unit:getID()))
+                table.insert(self.bunits, 1, unit)
+            elseif thought == simdefs.BSTATE_WAITING then
+                simlog(simdefs.LOG_AI, "[%s] Thinking again later: %s", tostring(unit:getID()),
+                    unit:getBrain().rootNode.status)
+                table.insert(self.bunits, unit)
+            else
+                table.insert(self.processedUnits, unit)
+            end
+        end
+        self:setCurrentAgent(nil)
+
+
+        steps = steps + 1
+    end
+
+    if steps > maxSteps then
+        simlog("thinkhard() BAILING -- took %.1f ms", (os.clock() - st) * 1000)
+        for i, bunit in ipairs(bunits) do
+            simlog("%s [%s]", bunit:getName(), bunit:isValid() and tostring(bunit:getID()) or "killed")
+        end
+        self.bunits = {}
+        steps = 0
+        st = os.clock()
+    end
+
+    self:cleanUpSituations()
+end
+
+aiplayer.getPrograms = function(self)
+    return self._incognita_program
+end
+
+aiplayer.addIncognitaIntention = function(self, abilityID)
+    local ability = simability.create(abilityID)
+    if ability then
+        ability:spawnAbility(self._sim, self)
+        table.insert(self._mainframeAbilities, ability)
+        self._sim:dispatchEvent(simdefs.EV_MAINFRAME_INSTALL_PROGRAM,
+            { idx = #self._mainframeAbilities, ability = ability })
     end
 end

@@ -64,9 +64,9 @@ function aiplayer:createGuard(sim, unitType)
 	if newUnit:getTraits().mainframe_ice and not newUnit:getTraits().omni then
 		local firewallMultiplier = sim:getParams().difficultyOptions.firewallMultiplier
 		newUnit:getTraits().mainframe_ice = newUnit:getTraits().mainframe_ice +
-		math.ceil(newUnit:getTraits().mainframe_ice * firewallMultiplier)
+			math.ceil(newUnit:getTraits().mainframe_ice * firewallMultiplier)
 		newUnit:getTraits().mainframe_iceMax = newUnit:getTraits().mainframe_iceMax +
-		math.ceil(newUnit:getTraits().mainframe_iceMax * firewallMultiplier)
+			math.ceil(newUnit:getTraits().mainframe_iceMax * firewallMultiplier)
 	end
 	return newUnit
 end
@@ -505,7 +505,7 @@ end
 
 function aiplayer:createOrJoinCombatSituation(unit, target)
 	local situation = unit:getBrain():getSituation().ClassType == simdefs.SITUATION_COMBAT and
-	unit:getBrain():getSituation()
+		unit:getBrain():getSituation()
 	if not situation then
 		situation = self:findExistingCombatSituation(target)
 	end

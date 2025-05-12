@@ -6,8 +6,8 @@
 
 --local version = include( "modules/version" )
 
-local util = include( "modules/util" )
-local array = include( "modules/array" )
+local util = include("modules/util")
+local array = include("modules/array")
 
 ----------------------------------------------------------------
 -- "Official" mod API.
@@ -20,9 +20,9 @@ local array = include( "modules/array" )
 
 -----------------------------------------------------------------
 -- SCRIPT TABLE
--- sometimes a script table is refered to (easy to confuse with mission scripts). 
+-- sometimes a script table is refered to (easy to confuse with mission scripts).
 -- These are used for dialogues between characters at the map screen or in missions.
--- They identify the speaker and what they say. 
+-- They identify the speaker and what they say.
 -- they are a talbe with these elements:
 --        text = string : dictation of what is spoken
 --        anim = string : path to the profile animation file of the speaker
@@ -32,16 +32,16 @@ local array = include( "modules/array" )
 
 
 
-
+---@class modApi
 local mod_api = class()
 
-function mod_api:init( mod_manager, mod_id, dataPath, scriptPath )
+function mod_api:init(mod_manager, mod_id, dataPath, scriptPath)
     self.mod_manager = mod_manager
     self.mod_id = mod_id
     self.data_path = dataPath
     self.script_path = scriptPath
-    local modInfo = mod_manager:findMod( mod_id )
-    self._dlc_footer = { modInfo.name, modInfo.icon, modInfo.author }    
+    local modInfo = mod_manager:findMod(mod_id)
+    self._dlc_footer = { modInfo.name, modInfo.icon, modInfo.author }
 end
 
 function mod_api:getDataPath()
@@ -54,35 +54,35 @@ end
 
 ---------------------------------------------------------------
 --prefabs are bits of level. Arangements of walls, floors and props and match and burn tags.
-function mod_api:addPrefabt( prefabt )
-    table.insert(self.mod_manager.modPrefabs,prefabt)
+function mod_api:addPrefabt(prefabt)
+    table.insert(self.mod_manager.modPrefabs, prefabt)
 end
 
-function mod_api:addWorldPrefabt( path, world, prefabt )                
-  --  self.mod_manager.modWorldPrefabs[world] =  prefabt 
-    self.mod_manager:addWorldPrefabs(world,prefabt)
+function mod_api:addWorldPrefabt(path, world, prefabt)
+    --  self.mod_manager.modWorldPrefabs[world] =  prefabt
+    self.mod_manager:addWorldPrefabs(world, prefabt)
 end
 
 ----------------------------------------------------------------
--- escape_mission is a collection of scripts that handle a lot of the general events that happen on missions. 
+-- escape_mission is a collection of scripts that handle a lot of the general events that happen on missions.
 -- Speical locations have their own scripts, like the detention center, but it also runs the escpae_mission scritps.
 -- This function will take whatever scripts file you added in the modinit and appends them to the base escape_mission scripts.
 function mod_api:addEscapeScripts(scripts)
-    table.insert(self.mod_manager.modMissionScripts,scripts)
+    table.insert(self.mod_manager.modMissionScripts, scripts)
 end
 
 ----------------------------------------------------------------
 --Woldgen has a list of strings that is all of the potential side missions that can show up.
---This function adds a string to that list. 
---The string is used in "escape_mission" script (see above) to determine what extra prefabs need to be added or what 
---speial mission script needs to be run. 
+--This function adds a string to that list.
+--The string is used in "escape_mission" script (see above) to determine what extra prefabs need to be added or what
+--speial mission script needs to be run.
 --
--- sidemissions :table 
---      talbe of strings 
-function mod_api:addSideMissions( path, sidemissions )
-    local worldgen = include( "sim/worldgen" )
-    for i,item in ipairs (sidemissions) do
-        table.insert(worldgen.SIDEMISSIONS,item)
+-- sidemissions :table
+--      talbe of strings
+function mod_api:addSideMissions(path, sidemissions)
+    local worldgen = include("sim/worldgen")
+    for i, item in ipairs(sidemissions) do
+        table.insert(worldgen.SIDEMISSIONS, item)
     end
 end
 
@@ -96,43 +96,42 @@ end
 -- stringTable: table
 --      Table of localizable strings.
 
-function mod_api:addStrings( poFolder, tableName, stringTable )
-    assert( type(tableName) == "string" )
-    assert( type(stringTable) == "table" )
+function mod_api:addStrings(poFolder, tableName, stringTable)
+    assert(type(tableName) == "string")
+    assert(type(stringTable) == "table")
 
     local langMod = self.mod_manager:getLanguageMod()
     if langMod then
-        local loc_translator = include( "loc_translator" )
-        local poFilepath = string.format( "%s/%s", poFolder, langMod.poFile )
-        loc_translator.translateStringTable( tableName, stringTable, poFilepath, langMod.poFile )
+        local loc_translator = include("loc_translator")
+        local poFilepath = string.format("%s/%s", poFolder, langMod.poFile)
+        loc_translator.translateStringTable(tableName, stringTable, poFilepath, langMod.poFile)
     end
-    assert( STRINGS[ tableName ] == nil )
-    STRINGS[ tableName ] = stringTable
+    assert(STRINGS[tableName] == nil)
+    STRINGS[tableName] = stringTable
 end
 
 ---------------------------------------------------------------
 -- Scritps in this case are sets of data that say who is talking, the location of the VO sound file, and a string of the dialog
--- This function adds new script lines to the INGAME table. Basically all the in mission speaking. 
+-- This function adds new script lines to the INGAME table. Basically all the in mission speaking.
 -- Scripts can be added without a VO sound, in which case, the message will just show up like the agent's banter.
-function mod_api:addMissionScripts(  table )
-    assert( type(table) == "table" )
+function mod_api:addMissionScripts(table)
+    assert(type(table) == "table")
 
-    local SCRIPTS = include('client/story_scripts')    
-    for i,tableItem in pairs(table)do
+    local SCRIPTS = include('client/story_scripts')
+    for i, tableItem in pairs(table) do
         SCRIPTS.INGAME[i] = tableItem
     end
 end
-
 
 ------------------------------------------------------------------------------------
 -- this function swaps out a script that exists already for a new one.
 --
 -- path: a table of the heiarcy in the scripts file of the entry you want to replace. "INCAME.AGENTDOWN" would be {"INGAME","AGENTDOWN"}
 -- data: a "SCRIPT" table (see top of file)
-function mod_api:modScript( path,data)
+function mod_api:modScript(path, data)
     local SCRIPTS = include('client/story_scripts')
     local var = SCRIPTS
-    for i, level in ipairs(path)do
+    for i, level in ipairs(path) do
         if i == #path then
             var[level] = data
         else
@@ -141,20 +140,18 @@ function mod_api:modScript( path,data)
     end
 end
 
-
 -------------------------------------------------------------------------------------
 -- New scripts for the map screen. Dialogue between missions.
 -- table is a list "SCRIPT" tables. (see top of file)
-function mod_api:addMapScripts( table, base)
-    assert( type(table) == "table" )
-    assert( type(base) == "string" )
+function mod_api:addMapScripts(table, base)
+    assert(type(table) == "table")
+    assert(type(base) == "string")
 
     local SCRIPTS = include('client/story_scripts')
-    for i,tableItem in pairs(table)do
+    for i, tableItem in pairs(table) do
         SCRIPTS[base].MISSIONS[i] = tableItem
     end
 end
-
 
 -------------------------------------------------------------------------------------
 -- adds the options that are customizeable to the the generations options screen.
@@ -164,32 +161,30 @@ end
 --      the name the shows up on the campaign generation screen
 -- tip : string
 --      the text that shows when you roll over that item on the campaign geration screen.
-function mod_api:addGenerationOption( option, name, tip)
-    assert( type(option) == "string" )
-    assert( type(name) == "string" )
-    assert( type(tip) == "string" )
+function mod_api:addGenerationOption(option, name, tip)
+    assert(type(option) == "string")
+    assert(type(name) == "string")
+    assert(type(tip) == "string")
     log:write("mod_api[%s]:addGenerationOption( %s, %s )", self.mod_id, option, name)
 
     self.mod_manager:addGenerationOption(self.mod_id, option, name, tip)
 end
 
-
 ---------------------------------------------------------------------------------------
--- add or replace content on the simdefs file. 
+-- add or replace content on the simdefs file.
 
-function mod_api:addSimdef( entry, content )
-    assert( type(entry) == "string" )
-    assert( type(content) == "table" )
+function mod_api:addSimdef(entry, content)
+    assert(type(entry) == "string")
+    assert(type(content) == "table")
 
-    local simdefs = include( "sim/simdefs" )
+    local simdefs = include("sim/simdefs")
 
-    if rawget(simdefs,entry) then    
-       local data = rawget(simdefs,entry) 
-       for i,item in pairs(content)do
-
-           data[i]=item
-       end             
-       rawset(simdefs, entry, data)       
+    if rawget(simdefs, entry) then
+        local data = rawget(simdefs, entry)
+        for i, item in pairs(content) do
+            data[i] = item
+        end
+        rawset(simdefs, entry, data)
     else
         rawset(simdefs, entry, content or false)
     end
@@ -199,21 +194,20 @@ end
 -- replace or add new types of alarm responses
 -- These are just the rules of what happens when that alarm state is triggers
 -- the list of what alarm states will trigger at each alarm level is in simdefs
-function mod_api:addAlarmStates( entry, content )
-    assert( type(entry) == "string" )
-    assert( type(content) == "table" )
+function mod_api:addAlarmStates(entry, content)
+    assert(type(entry) == "string")
+    assert(type(content) == "table")
 
-    local alarm_states = include( "sim/alarm_states" )
+    local alarm_states = include("sim/alarm_states")
 
     if alarm_states[entry] then
-        for i,item in pairs(content)do
+        for i, item in pairs(content) do
             alarm_states[entry][i] = item
         end
     else
         alarm_states[entry] = content
     end
 end
-
 
 ----------------------------------------------------------------
 -- Add/update an prop definition to the official props table.
@@ -223,48 +217,48 @@ end
 -- name: string
 -- propDef: table
 -- threats: boolean, if threats for this mod have been enabled, these props need to be added to their corp for worldgen.
-function mod_api:addPropDef( name, propDef, threats )
-    assert( type(name) == "string" )
-    assert( type(propDef) == "table" )
-    assert( type(threats) == "boolean" )
+function mod_api:addPropDef(name, propDef, threats)
+    assert(type(name) == "string")
+    assert(type(propDef) == "table")
+    assert(type(threats) == "boolean")
 
     local propdefs = include("sim/unitdefs/propdefs")
-    propdefs[ name ] = propDef
+    propdefs[name] = propDef
 
     if propDef.traits.recap_icon then
         mod_manager.device_lookup[propDef.id] = propDef.traits.recap_icon
-        if array.find( mod_manager.device_types , propDef.traits.recap_icon) == nil then
-            table.insert(mod_manager.device_types,propDef.traits.recap_icon)
+        if array.find(mod_manager.device_types, propDef.traits.recap_icon) == nil then
+            table.insert(mod_manager.device_types, propDef.traits.recap_icon)
         end
     end
- 
-    if threats and propDef.FTM_PREFABS then    
-        local worldgen = include( "sim/worldgen" )
-        table.insert(worldgen.FTM.PREFABS,propDef.FTM_PREFABS)
+
+    if threats and propDef.FTM_PREFABS then
+        local worldgen = include("sim/worldgen")
+        table.insert(worldgen.FTM.PREFABS, propDef.FTM_PREFABS)
     end
     --[[
-    if threats and propDef.SANKAKU_PREFABS then    
+    if threats and propDef.SANKAKU_PREFABS then
         local worldgen = include( "sim/worldgen" )
         table.insert(worldgen.SANKAKU.PREFABS,propDef.SANKAKU_PREFABS)
     end
 
-    if threats and propDef.PLASTECH_PREFABS then    
+    if threats and propDef.PLASTECH_PREFABS then
         local worldgen = include( "sim/worldgen" )
         table.insert(worldgen.PLASTECH.PREFABS,propDef.PLASTECH_PREFABS)
     end
 
-    if threats and propDef.KO_PREFABS then    
+    if threats and propDef.KO_PREFABS then
         local worldgen = include( "sim/worldgen" )
         table.insert(worldgen.KO.PREFABS,propDef.KO_PREFABS)
-    end            
+    end
     ]]
 end
 
 ----------------------------------------------------------------
 -- Add/update an agent definition to the official agents table.
 --
--- NOTE: Each agent needs a completely unique agentID. We used numbers, 
--- but strings may be better as they could have a prefix of your mod name making 
+-- NOTE: Each agent needs a completely unique agentID. We used numbers,
+-- but strings may be better as they could have a prefix of your mod name making
 -- it less likely for conflicts. EG: "coolMod-Gary"
 --
 -- name: string
@@ -275,38 +269,37 @@ end
 --      Array of strings that define the alternate loadouts for this agent.  If no table is provided
 --      then this agentDef is not selectable through the team preview screen.
 
-function mod_api:addAgentDef( name, agentDef, loadout )
-    assert( type(name) == "string" )
-    assert( type(agentDef) == "table" )
-    assert( loadout == nil or type(loadout) == "table" )
+function mod_api:addAgentDef(name, agentDef, loadout)
+    assert(type(name) == "string")
+    assert(type(agentDef) == "table")
+    assert(loadout == nil or type(loadout) == "table")
 
-    local agentdefs = include( "sim/unitdefs/agentdefs" )
-    agentdefs[ name ] = agentDef
+    local agentdefs = include("sim/unitdefs/agentdefs")
+    agentdefs[name] = agentDef
 
     if type(loadout) == "table" then
-        local serverdefs = include( "modules/serverdefs" )
-        if array.find( serverdefs.SELECTABLE_AGENTS, name ) == nil then
-            table.insert( serverdefs.SELECTABLE_AGENTS, name )
+        local serverdefs = include("modules/serverdefs")
+        if array.find(serverdefs.SELECTABLE_AGENTS, name) == nil then
+            table.insert(serverdefs.SELECTABLE_AGENTS, name)
         end
-        serverdefs.LOADOUTS[ name ] = loadout
+        serverdefs.LOADOUTS[name] = loadout
     end
 
     if self._dlc_footer then
-       agentdefs[ name ].traits.dlcFooter = self._dlc_footer
+        agentdefs[name].traits.dlcFooter = self._dlc_footer
     end
-
 end
 
 ----------------------------------------------------------------
 -- Add/update an guard definition to the official guard table.
 --
--- Each unit type added needs to know what spawn group it belongs to and what weight chance it has to spawn.  The SPAWN GROUP name will be a nunber of 
--- its weight in that category or nil. 
+-- Each unit type added needs to know what spawn group it belongs to and what weight chance it has to spawn.  The SPAWN GROUP name will be a nunber of
+-- its weight in that category or nil.
 --      CAMERA_DRONES = each mission reguardless of corp may have 1 or more from this list
 --      CORPNANE_THREAT = the unique threats for this corp
 --      CORPNAME_LV2 = the leveled up versions of the unique threats that show up later in the game.
 --      CORPNAME_GUARD = the lowest level threats for this corp (basic of support guards)
---      SANKAKU_HUMAN_THREAT = Sankaku is special in that it was important to have a distinction between it's human and drone guards to ensure at least  
+--      SANKAKU_HUMAN_THREAT = Sankaku is special in that it was important to have a distinction between it's human and drone guards to ensure at least
 --                             a few human guards
 --      SANKAKU_HUMAN_GUARD = Same as above, Sankaku is speical.
 --
@@ -315,111 +308,108 @@ end
 -- guardDef: table
 --      Defines the agent; see guarddefs.lua
 
-function mod_api:addGuardDef( name, guardDef )
-    assert( type(name) == "string" )
-    assert( type(guardDef) == "table" )
+function mod_api:addGuardDef(name, guardDef)
+    assert(type(name) == "string")
+    assert(type(guardDef) == "table")
 
-    local guarddefs = include( "sim/unitdefs/guarddefs" )
-    guarddefs[ name ] = guardDef
+    local guarddefs = include("sim/unitdefs/guarddefs")
+    guarddefs[name] = guardDef
 
-    guarddefs[ name ].id = name
+    guarddefs[name].id = name
 
-    local worldgen = include( "sim/worldgen" )
+    local worldgen = include("sim/worldgen")
 
     -- SPAWN GROUPS
     if guardDef.CAMERA_DRONE then
         worldgen.CAMERA_DRONE[name] = guardDef.CAMERA_DRONE
-        table.insert(worldgen.CAMERA_DRONE_FIX,{name,guardDef.CAMERA_DRONE})
+        table.insert(worldgen.CAMERA_DRONE_FIX, { name, guardDef.CAMERA_DRONE })
     end
     if guardDef.FTM_THREAT then
         worldgen.FTM_THREAT[name] = guardDef.FTM_THREAT
-        table.insert(worldgen.FTM.THREAT_FIX,{name,guardDef.FTM_THREAT})
+        table.insert(worldgen.FTM.THREAT_FIX, { name, guardDef.FTM_THREAT })
     end
     if guardDef.FTM_GUARD then
         worldgen.FTM_GUARD[name] = guardDef.FTM_GUARD
-        table.insert(worldgen.FTM.GUARD_FIX,{name,guardDef.FTM_GUARD})
-    end   
+        table.insert(worldgen.FTM.GUARD_FIX, { name, guardDef.FTM_GUARD })
+    end
     if guardDef.PLASTECH_THREAT then
         worldgen.PLASTECH_THREAT_0_17_5[name] = guardDef.PLASTECH_THREAT
-        table.insert(worldgen.PLASTECH.THREAT_FIX,{name,guardDef.PLASTECH_THREAT})
-    end 
+        table.insert(worldgen.PLASTECH.THREAT_FIX, { name, guardDef.PLASTECH_THREAT })
+    end
     if guardDef.PLASTECH_GUARD then
         worldgen.PLASTECH_GUARD[name] = guardDef.PLASTECH_GUARD
-        table.insert(worldgen.PLASTECH.GUARD_FIX,{name,guardDef.PLASTECH_GUARD})
-    end 
+        table.insert(worldgen.PLASTECH.GUARD_FIX, { name, guardDef.PLASTECH_GUARD })
+    end
     if guardDef.KO_THREAT then
         worldgen.KO_THREAT[name] = guardDef.KO_THREAT
-        table.insert(worldgen.KO.THREAT_FIX,{name,guardDef.KO_THREAT})
-    end 
+        table.insert(worldgen.KO.THREAT_FIX, { name, guardDef.KO_THREAT })
+    end
     if guardDef.KO_GUARD then
         worldgen.KO_GUARD[name] = guardDef.KO_GUARD
-        table.insert(worldgen.KO.GUARD_FIX,{name,guardDef.KO_GUARD})
-    end     
+        table.insert(worldgen.KO.GUARD_FIX, { name, guardDef.KO_GUARD })
+    end
     if guardDef.SANKAKU_THREAT then
         worldgen.SANKAKU_THREAT[name] = guardDef.SANKAKU_THREAT
-        table.insert(worldgen.SANKAKU.THREAT_FIX,{name,guardDef.SANKAKU_THREAT})
-    end     
+        table.insert(worldgen.SANKAKU.THREAT_FIX, { name, guardDef.SANKAKU_THREAT })
+    end
     if guardDef.SANKAKU_HUMAN_THREAT then
         worldgen.SANKAKU_HUMAN_THREAT[name] = guardDef.SANKAKU_HUMAN_THREAT
-        table.insert(worldgen.SANKAKU.HUMAN_THREAT_FIX,{name,guardDef.SANKAKU_HUMAN_THREAT})
-    end    
+        table.insert(worldgen.SANKAKU.HUMAN_THREAT_FIX, { name, guardDef.SANKAKU_HUMAN_THREAT })
+    end
     if guardDef.SANKAKU_GUARD then
         worldgen.SANKAKU_GUARD[name] = guardDef.SANKAKU_GUARD
-        table.insert(worldgen.SANKAKU.GUARD_FIX,{name,guardDef.SANKAKU_GUARD})
-    end        
+        table.insert(worldgen.SANKAKU.GUARD_FIX, { name, guardDef.SANKAKU_GUARD })
+    end
     if guardDef.SANKAKU_HUMAN_GUARD then
         worldgen.SANKAKU_HUMAN_GUARD[name] = guardDef.SANKAKU_HUMAN_GUARD
-        table.insert(worldgen.SANKAKU.HUMAN_GUARD_FIX,{name,guardDef.SANKAKU_HUMAN_GUARD})
-    end        
+        table.insert(worldgen.SANKAKU.HUMAN_GUARD_FIX, { name, guardDef.SANKAKU_HUMAN_GUARD })
+    end
     if guardDef.OMNI_GUARD then
         worldgen.OMNI_GUARD[name] = guardDef.OMNI_GUARD
-        table.insert(worldgen.OMNI_GUARD_FIX,{name,guardDef.OMNI_GUARD})
-    end 
+        table.insert(worldgen.OMNI_GUARD_FIX, { name, guardDef.OMNI_GUARD })
+    end
 
     if guardDef.FTM_LV2 then
-       table.insert(worldgen.FTM.LVL2,{name,guardDef.FTM_LV2})
-    end 
+        table.insert(worldgen.FTM.LVL2, { name, guardDef.FTM_LV2 })
+    end
     if guardDef.SANKAKU_LV2 then
-        table.insert(worldgen.SANKAKU.LVL2,{name,guardDef.SANKAKU_LV2})
-    end 
+        table.insert(worldgen.SANKAKU.LVL2, { name, guardDef.SANKAKU_LV2 })
+    end
     if guardDef.KO_LV2 then
-        table.insert(worldgen.KO.LVL2,{name,guardDef.KO_LV2})
-    end 
+        table.insert(worldgen.KO.LVL2, { name, guardDef.KO_LV2 })
+    end
     if guardDef.PLASTECH_LV2 then
-        table.insert(worldgen.PLASTECH.LVL2,{name,guardDef.PLASTECH_LV2})
-    end            
-   
+        table.insert(worldgen.PLASTECH.LVL2, { name, guardDef.PLASTECH_LV2 })
+    end
+
     if self._dlc_footer then
-       guarddefs[ name ].traits.dlcFooter = self._dlc_footer
+        guarddefs[name].traits.dlcFooter = self._dlc_footer
     end
 
     if guardDef.traits.recap_icon then
         mod_manager.guard_lookup[name] = guardDef.traits.recap_icon
-        if array.find( mod_manager.guard_types, guardDef.traits.recap_icon) == nil then
-            table.insert(mod_manager.guard_types,guardDef.traits.recap_icon)
+        if array.find(mod_manager.guard_types, guardDef.traits.recap_icon) == nil then
+            table.insert(mod_manager.guard_types, guardDef.traits.recap_icon)
         end
     end
-
-
 end
 
 ----------------------------------------------------------------
--- Add prgrams to the list of starting generators and breakers. 
+-- Add prgrams to the list of starting generators and breakers.
 -- program: string
 --      the name of the program to add
 
-function mod_api:addStartingGenerator( program )
-    assert( type(program) == "string" )
-    local serverdefs = include( "modules/serverdefs" )   
-    table.insert(serverdefs.SELECTABLE_PROGRAMS[1],program)  
-end
-function mod_api:addStartingBreaker( program )
-    assert( type(program) == "string" )
-    local serverdefs = include( "modules/serverdefs" )   
-    table.insert(serverdefs.SELECTABLE_PROGRAMS[2],program)  
+function mod_api:addStartingGenerator(program)
+    assert(type(program) == "string")
+    local serverdefs = include("modules/serverdefs")
+    table.insert(serverdefs.SELECTABLE_PROGRAMS[1], program)
 end
 
-
+function mod_api:addStartingBreaker(program)
+    assert(type(program) == "string")
+    local serverdefs = include("modules/serverdefs")
+    table.insert(serverdefs.SELECTABLE_PROGRAMS[2], program)
+end
 
 ----------------------------------------------------------------
 -- Add agents to the list of rescueable agents
@@ -429,15 +419,14 @@ end
 --      template : string
 --          agents templateName eg: "sharpshooter_1"
 --      upgrades : table
---          table of strings that are the item IDs    
+--          table of strings that are the item IDs
 
-function mod_api:addRescueAgent( unitDef )
-    assert( type(unitDef) == "table" )
+function mod_api:addRescueAgent(unitDef)
+    assert(type(unitDef) == "table")
 
-    local serverdefs = include( "modules/serverdefs" )   
-    table.insert(serverdefs.TEMPLATE_AGENCY.unitDefsPotential,unitDef)  
-end 
-
+    local serverdefs = include("modules/serverdefs")
+    table.insert(serverdefs.TEMPLATE_AGENCY.unitDefsPotential, unitDef)
+end
 
 ----------------------------------------------------------------
 -- Add situations to the list of situations
@@ -453,23 +442,22 @@ end
 --      tags: table
 --          table of strings that are special tags for the mission
 
-function mod_api:addSituation( situation, id, path )
-    assert( type(situation) == "table" )
-    assert( type(situation.levelFile) == "string" )
+function mod_api:addSituation(situation, id, path)
+    assert(type(situation) == "table")
+    assert(type(situation.levelFile) == "string")
 
-    local serverdefs = include( "modules/serverdefs" ) 
-    situation.scriptPath = path .."/"
+    local serverdefs = include("modules/serverdefs")
+    situation.scriptPath = path .. "/"
     serverdefs.SITUATIONS[id] = situation
-end 
-
+end
 
 -----------------------------------------------------mo-----------
--- Add a program or agent unlock to the XP rewards unlockables. 
---      table of properties of the reward 
---          unlocktype: int     
+-- Add a program or agent unlock to the XP rewards unlockables.
+--      table of properties of the reward
+--          unlocktype: int
 --                  the type of unlock, 2:agent or 1:program
 --          alt: bool
---                  wether the agents unlocked are alts 
+--                  wether the agents unlocked are alts
 --          unlocks: table
 --                  nested list of tables with a name property of the unlocked items
 --                  {{name="agent"},{name="agent"}}
@@ -477,48 +465,47 @@ end
 --          XP: int
 --                  The XP added to the last unlockable needed to reach this item.
 
-function mod_api:addLevelReward( reward )
-    assert( type(reward) == "table" )    
-    local metadefs = include( "sim/metadefs" )
+function mod_api:addLevelReward(reward)
+    assert(type(reward) == "table")
+    local metadefs = include("sim/metadefs")
     local rewardNum = 1
-    while metadefs.LEVEL_REWARDS[rewardNum] do 
+    while metadefs.LEVEL_REWARDS[rewardNum] do
         rewardNum = rewardNum + 1
     end
-    metadefs.XP_LEVELS[rewardNum] = metadefs.XP_LEVELS[rewardNum-1] + (reward.XP or metadefs.XP_INCREMENT3)    
-    metadefs.LEVEL_CAP =  #metadefs.XP_LEVELS
-    table.insert(metadefs.LEVEL_REWARDS,reward)
+    metadefs.XP_LEVELS[rewardNum] = metadefs.XP_LEVELS[rewardNum - 1] + (reward.XP or metadefs.XP_INCREMENT3)
+    metadefs.LEVEL_CAP = #metadefs.XP_LEVELS
+    table.insert(metadefs.LEVEL_REWARDS, reward)
 end
 
 ----------------------------------------------------------------
 -- Add a program or agent unlock to be rewarded when DLC installed
--- rewards: table 
+-- rewards: table
 --      talbe of reward elements.
 -- reward element: table
---      table of properties of the reward 
---          unlocktype: int     
+--      table of properties of the reward
+--          unlocktype: int
 --                  the type of unlock, 2:agent or 1:program
 --          alt: bool
---                  wether the agents unlocked are alts 
+--                  wether the agents unlocked are alts
 --          unlocks: table
 --                  nested list of tables with a name property of the unlocked items
 --                  {{name="agent"},{name="agent"}}
 --                  {{name="program"},{name="progam"}}
 
-function mod_api:addInstallReward( reward )
-    assert( type(reward) == "table" )    
-    local metadefs = include( "sim/metadefs" )
+function mod_api:addInstallReward(reward)
+    assert(type(reward) == "table")
+    local metadefs = include("sim/metadefs")
     table.insert(metadefs.DLC_INSTALL_REWARDS, reward)
 
-    local stateGenerationOptions = include( "states/state-generation-options" )
+    local stateGenerationOptions = include("states/state-generation-options")
 
-    for _,list in ipairs(metadefs.DLC_INSTALL_REWARDS) do
+    for _, list in ipairs(metadefs.DLC_INSTALL_REWARDS) do
         if list.unlockType == metadefs.AGENT_UNLOCK then
-            for i,unlock in ipairs(list.unlocks) do
-                table.insert(stateGenerationOptions._CHARACTER_IMAGES, { png=unlock.png, unlock=unlock.name} )
+            for i, unlock in ipairs(list.unlocks) do
+                table.insert(stateGenerationOptions._CHARACTER_IMAGES, { png = unlock.png, unlock = unlock.name })
             end
         end
     end
-
 end
 
 ----------------------------------------------------------------
@@ -528,33 +515,33 @@ end
 -- ability: table
 --      Defines the program; see mainframe_abilities.lua
 
-function mod_api:addMainframeAbility( name, ability )
-    assert( type(name) == "string" )
-    assert( type(ability) == "table" ) 
-    local mainframe_abilities = include( "sim/abilities/mainframe_abilities" )    
-    mainframe_abilities[ name ] = ability   
+function mod_api:addMainframeAbility(name, ability)
+    assert(type(name) == "string")
+    assert(type(ability) == "table")
+    local mainframe_abilities = include("sim/abilities/mainframe_abilities")
+    mainframe_abilities[name] = ability
 
-    local simstore = include( "sim/units/store" )
+    local simstore = include("sim/units/store")
 
     if ability.PROGRAM_LIST then
-        simstore.STORE_ITEM.progList:addChoice( name, ability.PROGRAM_LIST ) 
+        simstore.STORE_ITEM.progList:addChoice(name, ability.PROGRAM_LIST)
     end
 
     if ability.PROGRAM_NO_BREAKER_LIST then
-        simstore.STORE_ITEM.noBreakerProgList:addChoice( name, ability.PROGRAM_NO_BREAKER_LIST ) 
+        simstore.STORE_ITEM.noBreakerProgList:addChoice(name, ability.PROGRAM_NO_BREAKER_LIST)
     end
 
     if ability.PROGRAM_BEGINNING_BREAKER_LIST then
-        simstore.STORE_ITEM.beginner_breakers:addChoice( name, ability.PROGRAM_BEGINNING_BREAKER_LIST ) 
-    end 
+        simstore.STORE_ITEM.beginner_breakers:addChoice(name, ability.PROGRAM_BEGINNING_BREAKER_LIST)
+    end
 
     if ability.PROGRAM_BEGINNING_NO_BREAKER_LIST then
-        simstore.STORE_ITEM.beginner_nobreakers:addChoice( name, ability.PROGRAM_BEGINNING_NO_BREAKER_LIST ) 
-    end     
+        simstore.STORE_ITEM.beginner_nobreakers:addChoice(name, ability.PROGRAM_BEGINNING_NO_BREAKER_LIST)
+    end
 
     if self._dlc_footer then
-        mainframe_abilities[ name ].dlcFooter = self._dlc_footer
-    end   
+        mainframe_abilities[name].dlcFooter = self._dlc_footer
+    end
 end
 
 ----------------------------------------------------------------
@@ -564,33 +551,33 @@ end
 -- ability: table
 --      Defines the Daemon; see npc_abilities.lua
 
-function mod_api:addDaemonAbility( name, ability )
-    assert( type(name) == "string" )
-    assert( type(ability) == "table" ) 
-    local npc_abilities = include( "sim/abilities/npc_abilities" )    
-    npc_abilities[ name ] = ability 
+function mod_api:addDaemonAbility(name, ability)
+    assert(type(name) == "string")
+    assert(type(ability) == "table")
+    local npc_abilities = include("sim/abilities/npc_abilities")
+    npc_abilities[name] = ability
 
-    local serverdefs = include( "modules/serverdefs" )
-    local worldgen = include( "sim/worldgen" )
+    local serverdefs = include("modules/serverdefs")
+    local worldgen = include("sim/worldgen")
 
     if ability.ENDLESS_DAEMONS then
-        table.insert(serverdefs.ENDLESS_DAEMONS,name)
+        table.insert(serverdefs.ENDLESS_DAEMONS, name)
     end
     if ability.PROGRAM_LIST then
-        table.insert(serverdefs.PROGRAM_LIST,name)
+        table.insert(serverdefs.PROGRAM_LIST, name)
     end
     if ability.OMNI_PROGRAM_LIST_EASY then
-        table.insert(serverdefs.OMNI_PROGRAM_LIST_EASY,name)
-    end   
+        table.insert(serverdefs.OMNI_PROGRAM_LIST_EASY, name)
+    end
     if ability.OMNI_PROGRAM_LIST then
-        table.insert(serverdefs.OMNI_PROGRAM_LIST,name)
-    end 
+        table.insert(serverdefs.OMNI_PROGRAM_LIST, name)
+    end
     if ability.REVERSE_DAEMONS then
-        table.insert(serverdefs.REVERSE_DAEMONS,name)
-    end 
+        table.insert(serverdefs.REVERSE_DAEMONS, name)
+    end
 
     if self._dlc_footer then
-        npc_abilities[ name ].dlcFooter = self._dlc_footer
+        npc_abilities[name].dlcFooter = self._dlc_footer
     end
 end
 
@@ -601,12 +588,12 @@ end
 -- animDef: table
 --      Defines the animation; see animdefs.lua
 
-function mod_api:addAnimDef( name, animDef )
-    assert( type(name) == "string" )
-    assert( type(animDef) == "table" ) 
+function mod_api:addAnimDef(name, animDef)
+    assert(type(name) == "string")
+    assert(type(animDef) == "table")
 
-    local animdefs = include( "animdefs" )     
-    animdefs.defs[ name ] = animDef
+    local animdefs = include("animdefs")
+    animdefs.defs[name] = animDef
 end
 
 ----------------------------------------------------------------
@@ -616,56 +603,55 @@ end
 -- itemDef: table
 --      Defines the item; see itemdefs.lua
 
-local function findItemInList(item,list)
+local function findItemInList(item, list)
     local index = false
 
-    for i,listitem in ipairs(list)do
+    for i, listitem in ipairs(list) do
         if listitem.id == item.id then
             index = i
             break
         end
     end
 
-    return index 
+    return index
 end
 
-function mod_api:addItemDef( name, itemDef )
+function mod_api:addItemDef(name, itemDef)
+    assert(type(name) == "string")
+    assert(type(itemDef) == "table")
 
-    assert( type(name) == "string" )
-    assert( type(itemDef) == "table" )
+    local itemdefs = include("sim/unitdefs/itemdefs")
+    itemdefs[name] = itemDef
+    itemdefs[name].id = name
 
-    local itemdefs = include( "sim/unitdefs/itemdefs" )
-    itemdefs[ name ] = itemDef
-    itemdefs[ name ].id = name
+    local simstore = include("sim/units/store")
 
-    local simstore = include( "sim/units/store" )
-
-    if itemDef.ITEM_LIST then      
-        local test = findItemInList(itemDef,simstore.STORE_ITEM.itemList)
-        if test then            
+    if itemDef.ITEM_LIST then
+        local test = findItemInList(itemDef, simstore.STORE_ITEM.itemList)
+        if test then
             simstore.STORE_ITEM.itemList[test].markedForDeletion = true
         end
-        table.insert(simstore.STORE_ITEM.itemList,itemDef)
+        table.insert(simstore.STORE_ITEM.itemList, itemDef)
     end
 
-    if itemDef.WEAPON_LIST then      
-        local test = findItemInList(itemDef,simstore.STORE_ITEM.weaponList)
+    if itemDef.WEAPON_LIST then
+        local test = findItemInList(itemDef, simstore.STORE_ITEM.weaponList)
         if test then
             simstore.STORE_ITEM.weaponList[test].markedForDeletion = true
         end
-        table.insert(simstore.STORE_ITEM.weaponList,itemDef)
+        table.insert(simstore.STORE_ITEM.weaponList, itemDef)
     end
     if itemDef.AUGMENT_LIST then
-        local test = findItemInList(itemDef,simstore.STORE_ITEM.augmentList)
+        local test = findItemInList(itemDef, simstore.STORE_ITEM.augmentList)
         if test then
             simstore.STORE_ITEM.augmentList[test] = itemDef
-        else 
-            table.insert(simstore.STORE_ITEM.augmentList,itemDef)
+        else
+            table.insert(simstore.STORE_ITEM.augmentList, itemDef)
         end
-    end   
+    end
 
     if self._dlc_footer then
-        itemdefs[ name ].traits.dlcFooter = self._dlc_footer
+        itemdefs[name].traits.dlcFooter = self._dlc_footer
     end
 end
 
@@ -676,14 +662,13 @@ end
 -- itemDef: table
 --      Defines the item; see itemdefs.lua
 
-function mod_api:addAbilityDef( name, abilityDefPath )
-    assert( type(name) == "string" )
-    assert( type(abilityDefPath) == "string" )
+function mod_api:addAbilityDef(name, abilityDefPath)
+    assert(type(name) == "string")
+    assert(type(abilityDefPath) == "string")
 
-    local abilitydefs = include( "sim/abilitydefs" )
-    abilitydefs._abilities[ name ] = include( abilityDefPath )
+    local abilitydefs = include("sim/abilitydefs")
+    abilitydefs._abilities[name] = include(abilityDefPath)
 end
-
 
 ----------------------------------------------------------------
 -- Insert a new custom final situation so that it will add it to new campaigns if the extended campaign is selected
@@ -692,80 +677,77 @@ end
 --              name: string
 --                      name of the new situation
 --              corp: string
---                       name of the corp the mission we be set in. 
+--                       name of the corp the mission we be set in.
 
-function mod_api:setCampaignEvent_CustomFinalSituation( situation )
-    assert( type(situation) == "table" )
-    
-    local simdefs = include( "sim/simdefs" )
-    
+function mod_api:setCampaignEvent_CustomFinalSituation(situation)
+    assert(type(situation) == "table")
+
+    local simdefs = include("sim/simdefs")
+
     local event = {
         eventType = simdefs.CAMPAIGN_EVENTS.CUSTOM_FINAL,
-        data = situation,    
-    }    
-    mod_manager:setCampaignEvent(event)       
+        data = situation,
+    }
+    mod_manager:setCampaignEvent(event)
 end
-
 
 ----------------------------------------------------------------
 -- trigger more hours to be added to the campaign when a certain mission is finished
 --              hours: number
 --                      hours to add
 --              triggerMission: string
---                      name of mission to trigger. 
+--                      name of mission to trigger.
 
-function mod_api:setCampaignEvent_AddMoreHours( hours, triggerMission )
-    assert( type(hours) == "number" )
-    assert( type(triggerMission) == "string" )
-    
-    local simdefs = include( "sim/simdefs" )
-    
+function mod_api:setCampaignEvent_AddMoreHours(hours, triggerMission)
+    assert(type(hours) == "number")
+    assert(type(triggerMission) == "string")
+
+    local simdefs = include("sim/simdefs")
+
     local event = {
         eventType = simdefs.CAMPAIGN_EVENTS.ADD_MORE_HOURS,
         mission = triggerMission,
-        data = hours,    
-    }    
-    mod_manager:setCampaignEvent(event)         
+        data = hours,
+    }
+    mod_manager:setCampaignEvent(event)
 end
-
 
 ----------------------------------------------------------------
 -- trigger to advance to the next day in a campaign after a certain mission is finished
 --              triggerMission: string
---                      name of mission to trigger. 
+--                      name of mission to trigger.
 
-function mod_api:setCampaignEvent_AdvanceADay( triggerMission )
-    assert( type(triggerMission) == "string" )
-    
-    local simdefs = include( "sim/simdefs" )
-    
+function mod_api:setCampaignEvent_AdvanceADay(triggerMission)
+    assert(type(triggerMission) == "string")
+
+    local simdefs = include("sim/simdefs")
+
     local event = {
         eventType = simdefs.CAMPAIGN_EVENTS.ADVANCE_TO_NEXT_DAY,
-        mission = triggerMission,  
-    }    
-    mod_manager:setCampaignEvent(event)         
+        mission = triggerMission,
+    }
+    mod_manager:setCampaignEvent(event)
 end
-
 
 ----------------------------------------------------------------
 -- trigger to set a set if custom scripts on the map screen after a certain mission is finished
 --              customIndex: string
 --                      name of the new script ID prefix to use
 --              triggerMission: string
---                      name of mission to trigger. 
+--                      name of mission to trigger.
 
-function mod_api:setCampaignEvent_SetCustomScriptIndex( customIndex,triggerMission )
-    assert( type(customIndex) == "string" )
-    assert( type(triggerMission) == "string" )
+function mod_api:setCampaignEvent_SetCustomScriptIndex(customIndex, triggerMission)
+    assert(type(customIndex) == "string")
+    assert(type(triggerMission) == "string")
 
-    local simdefs = include( "sim/simdefs" )
-    
+    local simdefs = include("sim/simdefs")
+
     local event = {
         eventType = simdefs.CAMPAIGN_EVENTS.SET_CUSTOM_SCRIPT_INDEX,
-        mission = triggerMission,  
+        mission = triggerMission,
         data = customIndex,
-    }    
-    mod_manager:setCampaignEvent(event)         
+    }
+    mod_manager:setCampaignEvent(event)
 end
 
 ----------------------------------------------------------------
@@ -773,102 +755,102 @@ end
 --              mission: string
 --                      name of next mission
 --              triggerMission: string
---                      name of mission to trigger. 
+--                      name of mission to trigger.
 
-function mod_api:setCampaignEvent_AddSequelMisison( missionData, triggerMission )
-    assert( type(missionData) == "table" )
-    assert( type(triggerMission) == "string" )
-    
-    local simdefs = include( "sim/simdefs" )
-    
+function mod_api:setCampaignEvent_AddSequelMisison(missionData, triggerMission)
+    assert(type(missionData) == "table")
+    assert(type(triggerMission) == "string")
+
+    local simdefs = include("sim/simdefs")
+
     local event = {
         eventType = simdefs.CAMPAIGN_EVENTS.GOTO_MISSION,
         mission = triggerMission,
-        data = missionData,    
-    }    
-    mod_manager:setCampaignEvent(event)       
+        data = missionData,
+    }
+    mod_manager:setCampaignEvent(event)
 end
 
 ----------------------------------------------------------------
 -- trigger have a popup show up on the map screen after a particular mission
 --              popUpData: table
---                      table of data to populate the pop up 
+--                      table of data to populate the pop up
 --              triggerMission: string
---                      name of mission to trigger. 
+--                      name of mission to trigger.
 
-function mod_api:setCampaignEvent_AddMapPopup( popUpData, triggerMission, hours )
-    assert( type(popUpData) == "table" )
-    
-    local simdefs = include( "sim/simdefs" )
-    
+function mod_api:setCampaignEvent_AddMapPopup(popUpData, triggerMission, hours)
+    assert(type(popUpData) == "table")
+
+    local simdefs = include("sim/simdefs")
+
     local event = {
         eventType = simdefs.CAMPAIGN_EVENTS.ADD_POPUP,
         mission = triggerMission,
-        data = popUpData, 
-        hours = hours,   
-    }    
-    mod_manager:setCampaignEvent(event)       
+        data = popUpData,
+        hours = hours,
+    }
+    mod_manager:setCampaignEvent(event)
 end
 
 ----------------------------------------------------------------
 -- trigger to add campaign params after a certain mission is finished
 --              triggerMission: string
---                      name of mission to trigger.             
+--                      name of mission to trigger.
 --              param: string
 --                      param to add
 
-function mod_api:setCampaignEvent_setCampaignParam( triggerMission, param, value, agency, editCampaign, hours)
-    --if triggerMission is nil, this will happen at the begining of the campaign    
-    local simdefs = include( "sim/simdefs" )
-    
+function mod_api:setCampaignEvent_setCampaignParam(triggerMission, param, value, agency, editCampaign, hours)
+    --if triggerMission is nil, this will happen at the begining of the campaign
+    local simdefs = include("sim/simdefs")
+
     local event = {
-        eventType = simdefs.CAMPAIGN_EVENTS.SET_CAMPAIGN_PARAM,        
-        mission = triggerMission,   
-        data = {param=param, value=value, agency=agency, editCampaign=editCampaign, hours=hours },        
-    }    
-    mod_manager:setCampaignEvent(event)       
+        eventType = simdefs.CAMPAIGN_EVENTS.SET_CAMPAIGN_PARAM,
+        mission = triggerMission,
+        data = { param = param, value = value, agency = agency, editCampaign = editCampaign, hours = hours },
+    }
+    mod_manager:setCampaignEvent(event)
 end
 
 ----------------------------------------------------------------
--- trigger to remove an agent 
+-- trigger to remove an agent
 --              triggerMission: string
---                      name of mission to trigger. 
+--                      name of mission to trigger.
 --              agent: number
---                      ID of agent to remove. 
+--                      ID of agent to remove.
 
-function mod_api:setCampaignEvent_setRemoveAgent( triggerMission, agent )
-    assert( type(triggerMission) == "string" )
-    assert( type(agent) == "number" )
-    
-    local simdefs = include( "sim/simdefs" )
-    
+function mod_api:setCampaignEvent_setRemoveAgent(triggerMission, agent)
+    assert(type(triggerMission) == "string")
+    assert(type(agent) == "number")
+
+    local simdefs = include("sim/simdefs")
+
     local event = {
         eventType = simdefs.CAMPAIGN_EVENTS.REMOVE_AGENT,
-        mission = triggerMission,   
+        mission = triggerMission,
         data = agent,
-    }    
-    mod_manager:setCampaignEvent(event)       
+    }
+    mod_manager:setCampaignEvent(event)
 end
 
 ----------------------------------------------------------------
--- trigger to remove an agent 
+-- trigger to remove an agent
 --              triggerMission: string
---                      name of mission to trigger. 
+--                      name of mission to trigger.
 --              agent: number
---                      ID of agent to remove. 
+--                      ID of agent to remove.
 
-function mod_api:setCampaignEvent_setAddAgent( triggerMission, agent, removeMission )
-    assert( type(triggerMission) == "string" )
-    assert( type(agent) == "number" )
-    
-    local simdefs = include( "sim/simdefs" )
-    
+function mod_api:setCampaignEvent_setAddAgent(triggerMission, agent, removeMission)
+    assert(type(triggerMission) == "string")
+    assert(type(agent) == "number")
+
+    local simdefs = include("sim/simdefs")
+
     local event = {
         eventType = simdefs.CAMPAIGN_EVENTS.ADD_AGENT,
-        mission = triggerMission,   
-        data = {agent = agent, removeMission = removeMission},
-    }    
-    mod_manager:setCampaignEvent(event)       
+        mission = triggerMission,
+        data = { agent = agent, removeMission = removeMission },
+    }
+    mod_manager:setCampaignEvent(event)
 end
 
 ----------------------------------------------------------------
@@ -877,64 +859,63 @@ end
 --                      day the mission is inserted
 --              mission: string
 --                     name of the mission
-function mod_api:setCampaignEvent_setAddEndlessMission( day, mission )
-    assert( type(day) == "number" )
-    assert( type(mission) == "string" )
-    
-    local simdefs = include( "sim/simdefs" )
-    
+function mod_api:setCampaignEvent_setAddEndlessMission(day, mission)
+    assert(type(day) == "number")
+    assert(type(mission) == "string")
+
+    local simdefs = include("sim/simdefs")
+
     local event = {
-       eventType = simdefs.CAMPAIGN_EVENTS.ADD_ENDLESS_MISSION,
-       mission = mission,
-       day = day,
-    }    
-    mod_manager:setCampaignEvent(event)       
+        eventType = simdefs.CAMPAIGN_EVENTS.ADD_ENDLESS_MISSION,
+        mission = mission,
+        day = day,
+    }
+    mod_manager:setCampaignEvent(event)
 end
 
 ------------------------------------------------------------
 -- adds world geneartion code to worldgen
 --          world: table
 --                  the wold generation code
-function mod_api:addCorpWorld( worldID, world )
-    assert( type(worldID) == "string" )
-    assert( type(world) == "table" )
-    
-    local worldgen = include( "sim/worldgen" )
-    
+function mod_api:addCorpWorld(worldID, world)
+    assert(type(worldID) == "string")
+    assert(type(world) == "table")
+
+    local worldgen = include("sim/worldgen")
+
     worldgen.worlds[worldID] = world
 end
 
 ------------------------------------------------------------
 -- increases the max difficulty of endless missions
-function mod_api:changeMaxLocationDifficulty( maxDiff )
-    local serverdefs = include( "modules/serverdefs" )
-    serverdefs.MAX_DIFFICULTY.MAX= maxDiff
+function mod_api:changeMaxLocationDifficulty(maxDiff)
+    local serverdefs = include("modules/serverdefs")
+    serverdefs.MAX_DIFFICULTY.MAX = maxDiff
 end
 
 ------------------------------------------------------------
 -- set ENDLESS alert daemon start time.
-function mod_api:changeAlerEndlessDay( day )
-    local serverdefs = include( "modules/serverdefs" )
-    serverdefs.ENDLESS_ALERT_DAYS.DAY= day
+function mod_api:changeAlerEndlessDay(day)
+    local serverdefs = include("modules/serverdefs")
+    serverdefs.ENDLESS_ALERT_DAYS.DAY = day
 end
 
-function mod_api:addAchievement( achievement )
-   self.mod_manager:addAchievement(achievement)
+function mod_api:addAchievement(achievement)
+    self.mod_manager:addAchievement(achievement)
 end
 
-function mod_api:addLog( log )
-    local serverdefs = include( "modules/serverdefs" )
+function mod_api:addLog(log)
+    local serverdefs = include("modules/serverdefs")
 
     log.footerName = self._dlc_footer[1]
     log.footerIcon = self._dlc_footer[2]
     log.footerAuthor = self._dlc_footer[3]
 
-    table.insert(serverdefs.LOGS,log)
+    table.insert(serverdefs.LOGS, log)
     print("ADDING LOG")
 end
 
-function mod_api:addTooltipDef( commondef )
-
+function mod_api:addTooltipDef(commondef)
     if commondef.onMainframeTooltip then
         table.insert(self.mod_manager:getTooltipDefs().onMainframeTooltips, commondef.onMainframeTooltip)
     end
@@ -950,9 +931,6 @@ function mod_api:addTooltipDef( commondef )
     if commondef.onItemWorldTooltip then
         table.insert(self.mod_manager:getTooltipDefs().onItemWorldTooltips, commondef.onItemWorldTooltip)
     end
-                
 end
-
-
 
 return mod_api

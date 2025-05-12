@@ -44,7 +44,7 @@ function allyplayer:init(sim)
     sim:addTrigger(simdefs.TRG_ALARM_STATE_CHANGE, self)
 
     -- sim:forEachCell(function(c) self:glimpseCell(sim, c) end)
-    self._traits.playerType = simdefs.PLAYER_TYPE.ALLY
+    self._traits.playerType = simdefs.SA.PLAYER_TYPE.ALLY
 end
 
 function allyplayer:createGuard(sim, unitType)
@@ -445,7 +445,7 @@ function allyplayer:thinkHard(sim)
         for i, bunit in ipairs(bunits) do
             simlog("%s [%s]", bunit:getName(), bunit:isValid() and tostring(bunit:getID()) or "killed")
         end
-        bunits = {}
+        self.bunits = {}
         steps = 0
         st = os.clock()
     end

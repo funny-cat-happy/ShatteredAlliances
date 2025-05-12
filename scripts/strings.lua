@@ -3,8 +3,6 @@ local SA = {
     HUD = {
         ALARM_TITLE = "INC FIREWALL LEVEL",
         ALLIANCE_ACTIVITY = "ALLIANCE ACTIVITY",
-        SHOPCAT_NAME = "SHOPCAT",
-        SHOPCAT_CAMERA = "ACCESS SHOPCAT",
         CONNECT_SHOAPCAT = "CONNECT\nSHOPCAT>",
         DISCONNECT_SHOPCAT = "DISCONNECT\nSHOPCAT<"
     },
@@ -21,7 +19,39 @@ local SA = {
             HUD_DESC = "LOCK 1 FIREWALL",
             SHORT_DESC = "USE LOCK",
             TIP_DESC = "LOCK <c:FF8411>1 FIREWALL</c>. COST: <c:77FF77>{1} PWR</c>"
-        }
-    }
+        },
+        RATCHET = {
+            NAME = "RATCHET",
+            DESC = "Lock 1 firewall and Increase 1 upper limit for 2 PWR.",
+            HUD_DESC = "LOCK 1 FIREWALL AND INCREASE 1 LIMIT",
+            SHORT_DESC = "USE RATCHET",
+            TIP_DESC = "LOCK <c:FF8411>1 FIREWALL</c> AND INCREASE <c:FF8411>1 LIMIT</c>. COST: <c:77FF77>{1} PWR</c>"
+        },
+    },
+    DAEMON = {
+        LOCKPICK =
+        {
+            NAME = "LOCKPICK",
+            DESC = "Breaks 1 firewall for 2 PWR.",
+            HUD_DESC = "BREAK 1 FIREWALL",
+            SHORT_DESC = "BREAK FIREWALL",
+            ACTIVE_DESC = "BREAK 1 FIREWALL",
+            TIP_DESC = "BREAK <c:FF8411>1 FIREWALL</c>. COST: <c:77FF77>{1} PWR</c>",
+        },
+        MARCH =
+        {
+            NAME = "MARCH",
+            DESC = "Control all robots to act",
+            HUD_DESC = "CONTROL ROBOTS",
+            SHORT_DESC = "CONTROL ROBOTS",
+            ACTIVE_DESC = "ROBOTS WILL TAKE ACTION",
+            TIP_DESC = "Control all robots to act",
+        },
+    },
+    UI = {
+        SHOPCAT_NAME = "SHOPCAT",
+        INC_FIREWALL_TOOLTIP =
+        "INC use firewall to block incognita's intrusion. Once the firewall is breached, Incognita will install daemons. Each time it is breached, the installed daemon becomes more and more dangerous",
+    },
 }
 return SA

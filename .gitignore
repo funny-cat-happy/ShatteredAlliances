@@ -1,4 +1,11 @@
 .vscode/
 int/
 scripts.zip
-buildout/
+anims.kwad
+gui.kwad
+sound.kwad
+sound/.fsbcache
+*.fev
+*.fsb
+*.log
+sound/*.txt

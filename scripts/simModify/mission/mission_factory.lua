@@ -1,7 +1,7 @@
 local array = include("modules/array")
 local util = include("modules/util")
 local cdefs = include("client_defs")
----@type systemSimdefs|customSimdefs
+---@type simdefs
 local simdefs = include("sim/simdefs")
 local simquery = include("sim/simquery")
 local mission_util = include("sim/missions/mission_util")
@@ -23,7 +23,7 @@ local ALLY_SUPPORT =
     ---@param sim engine
     ---@param triggerData any
     fn = function(sim, triggerData)
-        if triggerData:getTraits().playerType and triggerData:getTraits().playerType == simdefs.PLAYER_TYPE.ALLY and #(triggerData:getUnits()) <= 0 then
+        if triggerData:getTraits().playerType and triggerData:getTraits().playerType == simdefs.SA.PLAYER_TYPE.ALLY and #(triggerData:getUnits()) <= 0 then
             return true
         end
     end
@@ -31,7 +31,7 @@ local ALLY_SUPPORT =
 
 local function allySupport(script, sim, mission)
     script:waitFor(ALLY_SUPPORT)
-    sim:getAlly():doTrackerSpawn(sim, 1, simdefs.ALLY_UNIT.ALLY_INVISIBLE_KILLER)
+    sim:getAlly():doTrackerSpawn(sim, 1, simdefs.SA.ALLY_UNIT.ALLY_INVISIBLE_KILLER)
     -- ally_player:doTrackerSpawn(sim, 1, simdefs.TRACKER_SPAWN_UNIT_ENFORCER)
 end
 

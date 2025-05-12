@@ -3,16 +3,19 @@
 -- All Rights Reserved.
 -- SPY SOCIETY.
 ----------------------------------------------------------------
+module("savefiles", package.seeall)
 
-module ( "savefiles", package.seeall )
-
-local array = include( "modules/array" )
+local array = include("modules/array")
 
 ----------------------------------------------------------------
 ----------------------------------------------------------------
 -- variables
 ----------------------------------------------------------------
-local files = { [KLEIPersistentStorage.PST_SaveGame] = {}, [KLEIPersistentStorage.PST_Settings] = {}, [KLEIPersistentStorage.PST_PrivacySettings] = {} }
+local files = {
+	[KLEIPersistentStorage.PST_SaveGame] = {},
+	[KLEIPersistentStorage.PST_Settings] = {},
+	[KLEIPersistentStorage.PST_PrivacySettings] = {}
+}
 local saveFiles = {}
 local currentSaveFile = nil
 local settingsFile = nil
@@ -20,39 +23,38 @@ local settingsFile = nil
 ----------------------------------------------------------------
 -- local functions
 ----------------------------------------------------------------
-local function makeFile ( type, filename )
-
+local function makeFile(type, filename)
 	local savefile = {}
-	
+
 	savefile.filename = filename
 	savefile.fileexist = false
 	savefile.data = nil
 	savefile.type = type
-	
+
 	----------------------------------------------------------------
 	function savefile:load()
-		local save = KLEIPersistentStorage.loadFile( self.type, self.filename, config.CLOUDSAVES == true )
+		local save = KLEIPersistentStorage.loadFile(self.type, self.filename, config.CLOUDSAVES == true)
 		if save then
 			local fn, err = loadstring(save)
 			if fn then
-                local res, data = pcall( fn )
-                if res then
-				    self.data = data
-				    self.fileexist = true
-                    err = nil
-                else
-                    err = data
-                end
-            end
+				local res, data = pcall(fn)
+				if res then
+					self.data = data
+					self.fileexist = true
+					err = nil
+				else
+					err = data
+				end
+			end
 
 			if err then
-                -- Copy the bad save file.
-                local filePath = KLEIPersistentStorage.getFilePath( self.type, self.filename )
-                MOAIFileSystem.copy( filePath, string.format( "%s.%s.bak", filePath, tostring(os.time())) )
-                local bugreport = include( "modules/bugreport" )
-                self.err = string.format( "savefile.load( %s ) failed with err:\n%s", self.filename, err )
-                log:write( self.err )
-                bugreport.reportTraceback( self.err )
+				-- Copy the bad save file.
+				local filePath = KLEIPersistentStorage.getFilePath(self.type, self.filename)
+				MOAIFileSystem.copy(filePath, string.format("%s.%s.bak", filePath, tostring(os.time())))
+				local bugreport = include("modules/bugreport")
+				self.err = string.format("savefile.load( %s ) failed with err:\n%s", self.filename, err)
+				log:write(self.err)
+				bugreport.reportTraceback(self.err)
 			end
 		end
 
@@ -60,56 +62,55 @@ local function makeFile ( type, filename )
 			self.data = {}
 			self.fileexist = false
 		end
-		
+
 		--self.data.lastSaveSlot = self.data.currentSaveSlot
-        self.data.currentSaveSlot = nil
-		
-        setmetatable( self,
+		self.data.currentSaveSlot = nil
+
+		setmetatable(self,
 			{
-				__newindex = function( t, k, v )
-					assert(false, "Use the data sub-table to store actual save data for key '"..tostring(k).."'") 
+				__newindex = function(t, k, v)
+					assert(false, "Use the data sub-table to store actual save data for key '" .. tostring(k) .. "'")
 				end
-			} )
+			})
 
 		return self.fileexist
 	end
-	
+
 	----------------------------------------------------------------
 	function savefile:save()
-        if not config.NOSAVES then
-            
-            --update the current campaign's save time
+		if not config.NOSAVES then
+			--update the current campaign's save time
 			if self.data.currentSaveSlot then
-            	local campaign = self.data.saveSlots[ self.data.currentSaveSlot ]
-                if campaign then
-                    campaign.save_time = os.time()
-                end
-            end
+				local campaign = self.data.saveSlots[self.data.currentSaveSlot]
+				if campaign then
+					campaign.save_time = os.time()
+				end
+			end
 
-		    local serializer = MOAISerializer.new ()
+			local serializer = MOAISerializer.new()
 
-		    self.fileexist = true
-		    serializer:serialize ( self.data )
+			self.fileexist = true
+			serializer:serialize(self.data)
 
-		    local gamestateStr = serializer:exportToString ()
+			local gamestateStr = serializer:exportToString()
 
-		    if self.type == KLEIPersistentStorage.PST_PrivacySettings then
-		    	local privacyHeader = [[-- NOTE: This file contains the settings for your privacy agreements.
+			if self.type == KLEIPersistentStorage.PST_PrivacySettings then
+				local privacyHeader = [[-- NOTE: This file contains the settings for your privacy agreements.
 -- Deleting or modifying its contents will nullify your current privacy settings.
 -- You can update your settings in game through the Options menu
 
 ]]
 
-		    	gamestateStr = privacyHeader .. gamestateStr
-		    end
+				gamestateStr = privacyHeader .. gamestateStr
+			end
 
-            if config.CLOUDSAVES then
-                -- Save to cloud.
-    		    KLEIPersistentStorage.saveFile( self.type, self.filename, gamestateStr, true )
-            end
-            -- Save to disk, all the time.
-            KLEIPersistentStorage.saveFile( self.type, self.filename, gamestateStr, false )
-        end
+			if config.CLOUDSAVES then
+				-- Save to cloud.
+				KLEIPersistentStorage.saveFile(self.type, self.filename, gamestateStr, true)
+			end
+			-- Save to disk, all the time.
+			KLEIPersistentStorage.saveFile(self.type, self.filename, gamestateStr, false)
+		end
 	end
 
 	return savefile
@@ -119,25 +120,24 @@ end
 -- exposed functions
 ----------------------------------------------------------------
 
-function getFile ( type, filename )
+function getFile(type, filename)
 	if not files[type][filename] then
-		files[type][filename] = makeFile( type, filename .. ".lua" )
+		files[type][filename] = makeFile(type, filename .. ".lua")
 		files[type][filename]:load()
 	end
 	return files[type][filename]
 end
 
-function getGame ( filename )
-	return getFile( KLEIPersistentStorage.PST_SaveGame, filename )
+function getGame(filename)
+	return getFile(KLEIPersistentStorage.PST_SaveGame, filename)
 end
 
 function getCurrentGame()
 	return currentSaveFile
 end
 
-function makeCurrentGame( filename )
-
-	local savefile = getGame( filename )
+function makeCurrentGame(filename)
+	local savefile = getGame(filename)
 	if savefile.fileexist then
 		currentSaveFile = savefile
 	end
@@ -145,75 +145,75 @@ function makeCurrentGame( filename )
 	return currentSaveFile
 end
 
-function getSettings( filename )
-	return getFile( KLEIPersistentStorage.PST_Settings, filename )
+function getSettings(filename)
+	return getFile(KLEIPersistentStorage.PST_Settings, filename)
 end
 
-function getPrivacySettings( filename )
-	return getFile( KLEIPersistentStorage.PST_PrivacySettings, "agreements" )
+function getPrivacySettings(filename)
+	return getFile(KLEIPersistentStorage.PST_PrivacySettings, "agreements")
 end
 
-function winAchievement( name )
-    log:write( "ACHIEVEMENT: %s", name )
-    if KLEIAchievements then
-        KLEIAchievements:achieve( name )
-    end
+function winAchievement(name)
+	log:write("ACHIEVEMENT: %s", name)
+	if KLEIAchievements then
+		KLEIAchievements:achieve(name)
+	end
 end
 
-function checkAchievements( user, campaign, result )
-    local cdefs = include( "client_defs" )
-    local simdefs = include( "sim/simdefs" )
-	local metadefs = include( "sim/metadefs" )
-    local serverdefs = include( "modules/serverdefs" )
+function checkAchievements(user, campaign, result)
+	local cdefs = include("client_defs")
+	local simdefs = include("sim/simdefs")
+	local metadefs = include("sim/metadefs")
+	local serverdefs = include("modules/serverdefs")
 
-    if user.data.xp >= metadefs.GetXPCap() then
-        winAchievement( cdefs.ACHIEVEMENTS.FULLY_EQUIPPED )
-    end
+	if user.data.xp >= metadefs.GetXPCap() then
+		winAchievement(cdefs.ACHIEVEMENTS.FULLY_EQUIPPED)
+	end
 
 	if result == "VICTORY" then
-        if campaign.campaignDifficulty == simdefs.VERY_HARD_DIFFICULTY then
-            winAchievement( cdefs.ACHIEVEMENTS.ACCEPTABLE_HOST )
-        end
-        if campaign.campaignDifficulty >= simdefs.EXPERIENCED_DIFFICULTY then
-            winAchievement( cdefs.ACHIEVEMENTS.ANT_SOCIETY )
-        end
-        if campaign.campaignDifficulty == simdefs.TIME_ATTACK_DIFFICULTY then
-            winAchievement( cdefs.ACHIEVEMENTS.TIME_ATTACK )
-        end
-        if (campaign.campaignDifficulty >= simdefs.HARD_DIFFICULTY and campaign.campaignDifficulty <= simdefs.VERY_HARD_DIFFICULTY) or campaign.campaignDifficulty == simdefs.TIME_ATTACK_DIFFICULTY  then
-            winAchievement( cdefs.ACHIEVEMENTS.INVISIBLE_INC )
-            if campaign.difficultyOptions.rewindsLeft == 0 then
-                winAchievement( cdefs.ACHIEVEMENTS.NEVER_LOOK_BACK )
-            end
-        end
-        if (campaign.campaignDifficulty >= simdefs.NORMAL_DIFFICULTY and campaign.campaignDifficulty <= simdefs.VERY_HARD_DIFFICULTY) or campaign.campaignDifficulty == simdefs.TIME_ATTACK_DIFFICULTY then
-            winAchievement( cdefs.ACHIEVEMENTS.TRAINING_WHEELS )
-        end
+		if campaign.campaignDifficulty == simdefs.VERY_HARD_DIFFICULTY then
+			winAchievement(cdefs.ACHIEVEMENTS.ACCEPTABLE_HOST)
+		end
+		if campaign.campaignDifficulty >= simdefs.EXPERIENCED_DIFFICULTY then
+			winAchievement(cdefs.ACHIEVEMENTS.ANT_SOCIETY)
+		end
+		if campaign.campaignDifficulty == simdefs.TIME_ATTACK_DIFFICULTY then
+			winAchievement(cdefs.ACHIEVEMENTS.TIME_ATTACK)
+		end
+		if (campaign.campaignDifficulty >= simdefs.HARD_DIFFICULTY and campaign.campaignDifficulty <= simdefs.VERY_HARD_DIFFICULTY) or campaign.campaignDifficulty == simdefs.TIME_ATTACK_DIFFICULTY then
+			winAchievement(cdefs.ACHIEVEMENTS.INVISIBLE_INC)
+			if campaign.difficultyOptions.rewindsLeft == 0 then
+				winAchievement(cdefs.ACHIEVEMENTS.NEVER_LOOK_BACK)
+			end
+		end
+		if (campaign.campaignDifficulty >= simdefs.NORMAL_DIFFICULTY and campaign.campaignDifficulty <= simdefs.VERY_HARD_DIFFICULTY) or campaign.campaignDifficulty == simdefs.TIME_ATTACK_DIFFICULTY then
+			winAchievement(cdefs.ACHIEVEMENTS.TRAINING_WHEELS)
+		end
 
-        if array.find( campaign.agency.abilities, "brimstone" ) ~= nil and
-           array.find( campaign.agency.abilities, "faust" ) ~= nil then
-           winAchievement( cdefs.ACHIEVEMENTS.DAEMON_CODE )
-        end
+		if array.find(campaign.agency.abilities, "brimstone") ~= nil and
+			array.find(campaign.agency.abilities, "faust") ~= nil then
+			winAchievement(cdefs.ACHIEVEMENTS.DAEMON_CODE)
+		end
 
 
- 		for i,achivement in ipairs(mod_manager:getAchievments() ) do
-	    	if achivement.win then
-		        if achivement.campaignDifficulty and type(achivement.campaignDifficulty) ~= "number" and achivement.campaignDifficulty(campaign.campaignDifficulty) then
-		        	local award = false
-		            if achivement.campaign_check then
-		            	if campaign.missionParams and campaign.missionParams[achivement.campaign_check] then
-		                	award = true
-		            	end
-		            else
-		            	award = true
-		            end
-		            if award == true then
-		            	print("-------------------------- AWARD ACHIEVEMENT", achivement.achievementID  )
-		            	winAchievement( achivement.achievementID )
-		        	end
-		        end
-	    	end
-	    end        
+		for i, achivement in ipairs(mod_manager:getAchievments()) do
+			if achivement.win then
+				if achivement.campaignDifficulty and type(achivement.campaignDifficulty) ~= "number" and achivement.campaignDifficulty(campaign.campaignDifficulty) then
+					local award = false
+					if achivement.campaign_check then
+						if campaign.missionParams and campaign.missionParams[achivement.campaign_check] then
+							award = true
+						end
+					else
+						award = true
+					end
+					if award == true then
+						print("-------------------------- AWARD ACHIEVEMENT", achivement.achievementID)
+						winAchievement(achivement.achievementID)
+					end
+				end
+			end
+		end
 	end
 end
 
@@ -224,43 +224,43 @@ MAX_TOP_GAMES = 6
 
 -- Initializes default savegame data.
 function initSaveGame()
-    local user = makeCurrentGame( "savegame" )
-    if not user or not user.data.retail then
-        local old_xp = user and user.data.xp
-        user = savefiles.getGame( "savegame" )
-        user.data = {}
-        user.data.name = "default"
-        user.data.top_games = {}
-        user.data.num_games = 0
-        user.data.saveSlots = {}
-        user.data.saveScumDaySlots = {}
-        user.data.saveScumLevelSlots = {}
-        user.data.xp = 0
-        user.data.old_xp = old_xp
-        user.data.retail = true
-        user:save()
-        makeCurrentGame( "savegame" )
-    end
+	local user = makeCurrentGame("savegame")
+	if not user or not user.data.retail then
+		local old_xp = user and user.data.xp
+		user = savefiles.getGame("savegame")
+		user.data = {}
+		user.data.name = "default"
+		user.data.top_games = {}
+		user.data.num_games = 0
+		user.data.saveSlots = {}
+		user.data.saveScumDaySlots = {}
+		user.data.saveScumLevelSlots = {}
+		user.data.xp = 0
+		user.data.old_xp = old_xp
+		user.data.retail = true
+		user:save()
+		makeCurrentGame("savegame")
+	end
 end
 
 function initSettings()
-    local SETTINGS_VERSION = 3
-	local settingsFile = savefiles.getSettings( "settings" )
-    if settingsFile.data.version ~= SETTINGS_VERSION then
-        log:write( "Settings version changed: reinitializing" )
-        settingsFile.data = {}
-	    settingsFile.data.enableLightingFX = true
-	    settingsFile.data.enableBackgroundFX = true
-	    settingsFile.data.enableOptionalDecore = true
-        settingsFile.data.enableBloom = true
-	    settingsFile.data.volumeMusic = 1
-        settingsFile.data.edgePanDist = 1
-        settingsFile.data.edgePanSpeed = 1
-	    settingsFile.data.volumeSfx = 1
-        settingsFile.data.showSubtitles = true
-        settingsFile.data.version = SETTINGS_VERSION
-	    settingsFile:save()
-    end
+	local SETTINGS_VERSION = 3
+	local settingsFile = savefiles.getSettings("settings")
+	if settingsFile.data.version ~= SETTINGS_VERSION then
+		log:write("Settings version changed: reinitializing")
+		settingsFile.data = {}
+		settingsFile.data.enableLightingFX = true
+		settingsFile.data.enableBackgroundFX = true
+		settingsFile.data.enableOptionalDecore = true
+		settingsFile.data.enableBloom = true
+		settingsFile.data.volumeMusic = 1
+		settingsFile.data.edgePanDist = 1
+		settingsFile.data.edgePanSpeed = 1
+		settingsFile.data.volumeSfx = 1
+		settingsFile.data.showSubtitles = true
+		settingsFile.data.version = SETTINGS_VERSION
+		settingsFile:save()
+	end
 
 	if config.RECORD_MODE then
 		settingsFile.data.volumeMusic = 0
@@ -268,7 +268,7 @@ function initSettings()
 
 	local agreementsFile = savefiles.getPrivacySettings()
 	if not agreementsFile.fileexist then
-		log:write("Privacy settings version doesn't exist: initializing" )
+		log:write("Privacy settings version doesn't exist: initializing")
 		-- First time init: transfer agreement from game settings if it exists.
 		agreementsFile.data = { suppressMetricsData = settingsFile.data.suppressMetricsData }
 		if agreementsFile.data.suppressMetricsData == nil then
@@ -282,10 +282,10 @@ function initSettings()
 	-- (so that the user can destroy game settings without nuking their separately-stored agreements)
 	settingsFile.data.suppressMetricsData = agreementsFile.data.suppressMetricsData
 
-    return settingsFile
+	return settingsFile
 end
 
-local function compareCampaigns( campaign1, campaign2 )
+local function compareCampaigns(campaign1, campaign2)
 	-- Should be based on some score factor?
 	if campaign1.hours == campaign2.hours then
 		return campaign1.agency.cash > campaign2.agency.cash
@@ -295,42 +295,45 @@ local function compareCampaigns( campaign1, campaign2 )
 end
 
 -- Adds the current campaign to the list of completed games, then clears the current campaign.
-function addCompletedGame( result )
-	local metadefs = include( "sim/metadefs" )
-    local simdefs = include( "sim/simdefs" )
+function addCompletedGame(result)
+	local metadefs = include("sim/metadefs")
+	local simdefs = include("sim/simdefs")
 	local user = getCurrentGame()
-	assert( user and user.data.currentSaveSlot )
-	local campaign = user.data.saveSlots[ user.data.currentSaveSlot ]
+	assert(user and user.data.currentSaveSlot)
+	local campaign = user.data.saveSlots[user.data.currentSaveSlot]
 
 	-- Add xpgain
 	local xpgained = 0
-	xpgained = xpgained + (campaign.agency.missions_completed_1 or 0) * metadefs.GetXPPerMission(1, campaign.campaignDifficulty)
-	xpgained = xpgained + (campaign.agency.missions_completed_2 or 0) * metadefs.GetXPPerMission(2, campaign.campaignDifficulty)
-	xpgained = xpgained + (campaign.agency.missions_completed_3 or 0) * metadefs.GetXPPerMission(3, campaign.campaignDifficulty)
+	xpgained = xpgained +
+		(campaign.agency.missions_completed_1 or 0) * metadefs.GetXPPerMission(1, campaign.campaignDifficulty)
+	xpgained = xpgained +
+		(campaign.agency.missions_completed_2 or 0) * metadefs.GetXPPerMission(2, campaign.campaignDifficulty)
+	xpgained = xpgained +
+		(campaign.agency.missions_completed_3 or 0) * metadefs.GetXPPerMission(3, campaign.campaignDifficulty)
 
 	local oldXp = (user.data.xp or 0)
-	user.data.xp = math.min( metadefs.GetXPCap(), oldXp + xpgained )
+	user.data.xp = math.min(metadefs.GetXPCap(), oldXp + xpgained)
 
 	-- See if fits within the top scores.
 	campaign.complete_time = os.time()
 	campaign.result = result
-	table.insert( user.data.top_games, campaign )
+	table.insert(user.data.top_games, campaign)
 
 	if result == "VICTORY" then
 		user.data.storyWins = (user.data.storyWins or 0) + 1
 		if campaign.campaignDifficulty > simdefs.NORMAL_DIFFICULTY then
-			user.data.storyExperiencedWins = (user.data.storyExperiencedWins or 0) + 1 
+			user.data.storyExperiencedWins = (user.data.storyExperiencedWins or 0) + 1
 		end
- 	end
-
-    checkAchievements( user, campaign, result )
-
-	table.sort( user.data.top_games, compareCampaigns )
-	while #user.data.top_games > MAX_TOP_GAMES do
-		table.remove( user.data.top_games )
 	end
 
-	user.data.saveSlots[ user.data.currentSaveSlot ] = nil
+	checkAchievements(user, campaign, result)
+
+	table.sort(user.data.top_games, compareCampaigns)
+	while #user.data.top_games > MAX_TOP_GAMES do
+		table.remove(user.data.top_games)
+	end
+
+	user.data.saveSlots[user.data.currentSaveSlot] = nil
 
 	user:save()
 end
