@@ -42,7 +42,7 @@ function mission:init(scriptMgr, sim)
     escape_mission.init(self, scriptMgr, sim)
     sim.exit_warning = function()
         if not self.loot_outer and not self.loot_inner then
-            return STRINGS.LEVEL.HUD_WARN_EXIT_MISSION_FACTORY
+            return STRINGS.SA.LEVEL.HUD_WARN_EXIT_MISSION_FACTORY
         end
     end
     scriptMgr:addHook("ALLY-ENTER", allySupport, nil, self)

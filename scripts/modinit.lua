@@ -22,8 +22,8 @@ local function init(modApi)
 	SAInclude("clientModify/fe/cheatmenu")
 
 	SAInclude('clientModify/gameplay/boardrig')
-    SAInclude('clientModify/gameplay/agentrig')
-	
+	SAInclude('clientModify/gameplay/agentrig')
+
 	SAInclude("simModify/simunit")
 
 	modApi:addSimdef("SA", SAInclude("simModify/simdefs"))
@@ -53,7 +53,7 @@ local function load(modApi, options, params, options_raw)
 	-- Add the new custom situations
 	SAInclude("simModify/mission/mission_factory")
 	local serverdefs_mod = SAInclude("modulesModify/serverdefs")
-	modApi:addSituation(serverdefs_mod.MISSION_FACTORY_SITUATION, "mission_factory", SA_PATH .. "/simModify/mission")
+	modApi:addSituation(serverdefs_mod.MISSION_FACTORY_SITUATION, "factory", SA_PATH .. "/simModify/mission")
 	-- add player program
 	local player_mainframe_abilities = SAInclude("simModify/abilities/player_mainframe_abilities")
 	for name, ability in pairs(player_mainframe_abilities) do
@@ -69,6 +69,15 @@ local function load(modApi, options, params, options_raw)
 	for name, ability in pairs(incognita_mainframe_abilities) do
 		modApi:addDaemonAbility(name, ability)
 	end
+	--add factory mission story
+	local SCRIPTS = SAInclude("clientModify/story_scripts")
+	modApi:addMapScripts(SCRIPTS.CAMPAIGN_MAP.MISSIONS, "CAMPAIGN_MAP")
+	SAInclude("clientModify/fe/talkinghead")
+	-- local customFinalSituation = {
+	-- 	name = "factory",
+	-- 	corp = nil,
+	-- }
+	-- modApi:setCampaignEvent_CustomFinalSituation(customFinalSituation)
 end
 
 local function lateLoad(modApi, options, params, options_raw)

@@ -51,7 +51,18 @@ local SA = {
     UI = {
         SHOPCAT_NAME = "SHOPCAT",
         INC_FIREWALL_TOOLTIP =
-        "INC use firewall to block incognita's intrusion. Once the firewall is breached, Incognita will install daemons. Each time it is breached, the installed daemon becomes more and more dangerous",
+        "INC uses firewall to block incognita's intrusion. Once the firewall is breached, Incognita will install daemons. Each time it is breached, the installed daemon becomes more and more dangerous",
+        RALF_TITLE = "RALF",
+    },
+    MISSIONS = {
+        FACTORY = {
+            "Situation's worse than projected. Incognita's Hunter-Killer protocols are live. Tens of thousands of people killed by Thanatos Drone. That factory's pumping out this new drones every minute. Our agents can't engage directly—those things move faster than human limits.", --Central
+            "Invisible Inc excels at data purges, but flesh can't stop titanium blades. Proposal: Accept our Pyro suppression squad. Payment?... Negotiable post-mission.", --Ralf
+            "Heyyyyy boys, guess who just hacked your secure line? (static-laced chuckle) Incognita says: 'Flesh rusts, code endures'—oh and it just... (explosion) SHIT! They're on me!", --Monst3r
+            " No time to debate. Monst3r's signal just died near West Sector vents. Your troops clear the path, my agents handle the purge. Remember: If those kill-codes escape that factory, the whole city will become a slaughterhouse.", --Central
+            "Approved. Pyro suppression squad has arrived factory. Hacking the facility elevator.", --Ralf
+            "Operator, ready to act. In 15 minutes, I either see that factory core burns, or the entire city burns in drone’s plasma fire.", --Central
+        },
     },
 }
 return SA

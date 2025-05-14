@@ -6,7 +6,7 @@ local agentdefs = include("sim/unitdefs/agentdefs")
 local skilldefs = include("sim/skilldefs")
 local simdefs = include("sim/simdefs")
 
-local INITIAL_MISSION_TAGS = { "destroy_factory", "plastech", "not_close" }
+local INITIAL_MISSION_TAGS = { "factory", "plastech", "not_close" }
 
 local function lateLoad()
     serverdefs.createNewCampaign = function(agency, campaignDifficulty, difficultyOptions)
@@ -38,9 +38,13 @@ local function lateLoad()
         campaign.agency.cash = difficultyOptions.startingCredits
         campaign.agency.cpus = difficultyOptions.startingPower
         serverdefs.createCampaignSituations(campaign, 1, INITIAL_MISSION_TAGS, 1)
-
+        local event = {
+            eventType = simdefs.CAMPAIGN_EVENTS.CUSTOM_SCRIPT,
+            data = "factory",
+        }
 
         campaign.campaignEvents = mod_manager:getCampaignEvents()
+        table.insert(campaign.campaignEvents, event)
 
         return campaign
     end
@@ -66,7 +70,7 @@ local MISSION_FACTORY_SITUATION = {
     },
     strings = STRINGS.MISSIONS.ESCAPE,
     scripts = { "mission_factory" },
-    tags = { "destroy_factory" },
+    tags = { "factory" },
 }
 
 return { lateLoad = lateLoad, MISSION_FACTORY_SITUATION = MISSION_FACTORY_SITUATION }
