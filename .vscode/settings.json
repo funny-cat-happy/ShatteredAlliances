@@ -1,0 +1,8 @@
+{
+    "Lua.runtime.special": {
+        "include": "require",
+        "SAInclude": "require"
+    },
+    "Lua.completion.requireSeparator": "/",
+    "Lua.runtime.version": "Lua 5.1",
+}

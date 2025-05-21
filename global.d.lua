@@ -8,3 +8,7 @@ STRINGS = nil
 ---@field find fun(fn:function, condition:string, maxDepth?:number):function
 ---@field findAndReplace fun(fn:function, condition:string, newValue:function, maxDepth?:number):function
 upvalueUtil = nil
+
+---@class KLEIResourceMgr
+---@field MountPackage fun(rescourcePath:string, virtualFolder:string)
+KLEIResourceMgr = nil

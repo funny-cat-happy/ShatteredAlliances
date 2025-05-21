@@ -1,0 +1,49 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Compress Folder to ZIP",
+            "type": "shell",
+            "dependsOn": "clear ZIP",
+            "command": "7z",
+            "args": [
+                "a",
+                "-tzip",
+                "./scripts.zip",
+                "./scripts/*",
+            ],
+            "problemMatcher": []
+        },
+        {
+            "label": "clear ZIP",
+            "type": "shell",
+            "command": "7z",
+            "args": [
+                "d",
+                "./scripts.zip",
+                "*",
+            ],
+            "problemMatcher": []
+        },
+        {
+            "label": "Restart Invisible Inc",
+            "type": "shell",
+            "dependsOn": "Compress Folder to ZIP",
+            "command": "powershell",
+            "args": [
+                "-Command",
+                "\"taskkill /IM invisibleinc.exe /F;Start-Sleep -Seconds 1;Start-Process -FilePath 'F:\\Program Files (x86)\\Steam\\steamapps\\common\\InvisibleInc\\invisibleinc.exe'\""
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "build package",
+            "type": "shell",
+            "command": "& \"\"\"${workspaceFolder}\\tool\\builder.exe\"\"\" -i \"build.lua\" -o \"\"\"${workspaceFolder}\\buildout\"\"\"",
+            "problemMatcher": []
+        }
+    ]
+}

@@ -64,5 +64,17 @@ local SA = {
             "Operator, ready to act. In 15 minutes, I either see that factory core burns, or the entire city burns in drone’s plasma fire.", --Central
         },
     },
+    PROPS = {
+        FACTORY_DATABASE = "Factory Data Bank"
+    },
+    ABILITIES = {
+        FACTORY_HACK = {
+            NAME = "Scrub DataBase",
+            DESC = "",
+        }
+    },
+    MAP_NAMES = {
+        BEIJING = "BEIJING"
+    },
 }
 return SA

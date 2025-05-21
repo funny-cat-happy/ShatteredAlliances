@@ -1,14 +1,14 @@
 local function earlyInit(modApi)
+	modApi.requirements = { "Sim Constructor", "Expanded Cheats" }
 	local scriptPath = modApi:getScriptPath()
-	rawset(_G, "SA_PATH", rawget(_G, "SA_PATH") or scriptPath)
-	rawset(_G, "SAInclude", rawget(_G, "SAInclude") or function(filePath)
+	rawset(_G, "SA_PATH",  scriptPath)
+	rawset(_G, "SAInclude",  function(filePath)
 		return include(scriptPath .. "/" .. filePath)
 	end)
 	SAInclude('modulesModify/log')
 	SAInclude('modulesModify/util')
 end
 local function init(modApi)
-	modApi.requirements = { "Sim Constructor", "Expanded Cheats" }
 	local dataPath = modApi:getDataPath()
 	KLEIResourceMgr.MountPackage(dataPath .. "/gui.kwad", "data")
 	KLEIResourceMgr.MountPackage(dataPath .. "/anims.kwad", "data")
@@ -73,11 +73,10 @@ local function load(modApi, options, params, options_raw)
 	local SCRIPTS = SAInclude("clientModify/story_scripts")
 	modApi:addMapScripts(SCRIPTS.CAMPAIGN_MAP.MISSIONS, "CAMPAIGN_MAP")
 	SAInclude("clientModify/fe/talkinghead")
-	-- local customFinalSituation = {
-	-- 	name = "factory",
-	-- 	corp = nil,
-	-- }
-	-- modApi:setCampaignEvent_CustomFinalSituation(customFinalSituation)
+	local worldgen = SAInclude("simModify/worldgen")
+	for i, world in pairs(worldgen) do
+		modApi:addCorpWorld(i, world)
+	end
 end
 
 local function lateLoad(modApi, options, params, options_raw)

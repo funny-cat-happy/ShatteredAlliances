@@ -6,7 +6,20 @@ local agentdefs = include("sim/unitdefs/agentdefs")
 local skilldefs = include("sim/skilldefs")
 local simdefs = include("sim/simdefs")
 
-local INITIAL_MISSION_TAGS = { "factory", "plastech", "not_close" }
+local function createFactorySituation(campaign)
+    local rand = include("modules/rand")
+    local gen = rand.createGenerator(campaign.seed)
+    local situation = {
+        name = "factory",
+        difficulty = 1,
+        -- mapLocation = { x = 386, y = -109, name = STRINGS.SA.MAP_NAMES.BEIJING, corpName = "NEXUS" },
+        mapLocation = 2,
+        new = true,
+        corpName = "omni"
+    }
+    table.insert(campaign.situations, situation)
+    campaign.seed = gen._seed
+end
 
 local function lateLoad()
     serverdefs.createNewCampaign = function(agency, campaignDifficulty, difficultyOptions)
@@ -37,7 +50,7 @@ local function lateLoad()
         campaign.difficultyOptions = util.tcopy(difficultyOptions)
         campaign.agency.cash = difficultyOptions.startingCredits
         campaign.agency.cpus = difficultyOptions.startingPower
-        serverdefs.createCampaignSituations(campaign, 1, INITIAL_MISSION_TAGS, 1)
+        createFactorySituation(campaign)
         local event = {
             eventType = simdefs.CAMPAIGN_EVENTS.CUSTOM_SCRIPT,
             data = "factory",
