@@ -45,6 +45,7 @@ function allyplayer:init(sim)
 
     -- sim:forEachCell(function(c) self:glimpseCell(sim, c) end)
     self._traits.playerType = simdefs.SA.PLAYER_TYPE.ALLY
+    self._traits.name = STRINGS.SA.UI.AllY_PLAYER_NAME
 end
 
 function allyplayer:createGuard(sim, unitType)
@@ -255,6 +256,10 @@ end
 
 function allyplayer:isAlly()
     return true
+end
+
+function allyplayer:isAI()
+    return false
 end
 
 function allyplayer:cleanUpSituations()

@@ -43,5 +43,50 @@ local npc_templates =
         sounds = SOUNDS.GUARD,
         brain = "AllyBrain",
     },
+    thanatos_robot = {
+        type = "simunit",
+        name = STRINGS.SA.ROBOTS.THANATOS_ROBOT,
+        profile_anim = "portraits/portrait_animation_template",
+        profile_build = "portraits/ko_heavy_build",
+        profile_image = "KO_heavy.png",
+        onWorldTooltip = onGuardTooltip,
+        kanim = "kanim_guard_male_ko_heavy",
+        traits = util.extend(commondefs.basic_robot_traits)
+            {
+                walk = true,
+                enforcer = false,
+                dashSoundRange = 8,
+                mpMax = 6,
+                mp = 6,
+                wounds = 0,
+                armor = 2,
+                LOSarc = math.pi * 2,
+                LOSperipheralArc = math.pi * 2,
+            },
+        dropTable =
+        {
+            { "item_clip",   8 },
+            { "item_stim",   7 },
+            { "item_stim_2", 6 },
+            { "item_stim_3", 5 },
+            { nil,           74 },
+        },
+        anarchyDropTable =
+        {
+            { "item_tazer",      5 },
+            { "item_stim",       5 },
+            { "item_clip",       25 },
+            { "item_adrenaline", 15 },
+            { nil,               135 }
+        },
+        speech = speechdefs.NPC,
+        voices = { "KO_Heavy", },
+        skills = {},
+        abilities = util.extend(DEFAULT_ABILITIES) {},
+        children = { itemdefs.item_npc_smg },
+        idles = DEFAULT_IDLES,
+        sounds = SOUNDS.HEAVY,
+        brain = "GuardBrain",
+    },
 }
 return npc_templates

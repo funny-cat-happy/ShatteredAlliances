@@ -4,6 +4,7 @@ local oldInit = pcplayer.init
 pcplayer.init = function(self, sim, agency)
     oldInit(self, sim, agency)
     self._traits.playerType = simdefs.SA.PLAYER_TYPE.PC
+    self._traits.name = STRINGS.SA.UI.PC_PLAYER_NAME
 end
 
 ---comment
@@ -13,5 +14,9 @@ function pcplayer:getPlayerAlly(sim)
 end
 
 function pcplayer:isAlly()
+    return false
+end
+
+function pcplayer:isAI()
     return false
 end

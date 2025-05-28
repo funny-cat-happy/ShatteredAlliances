@@ -50,7 +50,7 @@ end
 
 function mission.pregeneratePrefabs(cxt, tagSet)
     escape_mission.pregeneratePrefabs(cxt, tagSet)
-    table.insert(tagSet[1], "vault")
+    table.insert(tagSet[1], "factory_control_room")
 end
 
 return mission

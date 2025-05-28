@@ -18,7 +18,7 @@ local MODE_VISIBLE = 1
 
 local function updateButtonFromProgram(self, widget, ability, abilityOwner)
     local sim = self._hud._game.simCore
-    local enabled, reason = ability:canUseAbility(sim, abilityOwner)
+    local enabled, reason = ability:canUseAbility(sim)
     widget:setVisible(true)
     widget.binder.powerTxt:setVisible(true)
     widget.binder.turnsTxt:setVisible(true)
@@ -133,6 +133,9 @@ function panel:refresh(primeRefresh)
     end
     self._panel.binder.incognitaProgramsPanel:setVisible(true)
     updateProgramButtons(self, "program", self._hud._game.simCore:getNPC(), primeRefresh)
+    local aiPlayer = self._hud._game.simCore:getNPC()
+    self._panel.binder.cpuNum:setText(util.sformat(STRINGS.FORMATS.PWR,
+        string.format("%d/%d", aiPlayer:getCpus(), aiPlayer:getMaxCpus())))
 end
 
 function panel:onSimEvent(ev)

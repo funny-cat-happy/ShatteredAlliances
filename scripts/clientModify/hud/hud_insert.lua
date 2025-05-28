@@ -356,6 +356,40 @@ local inserts = {
             children =
             {
                 {
+                    name = [[cpuNum]],
+                    isVisible = true,
+                    noInput = true,
+                    anchor = 1,
+                    rotation = 0,
+                    x = 0,
+                    xpx = true,
+                    y = 105,
+                    ypx = true,
+                    w = 140,
+                    wpx = true,
+                    h = 30,
+                    hpx = true,
+                    sx = 1,
+                    sy = 1,
+                    tooltip =
+                    {
+                        str = [[STR_1677005573]],
+                    },
+                    tooltipHeader =
+                    {
+                        str = [[STR_517759365]],
+                    },
+                    ctor = [[label]],
+                    text_style = [[font1_18_r]],
+                    color =
+                    {
+                        0.549019634723663,
+                        1,
+                        1,
+                        1,
+                    },
+                },
+                {
                     name = [[program1]],
                     isVisible = true,
                     noInput = false,

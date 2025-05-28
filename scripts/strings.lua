@@ -50,22 +50,32 @@ local SA = {
     },
     UI = {
         SHOPCAT_NAME = "SHOPCAT",
+        PC_PLAYER_NAME = "Player",
+        AI_PLAYER_NAME = "Incognita",
+        AllY_PLAYER_NAME = "Ally",
         INC_FIREWALL_TOOLTIP =
         "INC uses firewall to block incognita's intrusion. Once the firewall is breached, Incognita will install daemons. Each time it is breached, the installed daemon becomes more and more dangerous",
         RALF_TITLE = "RALF",
+        TOOLTIPS = {
+            TRUE_PERCEPTION = "TRUE PERCEPTION",
+            TRUE_PERCEPTION_DESC = "360 degree Line of Sight",
+            HEART_BEAT_PACKET = "HEART BEAT PACKET",
+            HEART_BEAT_PACKET_DESC = "If the robot disconnects with network, incognita will get {1} PWR",
+        },
+        FACTORY_CORE_ALERT = "Factory core generate {1} PWR to {2}",
     },
     MISSIONS = {
         FACTORY = {
-            "Situation's worse than projected. Incognita's Hunter-Killer protocols are live. Tens of thousands of people killed by Thanatos Drone. That factory's pumping out this new drones every minute. Our agents can't engage directly—those things move faster than human limits.", --Central
+            "Situation's worse than projected. Incognita's Hunter-Killer protocols are live. Tens of thousands of people killed by Thanatos robot. That factory's pumping out this new robots every minute. Our agents can't engage directly—those things move faster than human limits.", --Central
             "Invisible Inc excels at data purges, but flesh can't stop titanium blades. Proposal: Accept our Pyro suppression squad. Payment?... Negotiable post-mission.", --Ralf
             "Heyyyyy boys, guess who just hacked your secure line? (static-laced chuckle) Incognita says: 'Flesh rusts, code endures'—oh and it just... (explosion) SHIT! They're on me!", --Monst3r
-            " No time to debate. Monst3r's signal just died near West Sector vents. Your troops clear the path, my agents handle the purge. Remember: If those kill-codes escape that factory, the whole city will become a slaughterhouse.", --Central
+            "No time to debate. Monst3r's signal just died near West Sector vents. Your troops clear the path, my agents handle the purge. Remember: If those kill-codes escape that factory, the whole city will become a slaughterhouse.", --Central
             "Approved. Pyro suppression squad has arrived factory. Hacking the facility elevator.", --Ralf
-            "Operator, ready to act. In 15 minutes, I either see that factory core burns, or the entire city burns in drone’s plasma fire.", --Central
+            "Operator, ready to act. In 15 minutes, I either see that factory core burns, or the entire city burns in robot’s plasma fire.", --Central
         },
     },
     PROPS = {
-        FACTORY_DATABASE = "Factory Data Bank"
+        FACTORY_POWER_CORE = "Factory Power Core"
     },
     ABILITIES = {
         FACTORY_HACK = {
@@ -76,5 +86,8 @@ local SA = {
     MAP_NAMES = {
         BEIJING = "BEIJING"
     },
+    ROBOTS = {
+        THANATOS_ROBOT = "THANATOS ROBOT",
+    }
 }
 return SA

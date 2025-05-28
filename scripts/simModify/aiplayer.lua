@@ -10,19 +10,31 @@ aiplayer.isAlly = function(self)
     return false
 end
 
+function aiplayer:isAI()
+    return true
+end
+
 local oldInit = aiplayer.init
 aiplayer.init = function(self, sim)
     oldInit(self, sim)
     self._traits.playerType = simdefs.SA.PLAYER_TYPE.AI
+    self._traits.name = STRINGS.SA.UI.AI_PLAYER_NAME
     self._incognita_program = {}
     self._intention_points = 2
     local ability = simability.create("programLockPick")
     table.insert(self._incognita_program, ability)
     local ability = simability.create("programMarch")
     table.insert(self._incognita_program, ability)
+    self._incognitaLockOut = false
+    self._cpus = 10
 end
+
 function aiplayer:getPlayerAlly(sim)
     return nil
+end
+
+function aiplayer:getIncognitaLockOut()
+    return self._incognitaLockOut
 end
 
 aiplayer.updateSenses = function(self, unit)
@@ -72,8 +84,10 @@ aiplayer.thinkHard = function(self, sim)
     sim:triggerEvent(simdefs.SA.TRG_INCOGNITA_ACTION, self)
     ---@type dict
     local evaluateDict = dict(sim)
-    for key, value in pairs(self:getPrograms()) do
-        evaluateDict:add(value, value.evaluate())
+    for key, program in pairs(self:getPrograms()) do
+        if program:canUseAbility(sim) then
+            evaluateDict:add(program, program.evaluate())
+        end
     end
     evaluateDict:sort()
     for i = 1, self._intention_points, 1 do

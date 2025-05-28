@@ -12,14 +12,15 @@ local function createFactorySituation(campaign)
     local situation = {
         name = "factory",
         difficulty = 1,
-        -- mapLocation = { x = 386, y = -109, name = STRINGS.SA.MAP_NAMES.BEIJING, corpName = "NEXUS" },
-        mapLocation = 2,
+        mapLocation = #serverdefs.MAP_LOCATIONS,
         new = true,
         corpName = "omni"
     }
     table.insert(campaign.situations, situation)
     campaign.seed = gen._seed
 end
+
+table.insert(serverdefs.MAP_LOCATIONS, { x = 386, y = -109, name = STRINGS.SA.MAP_NAMES.BEIJING, corpName = "NEXUS" })
 
 local function lateLoad()
     serverdefs.createNewCampaign = function(agency, campaignDifficulty, difficultyOptions)

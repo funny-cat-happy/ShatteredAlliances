@@ -1,8 +1,8 @@
 local function earlyInit(modApi)
 	modApi.requirements = { "Sim Constructor", "Expanded Cheats" }
 	local scriptPath = modApi:getScriptPath()
-	rawset(_G, "SA_PATH",  scriptPath)
-	rawset(_G, "SAInclude",  function(filePath)
+	rawset(_G, "SA_PATH", scriptPath)
+	rawset(_G, "SAInclude", function(filePath)
 		return include(scriptPath .. "/" .. filePath)
 	end)
 	SAInclude('modulesModify/log')
@@ -37,9 +37,15 @@ end
 local function load(modApi, options, params, options_raw)
 	modApi:insertUIElements(SAInclude("clientModify/hud/hud_insert"))
 	modApi:modifyUIElements(SAInclude("clientModify/hud/hud_modification"))
+	SAInclude("simModify/unitdefs/commondefs")
+	SAInclude("simModify/units/factorycore")
 	local guarddefs = SAInclude("simModify/unitdefs/guarddefs")
 	for name, guarddef in pairs(guarddefs) do
 		modApi:addGuardDef(name, guarddef)
+	end
+	local propdefs = SAInclude("simModify/unitdefs/propdefs")
+	for name, propdef in pairs(propdefs) do
+		modApi:addPropDef(name, propdef, true)
 	end
 	-- local give_spell = SAInclude("clientModify/fe/cheatmenu")
 	-- local cheatmenu = include("fe/cheatmenu")
@@ -70,6 +76,8 @@ local function load(modApi, options, params, options_raw)
 		modApi:addDaemonAbility(name, ability)
 	end
 	--add factory mission story
+	local factoryPrefabs = SAInclude("prefabs/factory/prefabt")
+	modApi:addPrefabt(factoryPrefabs)
 	local SCRIPTS = SAInclude("clientModify/story_scripts")
 	modApi:addMapScripts(SCRIPTS.CAMPAIGN_MAP.MISSIONS, "CAMPAIGN_MAP")
 	SAInclude("clientModify/fe/talkinghead")
