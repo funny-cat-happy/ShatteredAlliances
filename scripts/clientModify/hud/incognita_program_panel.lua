@@ -72,6 +72,15 @@ local function updateButtonFromProgram(self, widget, ability, abilityOwner)
         widget.binder.img:setVisible(true)
         widget.binder.img:setImage(ability:getDef().icon)
     end
+
+    if not ability.expose then
+        widget.binder.powerTxt:setText("-")
+        widget.binder.turnsTxt:setVisible(false)
+        widget.binder.img:setVisible(true)
+        widget.binder.descTxt:setText("unknown")
+        widget.binder.img:setImage("gui/icons/programs_icons/icon-program_Halt.png")
+        widget.binder.btn:setTooltip(STRINGS.SA.UI.HIDDEN_PROGRAM_TOOLTIP)
+    end
 end
 
 local function updateProgramButtons(self, widgetName, player, primeRefresh)

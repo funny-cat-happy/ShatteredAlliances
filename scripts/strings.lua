@@ -63,6 +63,12 @@ local SA = {
             HEART_BEAT_PACKET_DESC = "If the robot disconnects with network, incognita will get {1} PWR",
         },
         FACTORY_CORE_ALERT = "Factory core generate {1} PWR to {2}",
+        HIDDEN_PROGRAM_TOOLTIP = "Hidden program can be exposed by validation and exploration",
+        HIDDEN_INTENTION_TOOLTIP =
+        "Hidden daemon can be exposed by validation and exploration. Left click it to cost {1} PWR to explore it.",
+        REASON = {
+            DAEMON_FORCE_HIDDEN = "Daemon has been forced to hide",
+        },
     },
     MISSIONS = {
         FACTORY = {

@@ -27,6 +27,11 @@ aiplayer.init = function(self, sim)
     table.insert(self._incognita_program, ability)
     self._incognitaLockOut = false
     self._cpus = 10
+    self._foreverHidden = false
+end
+
+function aiplayer:getDaemonHidden()
+    return self._foreverHidden
 end
 
 function aiplayer:getPlayerAlly(sim)
@@ -149,6 +154,14 @@ end
 
 aiplayer.getPrograms = function(self)
     return self._incognita_program
+end
+
+aiplayer.findProgram = function(self, id)
+    for _, program in pairs(self._incognita_program) do
+        if program.id == id then
+            return program
+        end
+    end
 end
 
 aiplayer.addIncognitaIntention = function(self, abilityID)

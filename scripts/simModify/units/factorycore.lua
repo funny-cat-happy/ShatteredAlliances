@@ -50,23 +50,25 @@ end
 
 function factorycore:onTrigger(sim, evType, evData)
     if evType == simdefs.TRG_START_TURN then
-        local pwr_gen = self:getTraits().PWR_gen
-        if evData:isNPC() and self:isAI() then
-            sim:getCurrentPlayer():addCPUs(pwr_gen, sim)
-            sim:dispatchEvent(simdefs.EV_SHOW_WARNING,
-                {
-                    txt = util.sformat(STRINGS.SA.UI.FACTORY_CORE_ALERT, pwr_gen, evData:getTraits().name),
-                    color = cdefs.COLOR_CORP_WARNING,
-                    sound = nil,
-                })
-        elseif evData:isPC() and self:isPC() then
-            sim:getCurrentPlayer():addCPUs(pwr_gen, sim)
-            sim:dispatchEvent(simdefs.EV_SHOW_WARNING,
-                {
-                    txt = util.sformat(STRINGS.SA.UI.FACTORY_CORE_ALERT, pwr_gen, evData:getTraits().name),
-                    color = cdefs.COLOR_PLAYER_WARNING,
-                    sound = nil,
-                })
+        if self:getTraits().mainframe_status == "active" then
+            local pwr_gen = self:getTraits().PWR_gen
+            if evData:isAI() and self:isAI() then
+                sim:getCurrentPlayer():addCPUs(pwr_gen, sim)
+                sim:dispatchEvent(simdefs.EV_SHOW_WARNING,
+                    {
+                        txt = util.sformat(STRINGS.SA.UI.FACTORY_CORE_ALERT, pwr_gen, evData:getTraits().name),
+                        color = cdefs.COLOR_CORP_WARNING,
+                        sound = nil,
+                    })
+            elseif evData:isPC() and self:isPC() then
+                sim:getCurrentPlayer():addCPUs(pwr_gen, sim)
+                sim:dispatchEvent(simdefs.EV_SHOW_WARNING,
+                    {
+                        txt = util.sformat(STRINGS.SA.UI.FACTORY_CORE_ALERT, pwr_gen, evData:getTraits().name),
+                        color = cdefs.COLOR_PLAYER_WARNING,
+                        sound = nil,
+                    })
+            end
         end
     end
 end

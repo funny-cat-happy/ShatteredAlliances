@@ -14,6 +14,8 @@ local function createIncognitaDaemon(stringTbl)
     return util.extend(createDaemon(stringTbl))
         {
             incognitaIntention = true,
+            expose = false,
+            exploreCost = 2,
             turns = 1,
             onTrigger = function(self, sim, evType, evData, userUnit)
                 if evType == simdefs.SA.TRG_INCOGNITA_ACTION then
@@ -34,6 +36,7 @@ end
 local incognita_daemon = {
     daemonLockPick = util.extend(createIncognitaDaemon(STRINGS.SA.DAEMON.LOCKPICK))
         {
+            id = "LockPick",
             icon = "gui/icons/programs_icons/icon-incognita-lockpick.png",
             decrease_firewalls = 1,
             onSpawnAbility = function(self, sim, player)
@@ -54,6 +57,7 @@ local incognita_daemon = {
         },
     daemonMarch = util.extend(createIncognitaDaemon(STRINGS.SA.DAEMON.MARCH))
         {
+            id = "March",
             icon = "gui/icons/programs_icons/icon-incognita-march.png",
             onSpawnAbility = function(self, sim, player)
                 sim:addTrigger(simdefs.SA.TRG_INCOGNITA_ACTION, self)

@@ -10,6 +10,7 @@ local function createIncognitaProgram(stringTbl)
             huddesc = stringTbl.HUD_DESC,
             shortdesc = stringTbl.SHORT_DESC,
             tipdesc = stringTbl.TIP_DESC,
+            expose = false,
             evaluate = function()
                 return 50
             end,
@@ -36,6 +37,7 @@ local function createIncognitaProgram(stringTbl)
                 self:useCPUs(sim)
                 sim:getNPC():addIncognitaIntention("daemon" .. self.id)
                 self:setCooldown(sim)
+                return true
             end,
         }
 end
