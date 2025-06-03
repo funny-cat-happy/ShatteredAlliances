@@ -1,21 +1,24 @@
 local cheatmenu = include("fe/cheatmenu")
-
+local simdefs = include("sim/simdefs")
 
 local cheat_item = cheatmenu.cheat_item
-local give_spell = class(cheatmenu.cheat_submenu)
-
-local function giveSpell(spellName, spellLevel)
-    -- Code that spawns the spell goes here
+local function load()
+    local SAMenu = {
+        cheatmenu.cheat_submenu("SADebug", {
+            cheat_item("decrease INC firewall",
+                function()
+                    if sim then
+                        game:doAction("debugAction",
+                            function(sim)
+                                sim:getFirewall():updateINCFirewallStatus(-1, 0)
+                            end)
+                    end
+                end),
+        })
+    }
+    for _, cheat in pairs(SAMenu) do
+        table.insert(simdefs.CHEATS, cheat)
+    end
 end
-function give_spell:init()
-    local submenu = {}
 
-    local item = cheatmenu.cheat_item("debug", function()
-        SALog("test")
-    end)
-    table.insert(submenu, item)
-
-    cheatmenu.cheat_submenu.init(self, "Give spell", submenu)
-end
-
-return give_spell
+return { load = load }

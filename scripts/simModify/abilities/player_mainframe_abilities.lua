@@ -2,6 +2,7 @@ local mainframe_common = include("sim/abilities/mainframe_common")
 local util = include("client_util")
 local simdefs = include("sim/simdefs")
 
+
 local DEFAULT_ABILITY = mainframe_common.DEFAULT_ABILITY
 local abilities = {
     lock = util.extend(DEFAULT_ABILITY)
@@ -29,7 +30,7 @@ local abilities = {
                 end
 
                 if firewallsToLock and firewallsToLock > 0 then
-                    sim:updateINCFirewallStatus(firewallsToLock)
+                    sim:getFirewall():updateINCFirewallStatus(firewallsToLock)
                 end
                 sim:dispatchEvent(simdefs.EV_PLAY_SOUND, "SA/Actions/program_lock")
                 self:setCooldown(sim)
@@ -61,7 +62,7 @@ local abilities = {
                 end
 
                 if firewallsToLock and firewallsToLock > 0 then
-                    sim:updateINCFirewallStatus(firewallsToLock, self.increase_limit)
+                    sim:getFirewall():updateINCFirewallStatus(firewallsToLock, self.increase_limit)
                 end
                 sim:dispatchEvent(simdefs.EV_PLAY_SOUND, "SA/Actions/program_ratchet")
                 self:setCooldown(sim)

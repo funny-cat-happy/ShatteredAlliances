@@ -19,7 +19,6 @@ local function init(modApi)
 	SAInclude("simModify/btree/conditions")
 	SAInclude("simModify/btree/allybrain")
 
-	SAInclude("clientModify/fe/cheatmenu")
 
 	SAInclude('clientModify/gameplay/boardrig')
 	SAInclude('clientModify/gameplay/agentrig')
@@ -29,12 +28,30 @@ local function init(modApi)
 	modApi:addSimdef("SA", SAInclude("simModify/simdefs"))
 end
 
+local function lateInit(modApi)
+	--modify game hud
+	SAInclude("clientModify/hud/hud")
+	SAInclude("clientModify/hud/agent_panel")
+	SAInclude("clientModify/hud/mainframe_panel")
+	SAInclude("clientModify/hud/home_panel")
+	SAInclude("clientModify/gameplay/modal_thread")
+
+	--add allyplayer
+	SAInclude("simModify/simplayer")
+	SAInclude("simModify/aiplayer")
+	SAInclude("simModify/allyplayer")
+	SAInclude("simModify/pcplayer")
+	SAInclude("simModify/engine")
+end
+
 ---comment
 ---@param modApi modApi
 ---@param options any
 ---@param params any
 ---@param options_raw any
 local function load(modApi, options, params, options_raw)
+	local fn = SAInclude("clientModify/fe/cheatmenu")
+	fn.load()
 	modApi:insertUIElements(SAInclude("clientModify/hud/hud_insert"))
 	modApi:modifyUIElements(SAInclude("clientModify/hud/hud_modification"))
 	SAInclude("simModify/unitdefs/commondefs")
@@ -47,15 +64,6 @@ local function load(modApi, options, params, options_raw)
 	for name, propdef in pairs(propdefs) do
 		modApi:addPropDef(name, propdef, true)
 	end
-	-- local give_spell = SAInclude("clientModify/fe/cheatmenu")
-	-- local cheatmenu = include("fe/cheatmenu")
-	-- local cheat_item = cheatmenu.cheat_item
-	-- local simdefs = include("sim/simdefs")
-	-- if rawget(simdefs, "CHEATS") then
-	-- 	table.insert(simdefs.CHEATS, cheat_item("debug", function()
-	-- 		SALog("debug")
-	-- 	end))
-	-- end
 	-- Add the new custom situations
 	SAInclude("simModify/mission/mission_factory")
 	local serverdefs_mod = SAInclude("modulesModify/serverdefs")
@@ -91,21 +99,6 @@ local function lateLoad(modApi, options, params, options_raw)
 	--add new situation
 	local fn = SAInclude("modulesModify/serverdefs")
 	fn.lateLoad()
-end
-local function lateInit(modApi)
-	--modify game hud
-	SAInclude("clientModify/hud/hud")
-	SAInclude("clientModify/hud/agent_panel")
-	SAInclude("clientModify/hud/mainframe_panel")
-	SAInclude("clientModify/hud/home_panel")
-	SAInclude("clientModify/gameplay/modal_thread")
-
-	--add allyplayer
-	SAInclude("simModify/simplayer")
-	SAInclude("simModify/aiplayer")
-	SAInclude("simModify/allyplayer")
-	SAInclude("simModify/pcplayer")
-	SAInclude("simModify/engine")
 end
 
 local function initStrings(modApi)

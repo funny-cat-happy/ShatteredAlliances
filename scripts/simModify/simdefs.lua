@@ -11,9 +11,19 @@ local _M = {
 
 
     FIREWALL_UPPER_LIMIT = 9,
+    FIREWALL_STATUS = {
+        ACTIVATE = "ACTIVATE",
+        HACKING = "HACKING",
+        REBOOTING = "REBOOTING",
+        DEACTIVATE = "DEACTIVATE",
+    },
 
 
-    TRG_INCOGNITA_ACTION = 0,
+    TRG_INCOGNITA_ACTION = 1001,
+    TRG_VIRUS_OUTBREAK = 1002,
+
+
+    EV_INCFIREWALL_CHANGE = 1001,
 }
 return _M
 

@@ -34,6 +34,10 @@ function aiplayer:getDaemonHidden()
     return self._foreverHidden
 end
 
+function aiplayer:updateIntentionPoints(point)
+    return self._intention_points + point < 0 and 1 or self._intention_points + point
+end
+
 function aiplayer:getPlayerAlly(sim)
     return nil
 end
@@ -171,5 +175,24 @@ aiplayer.addIncognitaIntention = function(self, abilityID)
         table.insert(self._mainframeAbilities, ability)
         self._sim:dispatchEvent(simdefs.EV_MAINFRAME_INSTALL_PROGRAM,
             { idx = #self._mainframeAbilities, ability = ability })
+    end
+end
+
+aiplayer.addMainframeAbility = function(self, sim, abilityID, hostUnit)
+    local count = 0
+    for _, ability in ipairs(self._mainframeAbilities) do
+        if ability:getID() == abilityID then
+            count = count + 1
+        end
+    end
+    local ability = simability.create(abilityID)
+    if ability and count < (ability.max_count or math.huge) then
+        table.insert(self._mainframeAbilities, ability)
+        ability:spawnAbility(self._sim, self, hostUnit)
+        if self:isNPC() then
+            sim:dispatchEvent(simdefs.EV_MAINFRAME_INSTALL_PROGRAM,
+                { idx = #self._mainframeAbilities, ability = ability })
+            sim:triggerEvent(simdefs.TRG_DAEMON_INSTALL)
+        end
     end
 end

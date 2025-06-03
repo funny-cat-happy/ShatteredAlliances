@@ -47,6 +47,20 @@ local SA = {
             ACTIVE_DESC = "ROBOTS WILL TAKE ACTION",
             TIP_DESC = "Control all robots to act",
         },
+        EXTRACT =
+        {
+            NAME = "EXTRACT",
+            DESC = "Extract {1} PWR from INC to incognita",
+            SHORT_DESC = "EXTRACT PWR",
+            ACTIVE_DESC = "Extract {1} PWR from INC to incognita",
+        },
+        OVERDRIVE =
+        {
+            NAME = "OVERDRIVE",
+            DESC = "Add {1} intention point to incognita",
+            SHORT_DESC = "ADD INTENTION POINT",
+            ACTIVE_DESC = "Add {1} intention point to incognita",
+        },
     },
     UI = {
         SHOPCAT_NAME = "SHOPCAT",
@@ -78,6 +92,18 @@ local SA = {
             "No time to debate. Monst3r's signal just died near West Sector vents. Your troops clear the path, my agents handle the purge. Remember: If those kill-codes escape that factory, the whole city will become a slaughterhouse.", --Central
             "Approved. Pyro suppression squad has arrived factory. Hacking the facility elevator.", --Ralf
             "Operator, ready to act. In 15 minutes, I either see that factory core burns, or the entire city burns in robot’s plasma fire.", --Central
+        },
+        LOCATIONS = {
+            FACTORY = {
+                NAME = "Robotics Foundry",
+                MORE_INFO =
+                "Monst3r confirms this as primary production site for Thanatos Robot.",
+                INSET_TITLE = "DESTROY CORE",
+                INSET_TXT =
+                "Listen up, Operator - this may be our most dangerous mission yet.\n\nThanatos Robot has the most dangerous weapons and detection systems. Incognita will personally protect the factory and factory core continuous generate PWR to incognita.\n\nSo be careful when you act",
+                DESCRIPTION = "Disable production and retrieve robot body.",
+                REWARD = "Save thousands of humans and strengthen the AI resistance.",
+            },
         },
     },
     PROPS = {

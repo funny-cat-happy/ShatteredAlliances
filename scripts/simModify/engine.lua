@@ -1,6 +1,7 @@
 ---@class engine
+---@field _firewall INCFirewall
 local simengine = include("sim/engine")
-local allyplayer = include(SA_PATH .. "/simModify/allyplayer")
+local allyplayer = SAInclude("simModify/allyplayer")
 local simactions = include("sim/simactions")
 local simdefs = include("sim/simdefs")
 local util = include("modules/util")
@@ -31,43 +32,19 @@ local cdefs = include("client_defs")
 local simguard = include("modules/simguard")
 local version = include("modules/version")
 local alarm_states = include("sim/alarm_states")
+local firewall = SAInclude("simModify/incfirewall")
 
 local oldInit = simengine.init
-
----@class engine
----@field _firewallLimit integer
----@field _currentFirewall integer
----@field _firewallStage integer
-
 simengine.init = function(self, params, levelData, ...)
     oldInit(self, params, levelData, ...)
     self._turn = 3
     table.insert(self._players, 1, allyplayer(self))
-    self._firewallLimit = simdefs.SA.FIREWALL_UPPER_LIMIT
-    self._currentFirewall = 6
-    self._firewallStage = 1
+    self._firewall = firewall(self)
 end
 
-simengine.getINCFirewallStatus = function(self)
-    return self._currentFirewall, self._firewallLimit, self._firewallStage
+simengine.getFirewall = function(self)
+    return self._firewall
 end
-
-simengine.updateINCFirewallStatus = function(self, firewall, limit)
-    self._currentFirewall = self._currentFirewall + firewall
-    if limit then
-        self._firewallLimit = self._firewallLimit + limit
-    end
-    if firewall ~= 0 or limit ~= 0 then
-        self:dispatchEvent(simdefs.EV_ADVANCE_TRACKER,
-            {
-                currentFirewall = self._currentFirewall,
-                firewallLimit = self._firewallLimit,
-                firewallStage = self
-                    ._firewallStage
-            })
-    end
-end
-
 simengine.trackerAdvance = function(self, delta, txt, scan)
 end
 
@@ -123,7 +100,9 @@ simengine.applyAction = function(self, action)
         action.choices[i] = self._choices[i]
     end
 end
-
+---comment
+---@param self engine
+---@return aiplayer
 simengine.getNPC = function(self)
     for i, player in ipairs(self._players) do
         if player:isNPC() and not player:isAlly() then

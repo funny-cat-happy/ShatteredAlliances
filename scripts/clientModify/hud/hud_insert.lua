@@ -380,6 +380,8 @@ local inserts = {
                         str = [[STR_517759365]],
                     },
                     ctor = [[label]],
+                    halign = MOAITextBox.LEFT_JUSTIFY,
+                    valign = MOAITextBox.LEFT_JUSTIFY,
                     text_style = [[font1_18_r]],
                     color =
                     {

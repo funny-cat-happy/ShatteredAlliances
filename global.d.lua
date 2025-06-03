@@ -12,3 +12,13 @@ upvalueUtil = nil
 ---@class KLEIResourceMgr
 ---@field MountPackage fun(rescourcePath:string, virtualFolder:string)
 KLEIResourceMgr = nil
+
+---comment
+---@param path string
+SAInclude = function(path) end
+
+---@type engine
+sim = nil
+
+---@type game
+game = nil

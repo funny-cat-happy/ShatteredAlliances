@@ -67,12 +67,12 @@ end
 local MISSION_FACTORY_SITUATION = {
     levelFile = "lvl_procgen",
     ui = {
-        moreInfo = STRINGS.MISSIONS.LOCATIONS.GUARD_OFFICE.MORE_INFO,
-        insetTitle = STRINGS.MISSIONS.LOCATIONS.GUARD_OFFICE.INSET_TITLE,
-        insetTxt = STRINGS.MISSIONS.LOCATIONS.GUARD_OFFICE.INSET_TXT,
-        locationName = STRINGS.MISSIONS.LOCATIONS.GUARD_OFFICE.NAME,
-        playerdescription = STRINGS.MISSIONS.LOCATIONS.GUARD_OFFICE.DESCRIPTION,
-        reward = STRINGS.MISSIONS.LOCATIONS.GUARD_OFFICE.REWARD,
+        moreInfo = STRINGS.SA.MISSIONS.LOCATIONS.FACTORY.MORE_INFO,
+        insetTitle = STRINGS.SA.MISSIONS.LOCATIONS.FACTORY.INSET_TITLE,
+        insetTxt = STRINGS.SA.MISSIONS.LOCATIONS.FACTORY.INSET_TXT,
+        locationName = STRINGS.SA.MISSIONS.LOCATIONS.FACTORY.NAME,
+        playerdescription = STRINGS.SA.MISSIONS.LOCATIONS.FACTORY.DESCRIPTION,
+        reward = STRINGS.SA.MISSIONS.LOCATIONS.FACTORY.REWARD,
         insetVoice = {
             "SpySociety/VoiceOver/Missions/MapScreen/Location_RegionalSecurityOffice",
             "SpySociety/VoiceOver/Missions/MapScreen/Location_RegionalSecurityOffice_2",

@@ -59,7 +59,7 @@ local DBG_CONDITIONS =
         return ev.eventType == simdefs.EV_UNIT_INTERRUPTED
     end,
 }
-
+---@class game
 local game = class()
 
 function game:init()

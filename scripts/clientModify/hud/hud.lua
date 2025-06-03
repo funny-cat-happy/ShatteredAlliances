@@ -36,35 +36,29 @@ local STATE_ABILITY_TARGET = 4
 local STATE_ITEM_TARGET = 5
 local STATE_REPLAYING = 9
 
-local function refreshINCFirewall(hud, currentFirewall, firewallLimit, firewallStager)
-    local colourIndex = math.min(#cdefs.TRACKER_COLOURS, firewallStager + 1)
+local function refreshINCFirewall(hud)
+    ---@type INCFirewall
+    local firewall = hud._game.simCore:getFirewall()
+    local colourIndex = math.min(#cdefs.TRACKER_COLOURS, firewall.firewallStage + 1)
     local colour = cdefs.TRACKER_COLOURS[colourIndex]
-    -- Show the tracker number
-    hud._screen.binder.alarm.binder.trackerTxt:setText(tostring(currentFirewall) .. '/' .. tostring(firewallLimit))
+    if firewall.firewallStatus == simdefs.SA.FIREWALL_STATUS.ACTIVATE then
+        hud._screen.binder.alarm.binder.trackerTxt:setText(tostring(firewall.currentFirewall) ..
+            '/' .. tostring(firewall.firewallLimit))
+    else
+        hud._screen.binder.alarm.binder.trackerTxt:setText(firewall.firewallStatus)
+    end
     hud._screen.binder.alarm.binder.trackerTxt:setColor(colour.r, colour.g, colour.b, 1)
     hud._screen.binder.alarm.binder.alarmLvlTitle:setColor(colour.r, colour.g, colour.b, 1)
-    hud._screen.binder.alarm.binder.alarmDisc:animateProgress(lastFirewall, currentFirewall, 1)
-    local progressColorIndex = currentFirewall / firewallLimit
+    hud._screen.binder.alarm.binder.alarmDisc:animateProgress(lastFirewall, firewall.currentFirewall, 1)
+    local progressColorIndex = firewall.currentFirewall / firewall.firewallLimit
     hud._screen.binder.alarm.binder.alarmDisc:setProgressColor(1 - progressColorIndex, progressColorIndex, 0, 1)
-
     local tip = STRINGS.SA.UI.INC_FIREWALL_TOOLTIP
-
-    local alarmList = hud._game.simCore:getAlarmTypes()
-    local next_alarm = simdefs.ALARM_TYPES[alarmList][firewallStager + 1]
-
-
-    if next_alarm then
-        tip = tip .. alarm_states.alarm_level_tips[next_alarm]
-    else
-        tip = tip .. STRINGS.UI.ALARM_NEXT_AFTER_SIX
-    end
-
     hud._screen.binder.alarm:setTooltip(tip)
-    SAUtil.getLocalValue(hud.onSimEvent, "refreshTrackerMusic")(hud, firewallStager)
-    lastFirewall = currentFirewall
+    SAUtil.getLocalValue(hud.onSimEvent, "refreshTrackerMusic")(hud, firewall.firewallStage)
+    lastFirewall = firewall.currentFirewall
 end
 
-local function runINCFirewall(hud, currentFirewall, firewallLimit, firewallStage)
+local function runINCFirewall(hud)
     hud._screen.binder.alarm.binder.alarmRing1:setAnim("idle")
     hud._screen.binder.alarm.binder.alarmRing1:setVisible(true)
     hud._screen.binder.alarm.binder.alarmRing1:getProp():setListener(KLEIAnim.EVENT_ANIM_END,
@@ -73,7 +67,7 @@ local function runINCFirewall(hud, currentFirewall, firewallLimit, firewallStage
                 hud._screen.binder.alarm.binder.alarmRing1:setVisible(false)
             end
         end)
-    refreshINCFirewall(hud, currentFirewall, firewallLimit, firewallStage)
+    refreshINCFirewall(hud)
 end
 
 local oldInit = hud.init
@@ -197,7 +191,7 @@ local oldRefreshHud = hud.refreshHud
 hud.refreshHud = function(self)
     upvalueUtil.find(oldRefreshHud, "hideTitleSwipe")(self)
     self:showShotHaze(false)
-    refreshINCFirewall(self, self._game.simCore:getINCFirewallStatus())
+    refreshINCFirewall(self)
     self:refreshObjectives()
     self:abortChoiceDialog()
 
@@ -288,6 +282,7 @@ end
 local oldOnsimEvent = hud.onSimEvent
 hud.onSimEvent = function(self, ev)
     local sim = self._game.simCore
+    ---@type simdefs
     local simdefs = sim.getDefs()
 
     if ev.eventType == simdefs.EV_HIDE_PROGRAM or ev.eventType == simdefs.EV_SLIDE_IN_PROGRAM then
@@ -359,7 +354,7 @@ hud.onSimEvent = function(self, ev)
         if ev.eventData and not ev.eventData:isNPC() then
             SAUtil.getLocalValue(oldOnsimEvent, "stopTitleSwipe", 1)(self)
         end
-    elseif ev.eventType == simdefs.EV_ADVANCE_TRACKER then
+    elseif ev.eventType == simdefs.SA.EV_INCFIREWALL_CHANGE then
         -- if ev.eventData.alarmOnly or (ev.eventData.tracker + ev.eventData.delta >= simdefs.TRACKER_MAXCOUNT) then
         --	self._game.post_process:colorCubeLerp( "data/images/cc/cc_default.png", "data/images/cc/screen_shot_out_test1_cc.png", 1.0, MOAITimer.PING_PONG, 0,0.5 )			
         --     if not self._playingAlarmLoop then
@@ -367,7 +362,8 @@ hud.onSimEvent = function(self, ev)
         --         self._playingAlarmLoop = true
         --     end
         -- end
-        runINCFirewall(self, ev.eventData.currentFirewall, ev.eventData.firewallLimit, ev.eventData.firewallStage)
+        SALog("firewall event")
+        runINCFirewall(self)
     elseif ev.eventType == "used_radio" then
         local stage = self._game.simCore:getTrackerStage(ev.eventData.tracker)
         SAUtil.getLocalValue(oldOnsimEvent, "refreshTrackerMusic", 1)(self, stage)

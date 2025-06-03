@@ -8,6 +8,7 @@ local cdefs = include("client_defs")
 local serverdefs = include("modules/serverdefs")
 local mainframe_common = include("sim/abilities/mainframe_common")
 
+
 local createDaemon = mainframe_common.createDaemon
 
 local function createIncognitaDaemon(stringTbl)
@@ -33,6 +34,38 @@ local function createIncognitaDaemon(stringTbl)
         }
 end
 
+local function createVirus(stringTbl)
+    return util.extend(createDaemon(stringTbl))
+        {
+            virus = true,
+            expose = true,
+            exploreCost = 2,
+            turns = 1,
+            stage = 1,
+            weight = 1,
+            onTrigger = function(self, sim, evType, evData, userUnit)
+                if evType == simdefs.TRG_START_TURN then
+                    local player = evData
+                    if player:isPC() then
+                        if self.turns then
+                            self.turns = self.turns - 1
+                            if (self.turns or 0) == 0 then
+                                sim:triggerEvent(simdefs.SA.TRG_VIRUS_OUTBREAK)
+                                self:executeTimedAbility(sim, player)
+                            end
+                        end
+                    end
+                end
+            end,
+            executeTimedAbility = function(self, sim)
+                sim:getNPC():removeAbility(sim, self)
+            end,
+            onSpawnAbility = function(self, sim, player)
+                sim:addTrigger(simdefs.TRG_START_TURN, self)
+            end,
+        }
+end
+
 local incognita_daemon = {
     daemonLockPick = util.extend(createIncognitaDaemon(STRINGS.SA.DAEMON.LOCKPICK))
         {
@@ -46,7 +79,7 @@ local incognita_daemon = {
             onDespawnAbility = function(self, sim)
                 local firewallsToBreak = self.decrease_firewalls
                 if firewallsToBreak and firewallsToBreak > 0 then
-                    sim:updateINCFirewallStatus(-firewallsToBreak)
+                    sim:getFirewall():updateINCFirewallStatus(-firewallsToBreak)
                 end
                 sim:removeTrigger(simdefs.SA.TRG_INCOGNITA_ACTION, self)
             end,
@@ -70,6 +103,41 @@ local incognita_daemon = {
 
             executeTimedAbility = function(self, sim)
                 sim:getNPC():removeAbility(sim, self)
+            end,
+        },
+    virusExtract = util.extend(createVirus(STRINGS.SA.DAEMON.EXTRACT))
+        {
+            stage = 1,
+            extractPWR = 3,
+            icon = "gui/icons/daemon_icons/Daemons0005.png",
+            onDespawnAbility = function(self, sim)
+                sim:getNPC():addCPUs(self.extractPWR)
+                sim:getPC():addCPUs(-self.extractPWR)
+                sim:removeTrigger(simdefs.TRG_START_TURN, self)
+                sim:dispatchEvent(simdefs.EV_SHOW_DAEMON,
+                    {
+                        name = self.name,
+                        icon = self.icon,
+                        txt = util.sformat(self.activedesc,
+                            self.extractPWR),
+                    })
+            end,
+        },
+    virusOverdrive = util.extend(createVirus(STRINGS.SA.DAEMON.OVERDRIVE))
+        {
+            stage = 3,
+            addPoint = 1,
+            icon = "gui/icons/daemon_icons/Daemons0005.png",
+            onDespawnAbility = function(self, sim)
+                sim:getNPC():updateIntentionPoints(self.addPoint)
+                sim:removeTrigger(simdefs.TRG_START_TURN, self)
+                sim:dispatchEvent(simdefs.EV_SHOW_DAEMON,
+                    {
+                        name = self.name,
+                        icon = self.icon,
+                        txt = util.sformat(self.activedesc,
+                            self.addPoint),
+                    })
             end,
         },
 }

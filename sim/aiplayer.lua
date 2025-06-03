@@ -26,7 +26,7 @@ local Pather = include("sim/pather")
 
 -----------------------------------------------------
 -- Interface functions
-
+---@class aiplayer:simplayer
 local aiplayer = class(simplayer)
 
 function aiplayer:init(sim)

@@ -16,6 +16,16 @@ local SCRIPTS = include('client/story_scripts')
 local mission = class(escape_mission)
 
 
+local function makeAgentConnection(script, sim)
+    script:waitFor(mission_util.UI_INITIALIZED)
+    script:queue({ type = "hideInterface" })
+    sim:dispatchEvent(simdefs.EV_TELEPORT, { units = sim:getPC():getAgents(), warpOut = false })
+    script:queue(1.5 * cdefs.SECONDS)
+    script:queue({ type = "showInterface" })
+    script:queue(0.5 * cdefs.SECONDS)
+    script:queue({ type = "showMissionObjectives" })
+end
+
 local ALLY_SUPPORT =
 {
     trigger = simdefs.TRG_START_TURN,
@@ -39,7 +49,15 @@ end
 ---@param scriptMgr scriptHook
 ---@param sim engine
 function mission:init(scriptMgr, sim)
-    escape_mission.init(self, scriptMgr, sim)
+    mission_util.campaign_mission.init(self, scriptMgr, sim)
+    sim:addObjective(STRINGS.MISSIONS.ESCAPE.OBJECTIVE, "elevator_1")
+    sim:openElevator()
+    scriptMgr:addHook("CONNECT", makeAgentConnection)
+    for i, mod in pairs(mod_manager.modMissionScripts) do
+        if mod.init then
+            mod.init(scriptMgr, sim)
+        end
+    end
     sim.exit_warning = function()
         if not self.loot_outer and not self.loot_inner then
             return STRINGS.SA.LEVEL.HUD_WARN_EXIT_MISSION_FACTORY
