@@ -16,6 +16,65 @@ local npc_abilities = include("sim/abilities/npc_abilities")
 local version = include("modules/version")
 local worldgen = include("sim/worldgen")
 
+worldgen.findThreatRoom = function(cxt, zoneThreats, fitness)
+    local beginnerPatrols = cxt.params.difficultyOptions.beginnerPatrols
+    local rooms = util.weighted_list()
+    for i, room in ipairs(cxt.rooms) do
+        if worldgen.canSpawnThreat(cxt, zoneThreats[room.zoneID], room) then
+            if beginnerPatrols then
+                local totalDist = 1
+                local cx, cy = (room.xmin + room.xmax) / 2, (room.ymin + room.ymax) / 2
+                for zoneID, units in pairs(zoneThreats) do
+                    for j, threatUnit in ipairs(units) do
+                        totalDist = totalDist + mathutil.dist2d(threatUnit.x, threatUnit.y, cx, cy)
+                    end
+                end
+                rooms:addChoice(room, totalDist)
+            elseif fitness then
+                rooms:addChoice(room, fitness(cxt, room))
+            else
+                rooms:addChoice(room, 1)
+            end
+        end
+    end
+
+    if not isVersion(cxt.params, "0.17.18") and beginnerPatrols then
+        return rooms:removeHighest()
+    else
+        return rooms:getChoice(cxt.rnd:nextInt(1, rooms:getTotalWeight()))
+    end
+end
+
+
+local function spawnUnit(cxt, template, fitness)
+    local room, attempts = nil, 0
+    local x, y = nil, nil
+    while (x == nil or y == nil) and attempts < 20 do
+        room = worldgen.findThreatRoom(cxt, {}, fitness)
+        if room then
+            x, y = worldgen.findGuardSpawn(cxt, {}, room)
+        end
+        attempts = attempts + 1
+    end
+    if x and y then
+        local templateName = template
+        local unit =
+        {
+            x = x,
+            y = y,
+            template = templateName,
+        }
+        if worldgen.isGuard(unit) then
+            unit = worldgen.finalizeGuard(cxt, unit)
+        end
+        if unit then
+            table.insert(cxt.units, unit)
+        end
+    else
+        log:write("ERR: couldn't place unit anywhere in room %s", tostring(room and room.roomIndex))
+    end
+end
+
 local NEXUS = class(procgen_context)
 
 function NEXUS:init(...)
@@ -53,6 +112,11 @@ function NEXUS:generateUnit(unit)
 end
 
 function NEXUS:generateUnits()
+    local tagSet = {}
+    self:invokeScriptGen("pregenerateUnits", tagSet)
+    for _, tag in pairs(tagSet) do
+        spawnUnit(self, tag[1], tag[2])
+    end
     local OMNI_SPAWN_TABLE =
     {
         PROTECTOR = { omni_protector = 100 },
@@ -69,7 +133,6 @@ function NEXUS:generateUnits()
     worldgen.generateThreats(self, OMNI_SPAWN_TABLE, spawnList)
     worldgen.generateGuardLoot(self, unitdefs.prop_templates.passcard)
     worldgen.generateGuardLoot(self, unitdefs.prop_templates.passcard)
-    -- worldgen.spawnUnits(self, { "scientist", "scientist", "scientist" })
 
     self.ice_programs = util.weighted_list(worldgen.OMNI_DAEMONS)
 end

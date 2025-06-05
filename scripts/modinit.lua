@@ -93,6 +93,8 @@ local function load(modApi, options, params, options_raw)
 	for i, world in pairs(worldgen) do
 		modApi:addCorpWorld(i, world)
 	end
+	local nexusPrefabs = SAInclude("prefabs/nexus/prefabt")
+	modApi:addWorldPrefabt(nil, "NEXUS", nexusPrefabs)
 end
 
 local function lateLoad(modApi, options, params, options_raw)

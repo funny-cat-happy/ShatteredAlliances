@@ -14,13 +14,43 @@ local function createFactorySituation(campaign)
         difficulty = 1,
         mapLocation = #serverdefs.MAP_LOCATIONS,
         new = true,
-        corpName = "omni"
+        corpName = "NEXUS"
     }
     table.insert(campaign.situations, situation)
     campaign.seed = gen._seed
 end
 
 table.insert(serverdefs.MAP_LOCATIONS, { x = 386, y = -109, name = STRINGS.SA.MAP_NAMES.BEIJING, corpName = "NEXUS" })
+
+serverdefs.CORP_DATA.NEXUS = {
+    stringTable = STRINGS.CORP.OMNI,
+    shortname = "NEXUS", -- Not a UI string, used for debug and path concatenation purposes.
+    logo = "gui/corp_preview/logo_sankaku.png",
+
+    corpColor = { r = 148 / 255, g = 12 / 255, b = 12 / 255, a = 1 },
+    imgs = { shop = "gui/store/STORE_Sankaku_bg.png", logo = "gui/menu pages/corp_select/CP_SankakuLogo1.png", logoLarge = "gui/corps/logo_omni.png" },
+    music = "SpySociety/Music/music_FinalLevel",
+    region = "omni",
+    world = "NEXUS",
+    overlayBlobStyles = {
+        {
+            size = 2,
+            anims = { 'j3', 'y3' },
+        },
+        {
+            size = 3,
+            anims = { 'j4', 'y4' },
+        },
+        {
+            size = 4,
+            anims = { 'j5', 'y5' },
+        },
+        {
+            size = 5,
+            anims = { 'j5', 'y5' },
+        },
+    },
+}
 
 local function lateLoad()
     serverdefs.createNewCampaign = function(agency, campaignDifficulty, difficultyOptions)

@@ -665,7 +665,7 @@ local units =
             {
                 x = 4,
                 y = 4,
-                template = [[factory_core]],
+                template = [[ending_jackin]],
                 unitData =
                 {
                     facing = 0,

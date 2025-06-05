@@ -11,9 +11,8 @@ local simfactory = include("sim/simfactory")
 local itemdefs = include("sim/unitdefs/itemdefs")
 local serverdefs = include("modules/serverdefs")
 local cdefs = include("client_defs")
-
+local mathutil = include("modules/mathutil")
 local SCRIPTS = include('client/story_scripts')
-local mission = class(escape_mission)
 
 
 local function makeAgentConnection(script, sim)
@@ -45,6 +44,7 @@ local function allySupport(script, sim, mission)
     -- ally_player:doTrackerSpawn(sim, 1, simdefs.TRACKER_SPAWN_UNIT_ENFORCER)
 end
 
+local mission = class(escape_mission)
 ---comment
 ---@param scriptMgr scriptHook
 ---@param sim engine
@@ -69,6 +69,27 @@ end
 function mission.pregeneratePrefabs(cxt, tagSet)
     escape_mission.pregeneratePrefabs(cxt, tagSet)
     table.insert(tagSet[1], "factory_control_room")
+end
+
+function mission.pregenerateUnits(cxt, tagSet)
+    local tag = {}
+    table.insert(tag, "thanatos_robot")
+    table.insert(tag, function(context, room)
+        local exitRoom
+        for _, room in pairs(context.rooms) do
+            if room.tags.exit then
+                exitRoom = room
+            end
+        end
+        if exitRoom == nil or exitRoom == room then
+            return 1
+        end
+        local exitRoomX, exitRoomY = (exitRoom.xmin + exitRoom.xmax) / 2, (exitRoom.ymin + exitRoom.ymax) / 2
+        local roomX, roomY = (room.xmin + room.xmax) / 2, (room.ymin + room.ymax) / 2
+        local distance = mathutil.dist2d(roomX, roomY, exitRoomX, exitRoomY)
+        return distance * distance
+    end)
+    table.insert(tagSet, tag)
 end
 
 return mission
