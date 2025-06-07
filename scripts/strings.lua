@@ -61,6 +61,13 @@ local SA = {
             SHORT_DESC = "ADD INTENTION POINT",
             ACTIVE_DESC = "Add {1} intention point to incognita",
         },
+        WORM =
+        {
+            NAME = "WORM",
+            DESC = "Decrease {1} MP of all agents",
+            SHORT_DESC = "SLOW AGENTS",
+            ACTIVE_DESC = "Decrease {1} MP of all agents",
+        },
     },
     UI = {
         SHOPCAT_NAME = "SHOPCAT",
@@ -82,6 +89,7 @@ local SA = {
         "Hidden daemon can be exposed by validation and exploration. Left click it to cost {1} PWR to explore it.",
         REASON = {
             DAEMON_FORCE_HIDDEN = "Daemon has been forced to hide",
+            EXPLORE_NOT_IN_TURN = "Explore must be in player turn",
         },
     },
     MISSIONS = {

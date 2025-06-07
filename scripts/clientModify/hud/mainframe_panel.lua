@@ -1,6 +1,11 @@
 local mainframePanel = include("hud/mainframe_panel").panel
 local util = include("client_util")
 local simdefs = include("sim/simdefs")
+local rig_util = include("gameplay/rig_util")
+
+
+local MODE_HIDDEN = 0
+local MODE_VISIBLE = 1
 
 local oldMainFramePanel = mainframePanel.show
 mainframePanel.show = function(self)
@@ -16,6 +21,8 @@ local function canExpose(panel, ability)
         return false, STRINGS.SA.UI.REASON.DAEMON_FORCE_HIDDEN
     elseif pcPlayer:getCpus() < ability.exploreCost then
         return false, STRINGS.UI.REASON.NOT_ENOUGH_PWR
+    elseif panel._hud._game.simCore:getCurrentPlayer() ~= pcPlayer then
+        return false, STRINGS.SA.UI.REASON.EXPLORE_NOT_IN_TURN
     else
         return true
     end
@@ -62,3 +69,4 @@ local newSetDaemonPanel = function(self, widget, ability, player)
     end
 end
 upvalueUtil.findAndReplace(oldAddMainframeProgram, "setDaemonPanel", newSetDaemonPanel)
+

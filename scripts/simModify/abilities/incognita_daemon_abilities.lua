@@ -123,6 +123,27 @@ local incognita_daemon = {
                     })
             end,
         },
+    virusWorm = util.extend(createVirus(STRINGS.SA.DAEMON.WORM))
+        {
+            stage = 1,
+            decreaseMP = 2,
+            icon = "gui/icons/daemon_icons/Daemons0005.png",
+            onDespawnAbility = function(self, sim)
+                for i, unit in pairs(sim:getPC():getUnits()) do
+                    if unit:getMP() then
+                        unit:addMP(self.decreaseMP)
+                    end
+                end
+                sim:removeTrigger(simdefs.TRG_START_TURN, self)
+                sim:dispatchEvent(simdefs.EV_SHOW_DAEMON,
+                    {
+                        name = self.name,
+                        icon = self.icon,
+                        txt = util.sformat(self.activedesc,
+                            self.decreaseMP),
+                    })
+            end,
+        },
     virusOverdrive = util.extend(createVirus(STRINGS.SA.DAEMON.OVERDRIVE))
         {
             stage = 3,

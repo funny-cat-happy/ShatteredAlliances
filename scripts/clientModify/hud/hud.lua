@@ -221,7 +221,6 @@ hud.refreshHud = function(self)
     self._screen.binder.resourcePnl:setVisible(showPanels and self:canShowElement("resourcePnl"))
     self._screen.binder.statsPnl:setVisible(showPanels and self:canShowElement("statsPnl"))
     self._screen.binder.alarm:setVisible(self:canShowElement("alarm"))
-    self._screen.binder.mainframePnl:setVisible(showPanels)
     self._screen.binder.topPnl:setVisible(self:canShowElement("topPnl"))
 
     self._screen.binder.mainframePnl.binder.daemonPanel:setVisible(self:canShowElement("daemonPanel"))

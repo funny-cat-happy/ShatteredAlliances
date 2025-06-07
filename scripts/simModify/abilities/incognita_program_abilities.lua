@@ -53,6 +53,17 @@ local abilities = {
                 return 40
             end
         },
+    programLockPick = util.extend(createIncognitaProgram(STRINGS.SA.DAEMON.LOCKPICK))
+        {
+            id = "LockPick",
+            icon = "gui/icons/programs_icons/icon-incognita-lockpick.png",
+            icon_100 = "gui/icons/programs_icons/icon-incognita-lockpick.png",
+            cpu_cost = 2,
+            equipped = false,
+            evaluate = function()
+                return 40
+            end
+        },
     programMarch = util.extend(createIncognitaProgram(STRINGS.SA.DAEMON.MARCH))
         {
             id = "March",

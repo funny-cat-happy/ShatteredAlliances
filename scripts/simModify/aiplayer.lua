@@ -1,10 +1,16 @@
+---@class aiplayer
+---@field _incognita_program table
+---@field _intention_points integer
+---@field _incognitaLockOut boolean
+---@field _foreverHidden boolean
 local aiplayer = include("sim/aiplayer")
 ---@type simdefs
 local simdefs = include("sim/simdefs")
 local simplayer = include("sim/simplayer")
 local simability = include("sim/simability")
 local util = include("modules/util")
-local dict = SAInclude("modulesModify/dict")
+local weight_dict = SAInclude("modulesModify/weight_dict")
+
 
 aiplayer.isAlly = function(self)
     return false
@@ -91,8 +97,8 @@ end
 
 aiplayer.thinkHard = function(self, sim)
     sim:triggerEvent(simdefs.SA.TRG_INCOGNITA_ACTION, self)
-    ---@type dict
-    local evaluateDict = dict(sim)
+    ---@type weight_dict
+    local evaluateDict = weight_dict(sim)
     for key, program in pairs(self:getPrograms()) do
         if program:canUseAbility(sim) then
             evaluateDict:add(program, program.evaluate())
@@ -103,6 +109,9 @@ aiplayer.thinkHard = function(self, sim)
         local programDict = evaluateDict:randomPop(70)
         if programDict then
             programDict.key:executeAbility(sim)
+            sim:dispatchEvent(simdefs.EV_PLAY_SOUND, "SA/HUD/gameplay/intention_spawn")
+            sim:dispatchEvent( simdefs.EV_HUD_REFRESH )
+            sim:dispatchEvent( simdefs.EV_WAIT_DELAY, 60 )
         end
     end
     sim:endTurn()

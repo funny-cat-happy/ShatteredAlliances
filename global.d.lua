@@ -22,3 +22,10 @@ sim = nil
 
 ---@type game
 game = nil
+
+---@class SAUtil
+---@field getLocalValue fun(fn: function, funcname: string, maxDepth: integer):nil
+---@field debugFunc fun(fn: function, ...: any):nil
+---@field printUpvalue fun(fn: function, condition: string | function, maxDepth: integer, callChain: string):nil
+---@field printAllUpvalues fun(fn: function, maxDepth: integer|nil, callChain: string|nil):nil
+SAUtil=nil

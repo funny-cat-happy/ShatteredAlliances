@@ -1,8 +1,3 @@
----get local value in origin function
----@param fn function
----@param funcname string
----@param maxDepth integer
----@return unknown
 local function getLocalValue(fn, funcname, maxDepth)
     local localValue = upvalueUtil.find(fn, funcname, maxDepth)
     assert(localValue, funcname .. " not exist in " .. tostring(fn))
@@ -21,6 +16,27 @@ local function debugFunc(fn, ...)
     if status then
         SALog("Function executed successfully")
     end
+end
+
+local function printAllUpvalues(fn, maxDepth, callChain)
+    maxDepth = maxDepth or 3
+    callChain = callChain or 'root'
+    
+    local upvIdx = 1
+    local upvName, value
+    
+    repeat
+        upvName, value = debug.getupvalue(fn, upvIdx)
+        if upvName then
+            local currentChain = callChain .. "->" .. upvName
+            SALog(string.format("%s = %s", currentChain, tostring(value)))
+            
+            if type(value) == "function" and maxDepth > 0 then
+                printAllUpvalues(value, maxDepth - 1, currentChain)
+            end
+        end
+        upvIdx = upvIdx + 1
+    until upvName == nil
 end
 
 local function printUpvalue(fn, condition, maxDepth, callChain)
@@ -54,5 +70,6 @@ local SAUtil = {
     getLocalValue = getLocalValue,
     debugFunc = debugFunc,
     printUpvalue = printUpvalue,
+    printAllUpvalues = printAllUpvalues,
 }
 rawset(_G, "SAUtil", rawget(_G, "SAUtil") or SAUtil)

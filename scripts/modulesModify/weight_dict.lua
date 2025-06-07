@@ -1,21 +1,21 @@
----@class dict
-local dict = class()
-function dict:init(sim)
+---@class weight_dict
+local weight_dict = class()
+function weight_dict:init(sim)
     self.data = {}
     self.sim = sim
 end
 
-function dict:add(key, value)
+function weight_dict:add(key, value)
     table.insert(self.data, { key = key, value = value })
 end
 
-function dict:sort()
+function weight_dict:sort()
     table.sort(self.data, function(a, b)
         return a.value > b.value
     end)
 end
 
-function dict:randomPop(probability)
+function weight_dict:randomPop(probability)
     if #self.data < 1 then
         return nil
     elseif #self.data < 2 then
@@ -29,12 +29,12 @@ function dict:randomPop(probability)
     end
 end
 
-function dict:length()
+function weight_dict:length()
     return #self.data
 end
 
-function dict:print()
+function weight_dict:print()
     SALog(self.data, 2)
 end
 
-return dict
+return weight_dict

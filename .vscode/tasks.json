@@ -42,7 +42,7 @@
         {
             "label": "build package",
             "type": "shell",
-            "command": "& \"\"\"${workspaceFolder}\\tool\\builder.exe\"\"\" -i \"build.lua\" -o \"\"\"${workspaceFolder}\\buildout\"\"\"",
+            "command": "& \"\"\"${workspaceFolder}\\tool\\builder.exe\"\"\" -i \"build.lua\" -o \"\"\"${workspaceFolder}\"\"\"",
             "problemMatcher": []
         }
     ]
