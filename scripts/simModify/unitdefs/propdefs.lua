@@ -40,5 +40,19 @@ local prop_templates =
             },
         sounds = { appeared = "SpySociety/HUD/gameplay/peek_positive", reboot_start = "SpySociety/Actions/reboot_initiated_generator", reboot_end = "SpySociety/Actions/reboot_complete_generator" }
     },
+    acheron_breach_charge =
+    {
+        type = "simcharge",
+        name = STRINGS.SA.PROPS.ACHERON_BREACH_CHARGE,
+        onWorldTooltip = function(tooltip, unit)
+            tooltip:addLine(unit:getName())
+            tooltip:addAbility(STRINGS.ABILITIES.DISARM, STRINGS.ABILITIES.DISARM_TRAP,
+                "gui/icons/action_icons/Action_icon_Small/icon-action_drop_give_small.png")
+        end,
+        kanim = "kanim_shock_trap_door",
+        rig = "traprig",
+        traits = { trap = true, noMainframe = true },
+        abilities = {},
+    },
 }
 return prop_templates

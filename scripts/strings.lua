@@ -115,7 +115,8 @@ local SA = {
         },
     },
     PROPS = {
-        FACTORY_POWER_CORE = "Factory Power Core"
+        FACTORY_POWER_CORE = "Factory Power Core",
+        ACHERON_BREACH_CHARGE = "Acheron Breach Charge",
     },
     ABILITIES = {
         FACTORY_HACK = {
@@ -128,6 +129,28 @@ local SA = {
     },
     ROBOTS = {
         THANATOS_ROBOT = "THANATOS ROBOT",
+    },
+    ITEMS = {
+        ACHERON_BREACH_CHARGE = "Acheron Breach Charge",
+        ACHERON_BREACH_CHARGE_TOOLTIP = "Place on a wall. Triggers when turn ends. Destroy walls.",
+        ACHERON_BREACH_CHARGE_FLAVOR = "Made of plasma material, it can destroy the walls of the facility.",
+    },
+    AGENTS = {
+        CORA = {
+            NAME = "Cora",
+            FILE = "FILE #01-020435A-3454326",
+            YEARS_OF_SERVICE = "6",
+            AGE = "38",
+            HOMETOWN = "Los Angeles",
+            RESCUED = "Continue to test robot.",
+            ALT_1 = {
+                FULLNAME = "Eli Cora",
+                CODENAME = "Sentry",
+                BIO =
+                "This is Eli Cora, codename 'Sentry'. She was formerly K&O's top security engineer and narrowly escaped Incognita's satellite strike beams. Now she's the only living person who has seen the core code of the 'Castle' and 'Snake' daemons. Her mechanical hacking skills are irreplaceable, especially for reverse-engineering enemy drones and cracking Quantum Reservoirs 123. But warning: high neural load will fry her brain like an overloaded server. Trust her expertise, but monitor her vitals.",
+                TOOLTIP = "Ex-Corporate Security",
+            },
+        }
     }
 }
 return SA

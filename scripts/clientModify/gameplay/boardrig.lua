@@ -25,6 +25,7 @@ local array = include("modules/array")
 local animmgr = include("anim-manager")
 local cdefs = include("client_defs")
 local serverdefs = include("modules/serverdefs")
+---@type simdefs
 local simdefs = include("sim/simdefs")
 local simquery = include("sim/simquery")
 local level = include("sim/level")
@@ -49,6 +50,24 @@ boardrig.onSimEvent = function(self, ev, eventType, eventData)
         if eventData.seer then
             self:refreshLOSCaster(eventData.seer:getID())
         end
+    elseif eventType == simdefs.SA.EV_WALL_BROKEN then
+        for i, wallRig in pairs(self._wallRigs) do
+            local x0, y0 = wallRig._x1, wallRig._y1
+            local x1, y1 = wallRig._x2, wallRig._y2
+            local x2, y2 = eventData.cell.x, eventData.cell.y
+            local x3, y3 = eventData.rCell.x, eventData.rCell.y
+            if (x0 == x2 and x1 == x3 and y0 == y2 and y1 == y3) then
+                array.removeElement(self:getClientCellXY(x2, y2)._dependentRigs, wallRig)
+                table.remove(self._wallRigs, i)
+                wallRig:destroy()
+            end
+            if (x0 == x3 and x1 == x2 and y0 == y3 and y1 == y2) then
+                array.removeElement(self:getClientCellXY(x3, y3)._dependentRigs, wallRig)
+                table.remove(self._wallRigs, i)
+                wallRig:destroy()
+            end
+        end
+        self:refreshCells()
     else
         return oldOnSimEvent(self, ev, eventType, eventData)
     end
@@ -139,7 +158,7 @@ boardrig.canPlayerSeeUnit = function(self, unit)
             return true -- Non-ghostables are always visible in presentation (not necessarily 'visible' sim-speaking)
         else
             return self:getSim():canPlayerSeeUnit(localPlayer, unit) or
-            self:getSim():canPlayerSeeUnit(localPlayer:getPlayerAlly(self:getSim()), unit)
+                self:getSim():canPlayerSeeUnit(localPlayer:getPlayerAlly(self:getSim()), unit)
         end
     end
 end

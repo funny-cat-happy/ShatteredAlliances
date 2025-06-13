@@ -24,7 +24,7 @@ table.insert(serverdefs.MAP_LOCATIONS, { x = 386, y = -109, name = STRINGS.SA.MA
 
 serverdefs.CORP_DATA.NEXUS = {
     stringTable = STRINGS.CORP.OMNI,
-    shortname = "NEXUS", -- Not a UI string, used for debug and path concatenation purposes.
+    shortname = "OMNI", -- Not a UI string, used for debug and path concatenation purposes.
     logo = "gui/corp_preview/logo_sankaku.png",
 
     corpColor = { r = 148 / 255, g = 12 / 255, b = 12 / 255, a = 1 },

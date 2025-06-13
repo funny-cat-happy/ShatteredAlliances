@@ -1,11 +1,7 @@
 local mainframePanel = include("hud/mainframe_panel").panel
 local util = include("client_util")
 local simdefs = include("sim/simdefs")
-local rig_util = include("gameplay/rig_util")
 
-
-local MODE_HIDDEN = 0
-local MODE_VISIBLE = 1
 
 local oldMainFramePanel = mainframePanel.show
 mainframePanel.show = function(self)
@@ -69,4 +65,3 @@ local newSetDaemonPanel = function(self, widget, ability, player)
     end
 end
 upvalueUtil.findAndReplace(oldAddMainframeProgram, "setDaemonPanel", newSetDaemonPanel)
-

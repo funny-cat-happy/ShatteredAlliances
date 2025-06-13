@@ -24,8 +24,12 @@ local function init(modApi)
 	SAInclude('clientModify/gameplay/agentrig')
 
 	SAInclude("simModify/simunit")
+	SAInclude("simModify/units/simcamera")
+	local fn = SAInclude("clientModify/hud/targeting")
+	fn.init()
 
 	modApi:addSimdef("SA", SAInclude("simModify/simdefs"))
+	SAInclude("simModify/simquery")
 end
 
 local function lateInit(modApi)
@@ -63,6 +67,15 @@ local function load(modApi, options, params, options_raw)
 	local propdefs = SAInclude("simModify/unitdefs/propdefs")
 	for name, propdef in pairs(propdefs) do
 		modApi:addPropDef(name, propdef, true)
+	end
+	local itemdefs = SAInclude("simModify/unitdefs/itemdefs")
+	for name, itemDef in pairs(itemdefs) do
+		modApi:addItemDef(name, itemDef)
+	end
+	modApi:addAbilityDef("wallMechanism", SA_PATH .. "/simModify/abilities/wallMechanism")
+	local agentDefs = SAInclude("simModify/unitdefs/agentdefs")
+	for name, agentDef in pairs(agentDefs) do
+		modApi:addAgentDef(name, agentDef, nil)
 	end
 	-- Add the new custom situations
 	SAInclude("simModify/mission/mission_factory")

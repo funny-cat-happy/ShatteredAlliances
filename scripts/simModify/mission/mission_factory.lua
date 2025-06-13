@@ -63,7 +63,7 @@ function mission:init(scriptMgr, sim)
             return STRINGS.SA.LEVEL.HUD_WARN_EXIT_MISSION_FACTORY
         end
     end
-    scriptMgr:addHook("ALLY-ENTER", allySupport, nil, self)
+    -- scriptMgr:addHook("ALLY-ENTER", allySupport, nil, self)
 end
 
 function mission.pregeneratePrefabs(cxt, tagSet)

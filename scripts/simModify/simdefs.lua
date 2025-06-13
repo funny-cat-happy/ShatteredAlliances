@@ -24,6 +24,7 @@ local _M = {
 
 
     EV_INCFIREWALL_CHANGE = 1001,
+    EV_WALL_BROKEN = 1002,
 }
 return _M
 
